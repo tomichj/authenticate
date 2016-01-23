@@ -19,6 +19,8 @@ Authenticate.lifecycle.prepend_after_authentication name: 'brute force protectio
     end
   end
 
+  # if user is locked, and we allow a lockout period, then unlock the user if they've waited
+  # longer than the lockout period.
   if user && user.locked? && Authenticate.configuration.bad_login_lockout_period != nil
     user.unlock! if user.lock_expires_at <= Time.now.utc
   end

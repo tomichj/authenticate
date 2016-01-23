@@ -1,10 +1,6 @@
 source 'https://rubygems.org'
 
 gem 'rails'
-gem 'sqlite3'
-gem 'pry'
-gem 'factory_girl_rails'
-# gem 'capybara'
 
 # Declare your gem's dependencies in authenticate.gemspec.
 # Bundler will treat runtime dependencies like base dependencies, and

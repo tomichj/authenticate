@@ -29,10 +29,10 @@ Gem::Specification.new do |s|
   s.add_dependency 'email_validator', '~> 1.6'
   s.add_dependency 'rails', '>= 4.0', '< 5.1'
   s.add_development_dependency 'sqlite3'
-  s.add_development_dependency 'rspec'
   s.add_development_dependency 'rspec-rails'
   # s.add_development_dependency 'capybara'
   s.add_development_dependency 'factory_girl_rails'
+  s.add_development_dependency 'pry'
 
   s.required_ruby_version = Gem::Requirement.new('>= 2.0')
 end

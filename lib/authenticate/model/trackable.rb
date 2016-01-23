@@ -7,7 +7,7 @@ module Authenticate
     #
     # == Columns
     # This module expects and tracks the following columns on your user model:
-    # - sign_in_count - increase every time a sign in is made
+    # - sign_in_count - increase every time a sign in is successful
     # - current_sign_in_at - a timestamp updated at each sign in
     # - last_sign_in_at - a timestamp of the previous sign in
     # - current_sign_in_ip - the remote ip address of the user at sign in

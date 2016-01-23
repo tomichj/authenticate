@@ -1,6 +1,19 @@
 module Authenticate
   module Model
 
+    # Use :username as the identifier for the user. Username must be unique.
+    #
+    # = Columns
+    # * username - the username of your user
+    #
+    # = Validations
+    # * :username requires username is set, ensure it is unique
+    #
+    # = class methods
+    # * credentials(params) - return the credentials required for authorization by username
+    # * authenticate(credentials) - find user with given username, validate their password, return the user if authenticated
+    # * find_by_credentials(credentials) - find and return the user with the username in the credentials
+    #
     module Username
       extend ActiveSupport::Concern
 
@@ -9,7 +22,7 @@ module Authenticate
       end
 
       included do
-        before_validation :normalize_username
+        # before_validation :normalize_username
         validates :username,
                   presence: true,
                   uniqueness: { allow_blank: true }
@@ -27,17 +40,17 @@ module Authenticate
 
         def find_by_credentials(credentials)
           username = credentials[0]
-          find_by_username normalize_username(username)
+          find_by_username username
         end
 
-        def normalize_username(username)
-          username.to_s.downcase.gsub(/\s+/, '')
-        end
+        # def normalize_username(username)
+        #   username.to_s.downcase.gsub(/\s+/, '')
+        # end
       end
 
-      def normalize_username
-        self.username = self.class.normalize_username(username)
-      end
+      # def normalize_username
+      #   self.username = self.class.normalize_username(username)
+      # end
 
     end
 

@@ -7,6 +7,10 @@ open to significant modification.
 
 Authenticate is inspired by, and draws from, Devise, Warden, Authlogic, Clearance, Sorcery, and restful_authentication.
 
+Please use [GitHub Issues] to report bugs.
+
+[GitHub Issues]: https://github.com/tomichj/authenticate/issues
+
 
 ## Install
 
@@ -19,9 +23,11 @@ Installation is pretty standard. Authenticate does not currently have an automat
       # any settings you wish to tweak, see below
     end
 * Create a migration for any Authenticate features you wish to take advantage of. Here's a good default:
-    `rails g migration AddAuthenticateToUsers email:string encrypted_password:string session_token:string 
-    session_expiration:datetime sign_in_count:integer last_sign_in_at:datetime last_sign_in_ip:string 
-    last_access_at:datetime current_sign_in_at:datetime current_sign_in_ip:string`
+
+`rails g migration AddAuthenticateToUsers email:string encrypted_password:string session_token:string 
+session_expiration:datetime sign_in_count:integer last_sign_in_at:datetime last_sign_in_ip:string 
+last_access_at:datetime current_sign_in_at:datetime current_sign_in_ip:string`
+
 
 
 ## Configure
@@ -30,19 +36,22 @@ Override any of these defaults in your application `config/initializers/authenti
 
 ```ruby
 Authenticate.configure do |config|
-    config.user_model = 'User'
-    config.cookie_name = 'authenticate_session_token'
-    config.cookie_expiration = { 1.year.from_now.utc }
-    config.cookie_domain = nil
-    config.crypto_provider = Bcrypt
-    config.timeout_in = nil  # 45.minutes
-    config.max_session_lifetime = nil  # 8.hours
-    config.max_consecutive_bad_logins_allowed = nil # 5
-    config.bad_login_lockout_period = nil # 5.minutes
-    config.authentication_strategy = :email
+  config.user_model = 'User'
+  config.cookie_name = 'authenticate_session_token'
+  config.cookie_expiration = { 1.year.from_now.utc }
+  config.cookie_domain = nil
+  config.cookie_path = '/
+  config.secure_cookie = false
+  config.http_only = false
+  config.crypto_provider = Bcrypt
+  config.timeout_in = nil  # 45.minutes
+  config.max_session_lifetime = nil  # 8.hours
+  config.max_consecutive_bad_logins_allowed = nil # 5
+  config.bad_login_lockout_period = nil # 5.minutes
+  config.authentication_strategy = :email
 ```
 
-
+Configuration parameters are described in detail here: [Configuration](lib/authenticate/configuration.rb)
 
 ### timeout_in
 
@@ -92,15 +101,16 @@ The strategy will also add username attribute validation, ensuring the username 
 To perform authentication use:
 
 * authenticate(params) - authenticate a user with credentials in params, return user if correct. 
-`params[:session][:email]` and `params[:session][:password]` are required for the :email authentication
-strategy. `params[:session][:username]` and `params[:session][:password]` are required for
-the :username authentication strategy.
+`params[:session][:email]` and `params[:session][:password]` are required Authenticate's :email auth strategy.
+`params[:session][:username]` and `params[:session][:password]` are required for
+Authenticate's :username auth strategy.
 
-* login(user, &block) - log in the just-authenticated user. Login will run all rules as provided in the configuration,
-such as timeout_in detection, max_session_lifetime, etc. You can provide a block to this method to handle the result.
-Your block will receive either {SuccessStatus} or {FailureStatus}.
+* login(user, &block) - log in the just-authenticated user. Login will run all rules specified in your Authenticate 
+initializer configuration, such as timeout_in detection, max_session_lifetime, etc. You can provide
+a block to this method to handle the result of the login. Your block will receive either {SuccessStatus} or 
+{FailureStatus}.
 
-An example session controller:
+An example session controller to handle authentication:
 
 ```ruby
 class SessionsController < ActionController::Base
@@ -185,7 +195,9 @@ Authenticate can be extended with two mechanisms:
 ### User Modules
 
 Add behavior to your User model for your callbacks to use. Include them yourself directly in your User class,
-or via the Authentication configuration. 
+or via the Authenticate configuration.
+
+You can also simple extend 
 
 Example:
 ```ruby
@@ -197,7 +209,8 @@ end
 
 ### Callbacks
 
-Callbacks can be added with `after_set_user` or `after_authentication`. See {Authenticate::Lifecycle} for full details.
+Callbacks can be added with `after_set_user` or `after_authentication`. See [Lifecycle](lib/authenticate/lifecycle.rb)
+for full details.
 
 Callbacks can `throw(:failure, message)` to signal an authentication/authorization failure, or perform
 actions on the user or session. Callbacks are passed a block at runtime of `|user, session, options|`.

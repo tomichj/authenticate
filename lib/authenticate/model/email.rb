@@ -3,24 +3,24 @@ require 'email_validator'
 module Authenticate
   module Model
 
-    # Use :email as the identifier for the user. Must be unique to the system.
+    # Use :email as the identifier for the user. Email must be unique.
     #
     # = Columns
-    # - :email containing the email address of the user
+    # * email - the email address of the user
     #
     # = Validations
-    # - :email requires email is set, validations the format, and ensure it is unique
+    # * :email - require email is set, is a valid format, and is unique
     #
     # = Callbacks
-    # - :normalize_email - normalize the email, removing spaces etc, before saving
     #
     # = Methods
-    # - :email - require the email address is set and is a valid format
+    # * normalize_email - normalize the email, removing spaces etc, before saving
     #
     # = class methods
-    # - authenticate(email, password) - find user with given email, validate their password, return the user.
-    # - normalize_email(email) - clean up the given email and return it.
-    # - find_by_normalized_email(email) - normalize the given email, then look for the user with that email.
+    # * credentials(params) - return the credentials required for authorization by email
+    # * authenticate(credentials) - find user with given email, validate their password, return the user if authenticated
+    # * normalize_email(email) - clean up the given email and return it.
+    # * find_by_credentials(credentials) - find and return the user with the email address in the credentials
     #
     module Email
       extend ActiveSupport::Concern

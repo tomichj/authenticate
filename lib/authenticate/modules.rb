@@ -2,9 +2,27 @@ module Authenticate
   module Modules
     extend ActiveSupport::Concern
 
-    # Methods to help your user model load Authenticate modules
+    # Module to help Authenticate's user model load Authenticate modules.
+    #
+    # All Authenticate modules implement ActiveSupport::Concern.
+    #
+    # Modules can optionally define a class method to define what attributes they require present
+    # in the user model. For example, :username declares:
+    #
+    #   module Username
+    #     extend ActiveSupport::Concern
+    #
+    #     def self.required_fields(klass)
+    #       [:username]
+    #     end
+    #     ...
+    #
+    # If the model class is missing a required field, Authenticate will fail with a MissingAttribute error.
+    # The error will declare what required fields are missing.
     module ClassMethods
 
+      # Load all modules declared in Authenticate.configuration.modules.
+      # Requires them, then loads as a constant, then checks fields, and finally includes.
       def load_modules
         constants = []
         Authenticate.configuration.modules.each do |mod|

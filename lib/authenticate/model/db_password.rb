@@ -4,19 +4,26 @@ require 'authenticate/crypto/bcrypt'
 module Authenticate
   module Model
 
-    # Encrypts and stores a password in the database to validate the authenticity of a user while signing in.
+    # Encrypts and stores a password in the database to validate the authenticity of a user while logging in.
     #
     # Authenticate can plug in any crypto provider, but currently only features BCrypt.
+    # A crypto provider must provide:
+    # * encrypt(secret) - encrypt the secret, @return [String]
+    # * match?(secret, encrypted) - does the secret match the encrypted? @return [Boolean]
+    #
+    # = Columns
+    #
+    # * encrypted_password - the user's password, encrypted
     #
     # = Methods
     #
     # The following methods are added to your user model:
-    # - password_match?(password) - checks to see if the user's password matches the given password
-    # - password=(new_password) - encrypt and set the user password
+    # * password_match?(password) - checks to see if the user's password matches the given password
+    # * password=(new_password) - encrypt and set the user password
     #
     # = Validations
     #
-    # - :password validation, requiring the password is set
+    # * :password validation, requiring the password is set unless we're skipping due to a password change
     #
     module DbPassword
       extend ActiveSupport::Concern
@@ -36,8 +43,7 @@ module Authenticate
 
       module ClassMethods
 
-        # We only have one crypto provider at the moment, but this is a pluggable point
-        # to install different crypto.
+        # We only have one crypto provider at the moment, but look up the provider in the config.
         def crypto_provider
           Authenticate.configuration.crypto_provider || Authenticate::Crypto::BCrypt
         end
