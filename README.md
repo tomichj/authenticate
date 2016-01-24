@@ -11,10 +11,38 @@ Please use [GitHub Issues] to report bugs.
 
 [GitHub Issues]: https://github.com/tomichj/authenticate/issues
 
+## Philosophy
+
+* opinionated - set the "right" defaults, but let you control almost everything if you want
+* small footprint - as few public methods and modules as possible
+* configuration driven - everything is configured in the static initializer, and a couple of includes
+* simple - code is straightforward and easy to read
+
+
+
+## Implementation Overview
+
+Authenticate:
+* loads modules into your user model to provide authentication functionality
+* loads `callbacks` that are triggered during authentication and access events. All authentication
+decisions are performed in callbacks, e.g. do you have a valid session, has your session timed out, etc.
+* loads a module into your controllers (typically application controller) to secure controller actions 
+
+The callback architecture is lifted from devise and warden, but significantly simplified.
+
+### Session Token
+
+When a user authenticates successfully, Authenticate stores a 'session token' for your user in your database.
+The session token is also stored in a cookie in the user's browser. The cookie is then presented upon each
+access attempt to your server, and is compared to the session token in the database.
+
+
 
 ## Install
 
-Installation is pretty standard. Authenticate does not currently have an automated install process. One is coming.
+Authenticate does not currently have an automated install process. One is coming.
+
+Do the following to install authenticate:
 
 * Include `Authenticate::User` into your `User` model.
 * Include `Authenticate::Controller` into your `ApplicationController`
@@ -94,11 +122,13 @@ You may instead opt for :username. The username strategy will identify users wit
 The strategy will also add username attribute validation, ensuring the username exists and is unique.
 
 
+
 ## Use
 
 ### Authentication
 
-To perform authentication use:
+To perform authentication in a session controller, `include Authenticate::Controller` and then call
+authenticate() and login() as shown below.
 
 * authenticate(params) - authenticate a user with credentials in params, return user if correct. 
 `params[:session][:email]` and `params[:session][:password]` are required Authenticate's :email auth strategy.
@@ -141,6 +171,7 @@ class SessionsController < ActionController::Base
   end
 end
 ```
+
 
 
 ### Access Control
@@ -200,6 +231,7 @@ or via the Authenticate configuration.
 You can also simple extend 
 
 Example:
+
 ```ruby
 Authenticate.configuraton do |config|
   config.modules = [MyUserModule]
@@ -207,35 +239,39 @@ end
 ```
 
 
+
 ### Callbacks
 
-Callbacks can be added with `after_set_user` or `after_authentication`. See [Lifecycle](lib/authenticate/lifecycle.rb)
-for full details.
+Callbacks can be added to Authenticate. Use `Authenticate.lifecycle.after_set_user` or 
+`Authenticate.lifecycle.after_authentication`. See [Lifecycle](lib/authenticate/lifecycle.rb) for full details.
 
 Callbacks can `throw(:failure, message)` to signal an authentication/authorization failure, or perform
 actions on the user or session. Callbacks are passed a block at runtime of `|user, session, options|`.
 
-
-Example that counts logins for users. It consists of a module for User, and a callback that is
+Here's an example that counts logins for users. It consists of a module for User, and a callback that is
 set in the `included` block. The callback is then added to the  User module via the Authenticate configuration.
 
 ```ruby
+# app/models/concerns/login_count.rb
 module LoginCount
   extend ActiveSupport::Concern
 
   included do
-    # authentication hook
+    # callback to trigger after every authentication
     Authenticate.lifecycle.after_authentication name:'login counter' do |user, session, options|
       user.count_login if user
     end
   end
 
   def count_login
+    self.login_count ||= 0
     self.login_counter += 1
   end
 end
 
-Authenticate.configiration do |config|
+# config/initializers/authenticate.rb
+# You could also just `include LoginCount` in your user model.
+Authenticate.configuration do |config|
   config.modules = [LoginCount]
 end
 ```
