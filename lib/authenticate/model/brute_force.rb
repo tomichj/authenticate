@@ -5,7 +5,7 @@ module Authenticate
 
 
     # Protect from brute force attacks. Lock accounts that have too many failed consecutive logins.
-    # Todo: email user to allow faster unlocking via token.
+    # Todo: email user to allow unlocking via a token.
     #
     # = Columns
     #
