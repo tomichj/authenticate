@@ -40,22 +40,30 @@ access attempt to your server, and is compared to the session token in the datab
 
 ## Install
 
-Authenticate does not currently have an automated install process. One is coming.
+To get started, add Authenticate to your `Gemfile`:
 
-Do the following to install authenticate:
+```ruby
+gem 'authenticate'
+```
 
-* Include `Authenticate::User` into your `User` model.
-* Include `Authenticate::Controller` into your `ApplicationController`
-* Add an initializer: config/intializers/authenticate.rb containing:
-    Authenticate.configure do |config|
-      # any settings you wish to tweak, see below
-    end
-* Create a migration for any Authenticate features you wish to take advantage of. Here's a good default:
+Then run:
 
-`rails g migration AddAuthenticateToUsers email:string encrypted_password:string session_token:string 
-session_expiration:datetime sign_in_count:integer last_sign_in_at:datetime last_sign_in_ip:string 
-last_access_at:datetime current_sign_in_at:datetime current_sign_in_ip:string`
+```ruby
+bundle install
+```
 
+Then run the installation generator:
+
+```ruby
+rails generate authenticate:install
+```
+
+The generator does the following:
+
+* Insert `include Authenticate::User` into your `User` model.
+* Insert `include Authenticate::Controller` into your `ApplicationController`
+* Add an initializer at `config/intializers/authenticate.rb`.
+* Create migrations to either create a users table or add additional columns to it 
 
 
 ## Configure
