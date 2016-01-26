@@ -55,7 +55,7 @@ module Authenticate
     # Defaults to `false`. If `true`, the cookie will not be made available to JavaScript.
     # For more see [RFC6265](http://tools.ietf.org/html/rfc6265#section-5.2.6).
     # @return [Boolean]
-    attr_accessor :http_only
+    attr_accessor :cookie_http_only
 
     # Determines what crypto is used when authenticating and setting passwords.
     # Defaults to {Authenticate::Model::BCrypt}. At the moment Bcrypt is the only
@@ -134,7 +134,7 @@ module Authenticate
       @cookie_domain = nil
       @cookie_path = '/'
       @secure_cookie = false
-      @http_only = false
+      @cookie_http_only = false
 
       @modules = []
       @user_model = '::User'

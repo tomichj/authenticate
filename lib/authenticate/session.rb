@@ -102,7 +102,7 @@ module Authenticate
       cookie_hash = {
           path: Authenticate.configuration.cookie_path,
           secure: Authenticate.configuration.secure_cookie,
-          http_only: Authenticate.configuration.http_only,
+          httponly: Authenticate.configuration.cookie_http_only,
           value: @current_user.session_token,
           expires: Authenticate.configuration.cookie_expiration.call
       }
