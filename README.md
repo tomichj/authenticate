@@ -11,6 +11,8 @@ Please use [GitHub Issues] to report bugs.
 
 [GitHub Issues]: https://github.com/tomichj/authenticate/issues
 
+
+
 ## Philosophy
 
 * opinionated - set the "right" defaults, but let you control almost everything if you want
@@ -29,6 +31,7 @@ decisions are performed in callbacks, e.g. do you have a valid session, has your
 * loads a module into your controllers (typically application controller) to secure controller actions 
 
 The callback architecture is lifted from devise and warden, but significantly simplified.
+
 
 ### Session Token
 
@@ -63,7 +66,10 @@ The generator does the following:
 * Insert `include Authenticate::User` into your `User` model.
 * Insert `include Authenticate::Controller` into your `ApplicationController`
 * Add an initializer at `config/intializers/authenticate.rb`.
-* Create migrations to either create a users table or add additional columns to it 
+* Create migrations to either create a users table or add additional columns to :user. A primary migration is added,
+'create users' or 'add_authenticate_to_users'. This migration is required. Two additonal migrations are created
+to support the 'brute_force' and 'timeoutable' modules. You may delete the brute_force and timeoutable migrations,
+but those migrations are required if you use those Authenticate features (see Configure, next).
 
 
 ## Configure
@@ -89,6 +95,7 @@ Authenticate.configure do |config|
 
 Configuration parameters are described in detail here: [Configuration](lib/authenticate/configuration.rb)
 
+
 ### timeout_in
 
 * timeout_in: the interval to timeout the user session without activity.
@@ -96,7 +103,6 @@ Configuration parameters are described in detail here: [Configuration](lib/authe
 If your configuration sets timeout_in to a non-nil value, then the last user access is tracked.
 If the interval between the current access time and the last access time is greater than timeout_in,
 the session is invalidated. The user will be prompted for authentication again.
-
 
 
 ### max_session_lifetime
@@ -108,7 +114,6 @@ max_session_lifetime. The user session is invalidated and the next access will w
 authentication again.
 
 
-
 ### max_consecutive_bad_logins_allowed & bad_login_lockout_period
 
 * max_consecutive_bad_logins_allowed: an integer
@@ -117,7 +122,6 @@ authentication again.
 To enable brute force protection, set max_consecutive_bad_logins_allowed to a non-nil positive integer.
 The user's consecutive bad logins will be tracked, and if they exceed the allowed maximumm the user's account
 will be locked. The lock will last `bad_login_lockout_period`, which can be any time period (e.g. `10.minutes`).  
-
 
 
 ### authentication_strategy

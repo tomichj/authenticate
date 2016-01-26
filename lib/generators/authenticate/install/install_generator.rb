@@ -42,7 +42,6 @@ module Authenticate
       def copy_migration_files
         copy_migration 'add_authenticate_brute_force_to_users.rb'
         copy_migration 'add_authenticate_timeoutable_to_users.rb'
-        copy_migration 'add_authenticate_trackable_to_users.rb'
       end
 
       private
@@ -83,21 +82,14 @@ module Authenticate
         @new_columns ||= {
             email: 't.string :email',
             encrypted_password: 't.string :encrypted_password, limit: 128',
-            session_token: 't.string :session_token, limit: 128'
+            session_token: 't.string :session_token, limit: 128',
 
-            # brute_force
-            # failed_logins_count: 't.integer :failed_logins_count',
-            # lock_expires_at: 't.datetime :lock_expires_at',
-
-            # timeoutable
-            # last_access_at: 't.datetime :last_access_at',
-
-            # # trackable, lifetimed
-            # current_sign_in_at: 't.datetime :current_sign_in_at',
-            # current_sign_in_ip: 't.string :current_sign_in_ip, limit: 128',
-            # last_sign_in_at: 't.datetime :last_sign_in_at',
-            # last_sign_in_ip: 't.string :last_sign_in_ip, limit: 128',
-            # sign_in_count: 't.integer :sign_in_count'
+            # trackable, lifetimed
+            current_sign_in_at: 't.datetime :current_sign_in_at',
+            current_sign_in_ip: 't.string :current_sign_in_ip, limit: 128',
+            last_sign_in_at: 't.datetime :last_sign_in_at',
+            last_sign_in_ip: 't.string :last_sign_in_ip, limit: 128',
+            sign_in_count: 't.integer :sign_in_count'
         }.reject { |column| existing_users_columns.include?(column.to_s) }
       end
 
