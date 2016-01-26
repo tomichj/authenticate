@@ -35,15 +35,20 @@ module Authenticate
       load_modules
     end
 
+    # Generate a new session token for the user, overwriting the existing session token, if any.
+    # This is not automatically persisted; call {#reset_session_token!} to automatically
+    # generate and persist the session token update.
     def generate_session_token
       self.session_token = Authenticate::Token.new
-      # puts 'User.generate_session_token session_token:' + self.session_token.to_s
     end
 
+    # Generate a new session token and persist the change, ignoring validations.
+    # This effectively signs out all existing sessions. Called as part of logout.
     def reset_session_token!
       generate_session_token
       save validate: false
     end
+
 
   end
 end

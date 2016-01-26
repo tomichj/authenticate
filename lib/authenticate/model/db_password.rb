@@ -18,8 +18,8 @@ module Authenticate
     # = Methods
     #
     # The following methods are added to your user model:
-    # * password_match?(password) - checks to see if the user's password matches the given password
     # * password=(new_password) - encrypt and set the user password
+    # * password_match?(password) - checks to see if the user's password matches the given password
     #
     # = Validations
     #
@@ -49,7 +49,6 @@ module Authenticate
         end
 
       end
-
 
 
       def password_match?(password)

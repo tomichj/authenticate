@@ -42,6 +42,7 @@ module Authenticate
       def copy_migration_files
         copy_migration 'add_authenticate_brute_force_to_users.rb'
         copy_migration 'add_authenticate_timeoutable_to_users.rb'
+        copy_migration 'add_authenticate_password_reset_to_users.rb'
       end
 
       private

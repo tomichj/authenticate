@@ -15,10 +15,10 @@ Please use [GitHub Issues] to report bugs.
 
 ## Philosophy
 
+* simple - Authenticate's code is straightforward and easy to read.
 * opinionated - set the "right" defaults, but let you control almost everything if you want
 * small footprint - as few public methods and modules as possible
-* configuration driven - everything is configured in the static initializer, and a couple of includes
-* simple - code is straightforward and easy to read
+* configuration driven - almost everything is configured in the static initializer
 
 
 
@@ -35,9 +35,7 @@ The callback architecture is lifted from devise and warden, but significantly si
 
 ### Session Token
 
-When a user authenticates successfully, Authenticate stores a 'session token' for your user in your database.
-The session token is also stored in a cookie in the user's browser. The cookie is then presented upon each
-access attempt to your server, and is compared to the session token in the database.
+When a user authenticates successfully, Authenticate stores a 'session token' for your user in your database. The session token is also stored in a cookie in the user's browser. The cookie is then presented upon each access attempt to your server, and is compared to the session token in the database.
 
 
 
@@ -51,13 +49,13 @@ gem 'authenticate'
 
 Then run:
 
-```ruby
+```sh
 bundle install
 ```
 
 Then run the installation generator:
 
-```ruby
+```sh
 rails generate authenticate:install
 ```
 
@@ -70,6 +68,12 @@ The generator does the following:
 'create users' or 'add_authenticate_to_users'. This migration is required. Two additonal migrations are created
 to support the 'brute_force' and 'timeoutable' modules. You may delete the brute_force and timeoutable migrations,
 but those migrations are required if you use those Authenticate features (see Configure, next).
+
+Finally, you'll need to run the migrations that Authenticate just generated:
+
+```sh
+rake db:migrate
+```
 
 
 ## Configure

@@ -151,6 +151,7 @@ module Authenticate
       modules = @modules.dup # in case the user pushes any on
       modules << @authentication_strategy
       modules << :db_password
+      modules << :password_reset
       modules << :trackable  # needs configuration
       modules << :timeoutable if @timeout_in
       modules << :lifetimed if @max_session_lifetime
