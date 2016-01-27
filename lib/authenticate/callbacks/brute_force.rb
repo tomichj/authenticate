@@ -3,17 +3,10 @@
 Authenticate.lifecycle.prepend_after_authentication name: 'brute force protection' do |user, session, options|
   include ActionView::Helpers::DateHelper
 
-  # puts 'bf: about to check authentication'
-  unless session.authenticated?
-    # puts 'bf: session not authenticated'
-
+  unless session.authenticated? || Authenticate.configuration.max_consecutive_bad_logins_allowed.nil?
     user_credentials = User.credentials(session.request.params)
-    # puts "brute force protection user_credentials: #{user_credentials}"
     user ||= User.find_by_credentials(user_credentials)
-
-    # puts 'bf: looked up user by credentials, found:' + user.inspect
     if user
-      # puts 'found user, about to register failed attempt'
       user.register_failed_login!
       user.save!
     end
@@ -21,10 +14,11 @@ Authenticate.lifecycle.prepend_after_authentication name: 'brute force protectio
 
   # if user is locked, and we allow a lockout period, then unlock the user if they've waited
   # longer than the lockout period.
-  if user && user.locked? && Authenticate.configuration.bad_login_lockout_period != nil
+  if user && !Authenticate.configuration.bad_login_lockout_period.nil? && user.locked?
     user.unlock! if user.lock_expires_at <= Time.now.utc
   end
 
+  # if the user is still locked, let them know how long they are locked for.
   if user && user.locked?
     remaining = time_ago_in_words(user.lock_expires_at)
     throw(:failure, "Your account is locked, will unlock in #{remaining.to_s}")

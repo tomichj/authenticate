@@ -2,7 +2,6 @@ Description:
     Explain the generator
 
 Example:
-    rails generate install Thing
+    rails generate authenticate:install
 
     This will create:
-        what/will/it/create

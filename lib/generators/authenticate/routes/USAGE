@@ -1,0 +1,8 @@
+Description:
+  Inject the authenticate routes into your `config/routes.rb`. Also turns off authenticate's built-in routes
+  by adding `config.routes = false` into your `config/initializers/authenticate.rb`.
+
+Examples:
+  rails generate authenticate:routes
+
+

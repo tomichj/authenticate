@@ -11,21 +11,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160120003910) do
+ActiveRecord::Schema.define(version: 20160130192731) do
 
   create_table "users", force: :cascade do |t|
     t.string   "email"
-    t.string   "encrypted_password"
-    t.string   "session_token"
-    t.datetime "session_expiration"
-    t.integer  "sign_in_count"
-    t.datetime "last_sign_in_at"
-    t.string   "last_sign_in_ip"
-    t.datetime "last_access_at"
+    t.string   "encrypted_password",     limit: 128
+    t.string   "session_token",          limit: 128
     t.datetime "current_sign_in_at"
-    t.string   "current_sign_in_ip"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.string   "current_sign_in_ip",     limit: 128
+    t.datetime "last_sign_in_at"
+    t.string   "last_sign_in_ip",        limit: 128
+    t.integer  "sign_in_count"
+    t.integer  "failed_logins_count",                default: 0
+    t.datetime "lock_expires_at"
+    t.datetime "last_access_at"
+    t.string   "password_reset_token"
+    t.datetime "password_reset_sent_at"
   end
+
+  add_index "users", ["email"], name: "index_users_on_email"
+  add_index "users", ["session_token"], name: "index_users_on_session_token"
 
 end

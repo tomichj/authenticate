@@ -1,7 +1,14 @@
-puts '************************** initializer start'
 Authenticate.configure do |config|
-  config.debug = true
-  config.timeout_in = 5.minutes
-  config.max_session_lifetime = 10.minutes
+  # config.user_model = 'User'
+  # config.cookie_name = 'authenticate_session_token'
+  # config.cookie_expiration = { 1.month.from_now.utc }
+  # config.cookie_domain = nil
+  # config.cookie_path = '/'
+  # config.secure_cookie = false # set to true in production https environments
+  # config.http_only = false # set to true if you can
+  # config.timeout_in = 45.minutes
+  # config.max_session_lifetime = 8.hours
+  config.max_consecutive_bad_logins_allowed = 1
+  config.bad_login_lockout_period = 2.minutes
+  # config.authentication_strategy = :email
 end
-puts '************************** initializer finished'

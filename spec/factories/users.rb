@@ -1,3 +1,5 @@
+require 'authenticate/user'
+
 FactoryGirl.define do
   sequence :email do |n|
     "user#{n}@example.com"
@@ -11,13 +13,8 @@ FactoryGirl.define do
       session_token 'this_is_a_big_fake_long_token'
     end
 
-    # trait :with_forgotten_password do
-    #   confirmation_token Clearance::Token.new
-    # end
-
-    # factory :user_with_optional_password, class: 'UserWithOptionalPassword' do
-    #   password nil
-    #   encrypted_password ''
-    # end
+    trait :with_forgotten_password do
+      password_reset_token Authenticate::Token.new
+    end
   end
 end

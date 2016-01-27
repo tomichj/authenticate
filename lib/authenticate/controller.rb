@@ -40,7 +40,7 @@ module Authenticate
     end
 
 
-    # Use this as a before_action to restrict controller actions to authenticated users.
+    # Use this filter as a before_action to restrict controller actions to authenticated users.
     # Consider using in application_controller to restrict access to all controllers.
     #
     # Example:
@@ -89,22 +89,82 @@ module Authenticate
       authenticate_session.current_user
     end
 
-    private
+    protected
 
-    def authenticate_session
-      @authenticate_session ||= Authenticate::Session.new(request, cookies)
-    end
-
-    def unauthorized(msg = 'You must sign in')
+    # User is not authorized, bounce 'em to sign in
+    def unauthorized(msg = 'You must sign in') # get default message from locale
       respond_to do |format|
         format.any(:js, :json, :xml) { head :unauthorized }
         format.any {
-          flash[:notice] = msg  # TODO use locales
-          redirect_to '/authenticate' #TODO something better baby
+          redirect_unauthorized(msg)
         }
       end
     end
 
+    def redirect_unauthorized(flash_message)
+      store_location
+
+      if flash_message
+        flash[:notice] = flash_message  # TODO use locales
+      end
+
+      if authenticated?
+        redirect_to url_after_denied_access_when_signed_in
+      else
+        redirect_to url_after_denied_access_when_signed_out
+      end
+    end
+
+
+    def redirect_back_or(default)
+      redirect_to(stored_location || default)
+      clear_stored_location
+    end
+
+
+    # Used as the redirect location when {#unauthorized} is called and there is a
+    # currently signed in user.
+    #
+    # @return [String]
+    def url_after_denied_access_when_signed_in
+      Authenticate.configuration.redirect_url
+    end
+
+    # Used as the redirect location when {#unauthorized} is called and there is
+    # no currently signed in user.
+    #
+    # @return [String]
+    def url_after_denied_access_when_signed_out
+      sign_in_url
+    end
+
+    private
+
+    # Write location to return to in a cookie. This is 12-factor compliant, cloud-safe.
+    def store_location
+      if request.get?
+        value = {
+            expires: nil,
+            httponly: true,
+            path: nil,
+            secure: Authenticate.configuration.secure_cookie,
+            value: request.original_fullpath
+        }
+        cookies[:authenticate_return_to] = value
+      end
+    end
+
+    def stored_location
+      cookies[:authenticate_return_to]
+    end
+
+    def clear_stored_location
+      cookies[:authenticate_return_to] = nil
+    end
+
+    def authenticate_session
+      @authenticate_session ||= Authenticate::Session.new(request, cookies)
+    end
 
   end
 end

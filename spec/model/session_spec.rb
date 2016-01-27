@@ -41,6 +41,9 @@ describe Authenticate::Session do
         end
       end
       it 'passes the failure status to the block when login fails' do
+        Authenticate.configure do |config|
+          config.max_consecutive_bad_logins_allowed = nil
+        end
         session = Authenticate::Session.new(mock_request, {})
         session.login nil do |status|
           expect(status.success?).to eq false
@@ -80,6 +83,7 @@ describe Authenticate::Session do
 
   def mock_request
     req = double("request")
+    allow(req).to receive(:params)
     allow(req).to receive(:remote_ip).and_return('111.111.111.111')
     return req
   end

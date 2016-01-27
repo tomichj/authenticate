@@ -57,6 +57,11 @@ module Authenticate
     # @return [Boolean]
     attr_accessor :cookie_http_only
 
+    # Controls the 'from' address for Authenticate emails.
+    # Defaults to reply@example.com.
+    # @return [String]
+    attr_accessor :mailer_sender
+
     # Determines what crypto is used when authenticating and setting passwords.
     # Defaults to {Authenticate::Model::BCrypt}. At the moment Bcrypt is the only
     # option offered.
@@ -115,6 +120,34 @@ module Authenticate
     # @return [Symbol or Class]
     attr_accessor :authentication_strategy
 
+    # The default path Authenticate will redirect signed in users to.
+    # Defaults to `"/"`. This can often be overridden for specific scenarios by
+    # overriding controller methods that rely on it.
+    # @return [String]
+    attr_accessor :redirect_url
+
+    # Controls whether the "sign up" route, allowing creation of users, is enabled.
+    # Defaults to `true`. Set to `false` to disable user creation routes.
+    # The setting is ignored if routes are disabled.
+    # @param [Boolean] value
+    # @return [Boolean]
+    attr_accessor :allow_sign_up
+
+
+    # Enable or disable Authenticate's built-in routes. Defaults to 'true',
+    # enabling Authenticate's built-in routes. Disable by setting to 'false'.
+    # If you disable the routes, your application is responsible for all routes.
+    # You can deploy a copy of Authenticate's routes with `rails generate authenticate:routes`,
+    # which will also set `config.routes = false`.
+    # @return [Boolean]
+    attr_accessor :routes
+
+    # The time period within which the password must be reset or the token expires.
+    # If set to nil, the password reset token does not expire.
+    # Defaults to `2.days`.
+    # @return [ActiveSupport::CoreExtensions::Numeric::Time]
+    attr_accessor :reset_password_within
+
     # An array of additional modules to load into the User module.
     # Defaults to an empty array.
     # @return [Array]
@@ -135,7 +168,11 @@ module Authenticate
       @cookie_path = '/'
       @secure_cookie = false
       @cookie_http_only = false
-
+      @mailer_sender = 'reply@example.com'
+      @redirect_url = '/'
+      @allow_sign_up = true
+      @routes = true
+      @reset_password_within = 2.days
       @modules = []
       @user_model = '::User'
       @authentication_strategy = :email
@@ -145,6 +182,24 @@ module Authenticate
       @user_model_class ||= user_model.constantize
     end
 
+    # The name of foreign key parameter for the configured user model.
+    # This is derived from the `model_name` of the `user_model` setting.
+    # In the default configuration, this is `user_id`.
+    # @return [Symbol]
+    def user_id_parameter
+      "#{user_model_class.model_name.singular}_id".to_sym
+    end
+
+    # Is the user sign up route enabled?
+    # @return [Boolean]
+    def allow_sign_up?
+      @allow_sign_up
+    end
+
+    # @return [Boolean] are Authenticate's built-in routes enabled?
+    def routes_enabled?
+      @routes
+    end
 
     # List of symbols naming modules to load.
     def modules

@@ -41,7 +41,6 @@ module Authenticate
       module ClassMethods
 
         def credentials(params)
-          # todo closure from configuration
           [params[:session][:email], params[:session][:password]]
         end
 
@@ -52,7 +51,6 @@ module Authenticate
 
         def find_by_credentials(credentials)
           email = credentials[0]
-          puts "find_by_credentials email: #{email}"
           find_by_email normalize_email(email)
         end
 

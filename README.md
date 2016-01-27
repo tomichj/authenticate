@@ -210,7 +210,7 @@ Example:
 ```erb
 <% if authenticated? %>
   <%= current_user.email %>
-  <%= button_to "Sign out", sign_out_path, method: :delete %>
+  <%= link_to "Sign out", sign_out_path %>
 <% else %>
   <%= link_to "Sign in", sign_in_path %>
 <% end %>

@@ -1,0 +1,20 @@
+<div id="authenticate" class="password-reset">
+  <h2><%= t(".title") %></h2>
+
+  <p><%= t(".description") %></p>
+
+  <%= form_for :password_reset,
+               url: users_password_path(@user, token: @user.password_reset_token),
+               html: { method: :put } do |form| %>
+
+      <div class="field">
+        <%= form.label :password %>
+        <%= form.password_field :password %>
+      </div>
+
+      <div class="actions">
+        <%= form.submit %>
+      </div>
+
+  <% end %>
+</div>

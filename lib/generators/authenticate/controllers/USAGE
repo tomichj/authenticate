@@ -1,0 +1,12 @@
+Description:
+  Override the default authentication controllers and mailers. This generator will copy all of the
+  base authenticate controllers and mailers into your project.
+
+Examples:
+  rails generate authenticate:controllers
+
+  View: app/controllers/authenticate/passwords_controller.rb
+  View: app/controllers/authenticate/sessions_controller.rb
+  View: app/controllers/authenticate/users_controller.rb
+  View: app/mailers/authenticate_mailer.rb
+
