@@ -159,7 +159,7 @@ module Authenticate
     end
 
     def clear_stored_location
-      cookies[:authenticate_return_to] = nil
+      cookies.delete :authenticate_return_to
     end
 
     def authenticate_session

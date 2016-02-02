@@ -18,7 +18,7 @@ Please use [GitHub Issues] to report bugs.
 * simple - Authenticate's code is straightforward and easy to read.
 * opinionated - set the "right" defaults, but let you control almost everything if you want
 * small footprint - as few public methods and modules as possible
-* configuration driven - almost everything is configured in the static initializer
+* configuration driven - almost all configuration is performed in the initializer
 
 
 
@@ -30,12 +30,18 @@ Authenticate:
 decisions are performed in callbacks, e.g. do you have a valid session, has your session timed out, etc.
 * loads a module into your controllers (typically application controller) to secure controller actions 
 
-The callback architecture is lifted from devise and warden, but significantly simplified.
+The callback architecture is based on the system used by devise and warden, but significantly simplified.
 
 
 ### Session Token
 
-When a user authenticates successfully, Authenticate stores a 'session token' for your user in your database. The session token is also stored in a cookie in the user's browser. The cookie is then presented upon each access attempt to your server, and is compared to the session token in the database.
+Authenticate generates and clears a token (called a 'session token') to identify the user from a saved cookie.
+When a user authenticates successfully, Authenticate generates and stores a 'session token' for your user in 
+your database. The session token is also stored in a cookie in the user's browser. 
+The cookie is then presented upon each subsequent access attempt to your server.
+
+### User Model
+
 
 
 
@@ -143,51 +149,15 @@ The strategy will also add username attribute validation, ensuring the username 
 
 ### Authentication
 
-To perform authentication in a session controller, `include Authenticate::Controller` and then call
-authenticate() and login() as shown below.
-
-* authenticate(params) - authenticate a user with credentials in params, return user if correct. 
-`params[:session][:email]` and `params[:session][:password]` are required Authenticate's :email auth strategy.
-`params[:session][:username]` and `params[:session][:password]` are required for
-Authenticate's :username auth strategy.
-
-* login(user, &block) - log in the just-authenticated user. Login will run all rules specified in your Authenticate 
-initializer configuration, such as timeout_in detection, max_session_lifetime, etc. You can provide
-a block to this method to handle the result of the login. Your block will receive either {SuccessStatus} or 
-{FailureStatus}.
-
-An example session controller to handle authentication:
+Authenticate provides a session controller and views to authenticate users. After successful authentication, 
+the user is redirected to the path they attempted to access, or as specified by the `redirect_url` property
+ in your configuration. This defaults to '/' but can customized:
 
 ```ruby
-class SessionsController < ActionController::Base
-  include Authenticate::Controller
-
-  def create
-    user = authenticate(params)
-    login(user) do |status|
-      if status.success?
-        flash[:notice] = 'You successfully logged in! Very nice.'
-        logger.info flash[:notice].inspect
-        redirect_to '/'
-      else
-        flash[:notice] = status.message
-        logger.info flash[:notice].inspect
-        render template: 'sessions/new', status: :unauthorized
-      end
-    end
-  end
-
-
-  def new
-  end
-
-  def destroy
-    logout
-    redirect_to '/', notice: 'You logged out successfully'
-  end
+Authenticate.configure do |config|
+  config.redirect_url = '/specials'
 end
 ```
-
 
 
 ### Access Control
@@ -230,30 +200,67 @@ end
 ```
 
 
+## Overriding Authenticate
+
+### Views
+
+You can quickly get started with a rails application using the built-in views. See [app/views](/app/views) for
+the default views. When you want to customize an Authenticate view, create your own copy of it in your app.
+
+You can use the Authenticate view generator to copy the default views into your application: 
+
+```sh
+$ rails generate authenticate:views
+```
+
+
+### Controllers
+
+If the customization at the views level is not enough, you can customize each controller, and the
+authenticate mailer. See [app/controllers](/app/controllers) for the default controllers, and 
+[app/mailers](/app/mailers) for the default mailer. 
+
+You can use the Authenticate controller generator to copy the default controllers and mailer into your application:
+
+```sh
+$ rails generate authenticate:controllers
+```
+
+
+### Routes
+
+Authenticate adds routes. See [config/routes.rb](/config/routes.rb) for the default routes.
+
+If you want to control and customizer the routes, you can turn off the built-in routes in
+the Authenticate configuration with `config.routes = false`.
+
+You can optionally run a generator to dump a copy of the default routes into your application for modification.
+
+```sh
+$ rails generate authenticate:routes
+```
+
+
 ## Extending Authenticate
 
-Authenticate can be extended with two mechanisms:
+Authenticate can be further extended with two mechanisms:
 
 * user modules: add behavior to the user model
-* callbacks: add login during various authentication events, during login and access
-
+* callbacks: add behavior during various authentication events, such as login and subsequent hits
 
 
 ### User Modules
 
-Add behavior to your User model for your callbacks to use. Include them yourself directly in your User class,
-or via the Authenticate configuration.
+Add behavior to your User model for your callbacks to use. You can, of course, incldue behavrio yourself directly 
+in your User class, but you can also use the Authenticate module loading system.
 
-You can also simple extend 
-
-Example:
+To add a custom module to Authenticate, e.g. `MyUserModule`: 
 
 ```ruby
-Authenticate.configuraton do |config|
+Authenticate.configuration do |config|
   config.modules = [MyUserModule]
 end
 ```
-
 
 
 ### Callbacks
@@ -261,7 +268,7 @@ end
 Callbacks can be added to Authenticate. Use `Authenticate.lifecycle.after_set_user` or 
 `Authenticate.lifecycle.after_authentication`. See [Lifecycle](lib/authenticate/lifecycle.rb) for full details.
 
-Callbacks can `throw(:failure, message)` to signal an authentication/authorization failure, or perform
+Callbacks can `throw(:failure, message)` to signal an authentication/authorization failure. Callbacks can also perform
 actions on the user or session. Callbacks are passed a block at runtime of `|user, session, options|`.
 
 Here's an example that counts logins for users. It consists of a module for User, and a callback that is
@@ -272,8 +279,8 @@ set in the `included` block. The callback is then added to the  User module via 
 module LoginCount
   extend ActiveSupport::Concern
 
-  included do
-    # callback to trigger after every authentication
+  included do    
+    # Add a callback that is triggered after every authentication
     Authenticate.lifecycle.after_authentication name:'login counter' do |user, session, options|
       user.count_login if user
     end
@@ -291,7 +298,6 @@ Authenticate.configuration do |config|
   config.modules = [LoginCount]
 end
 ```
-
 
 
 ## Testing
