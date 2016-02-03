@@ -11,7 +11,7 @@ module Authenticate
       @request = request # trackable module accesses request
       @cookies = cookies
       @session_token = @cookies[cookie_name]
-      d 'SESSION initialize: @session_token: ' + @session_token.inspect
+      debug 'SESSION initialize: @session_token: ' + @session_token.inspect
     end
 
     # consecutive_failed_logins_limit
@@ -28,9 +28,9 @@ module Authenticate
     #
     # @return [User]
     def login(user, &block)
-      d 'session.login()'
+      debug 'session.login()'
       @current_user = user
-      d "session.login @current_user: #{@current_user.inspect}"
+      debug "session.login @current_user: #{@current_user.inspect}"
       # todo extract token gen to two different strategies
       @current_user.generate_session_token if user.present?
 
@@ -39,7 +39,7 @@ module Authenticate
         Authenticate.lifecycle.run_callbacks(:after_authentication, @current_user, self, { event: :authentication })
       end
 
-      d "session.login after lifecycle callbacks, message: #{message}"
+      debug "session.login after lifecycle callbacks, message: #{message}"
       status = message.present? ? Failure.new(message) : Success.new
       if status.success?
         @current_user.save
@@ -58,7 +58,7 @@ module Authenticate
     #
     # @return [User]
     def current_user
-      d 'session.current_user'
+      debug 'session.current_user'
       if @session_token.present?
         @current_user ||= load_user
       end
@@ -69,7 +69,7 @@ module Authenticate
     #
     # @return [Boolean]
     def authenticated?
-      d 'session.authenticated?'
+      debug 'session.authenticated?'
       current_user.present?
     end
 
@@ -109,7 +109,7 @@ module Authenticate
       cookie_hash[:domain] = Authenticate.configuration.cookie_domain if Authenticate.configuration.cookie_domain
       # @cookies.signed[cookie_name] = cookie_hash
       @cookies[cookie_name] = cookie_hash
-      d 'session.write_cookie WROTE COOKIE I HOPE. Cookie guts:' + @cookies[cookie_name].inspect
+      debug 'session.write_cookie WROTE COOKIE I HOPE. Cookie guts:' + @cookies[cookie_name].inspect
     end
 
     def cookie_name

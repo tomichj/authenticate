@@ -62,12 +62,12 @@ module Authenticate
     def run_callbacks(kind, *args) # args - |user, session, opts|
       # Last callback arg MUST be a Hash
       options = args.last
-      d "@@@@@@@@@@@@ run_callbacks kind:#{kind} options:#{options.inspect}"
+      debug "START Lifecycle.run_callbacks kind:#{kind} options:#{options.inspect}"
 
       # each callback has 'conditions' stored with it
       send("#{kind}_callbacks").each do |callback, conditions|
         conditions = conditions.dup # make a copy, we mutate it
-        d "running callback -- #{conditions.inspect}"
+        debug "Lifecycle.running callback -- #{conditions.inspect}"
         conditions.delete_if {|key, val| !@@conditions.include? key}
         # d "conditions after filter:#{conditions.inspect}"
         invalid = conditions.find do |key, value|
@@ -75,10 +75,10 @@ module Authenticate
           # d("!value.include?(options[key]):#{!value.include?(options[key])}") if value.is_a?(Array)
           value.is_a?(Array) ? !value.include?(options[key]) : (value != options[key])
         end
-        d "callback invalid? #{invalid.inspect}"
+        debug "Lifecycle.callback invalid? #{invalid.inspect}"
         callback.call(*args) unless invalid
       end
-      d "FINISHED run_callbacks #{kind}"
+      debug "FINISHED Lifecycle.run_callbacks #{kind}"
       nil
     end
 

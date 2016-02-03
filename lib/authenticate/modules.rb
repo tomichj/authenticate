@@ -1,6 +1,7 @@
 module Authenticate
   module Modules
     extend ActiveSupport::Concern
+    include Authenticate::Debug
 
     # Module to help Authenticate's user model load Authenticate modules.
     #
@@ -26,7 +27,7 @@ module Authenticate
       def load_modules
         constants = []
         Authenticate.configuration.modules.each do |mod|
-          puts "load_modules about to load #{mod.to_s}"
+          # puts "load_modules about to load #{mod.to_s}"
           require "authenticate/model/#{mod.to_s}" if mod.is_a?(Symbol)
           mod = load_constant(mod) if mod.is_a?(Symbol)
           constants << mod
@@ -70,7 +71,7 @@ module Authenticate
       end
 
       def message
-        "The following attribute(s) is (are) missing on your model: #{@attributes.join(", ")}"
+        "The following attribute(s) is (are) missing on your user model: #{@attributes.join(", ")}"
       end
     end
 

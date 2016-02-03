@@ -40,10 +40,6 @@ When a user authenticates successfully, Authenticate generates and stores a 'ses
 your database. The session token is also stored in a cookie in the user's browser.
 The cookie is then presented upon each subsequent access attempt to your server.
 
-### User Model
-
-
-
 
 ## Install
 
@@ -94,16 +90,37 @@ Authenticate.configure do |config|
   config.cookie_domain = nil
   config.cookie_path = '/
   config.secure_cookie = false
-  config.http_only = false
+  config.cookie_http_only = false
+  config.mailer_sender = 'reply@example.com'
   config.crypto_provider = Bcrypt
   config.timeout_in = nil  # 45.minutes
   config.max_session_lifetime = nil  # 8.hours
   config.max_consecutive_bad_logins_allowed = nil # 5
   config.bad_login_lockout_period = nil # 5.minutes
   config.authentication_strategy = :email
+  config.redirect_url = '/'
+  config.allow_sign_up = true
+  config.routes = true
+  config.reset_password_within = 2.days
 ```
 
 Configuration parameters are described in detail here: [Configuration](lib/authenticate/configuration.rb)
+
+
+### User Model
+
+Authenticate assumes your user class is '::User' by default. You can elect to use another user class.
+Set the user model class name using `user_model` in configuration. For example, if your user model
+class is `Profile`:
+
+```ruby
+Authenticate.configure do |config|
+  config.user_model = '::Profile'
+end
+```
+
+Your user model will also need to `include Authenticate::User`. This is done automatically for you using
+the Authenticate install generator, see [install](#install) above.
 
 
 ### timeout_in

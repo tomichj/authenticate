@@ -54,7 +54,7 @@ module Authenticate
     #   end
     #
     def require_authentication
-      d 'Controller::require_authentication'
+      debug 'Controller::require_authentication'
       unless authenticated?
         unauthorized
       end
