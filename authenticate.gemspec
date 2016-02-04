@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   # s.test_files = `git ls-files -- {spec}/*`.split("\n")
   s.test_files = Dir['spec/**/*_spec.rb']
 
-  s.extra_rdoc_files = %w(LICENSE README.md)
+  s.extra_rdoc_files = %w(LICENSE README.md CHANGELOG.md)
   s.rdoc_options = ['--charset=UTF-8']
 
   s.require_paths = ['lib']
@@ -27,11 +27,12 @@ Gem::Specification.new do |s|
   s.add_dependency 'bcrypt'
   s.add_dependency 'email_validator', '~> 1.6'
   s.add_dependency 'rails', '>= 4.0', '< 5.1'
-  s.add_development_dependency 'sqlite3'
-  s.add_development_dependency 'rspec-rails'
+
   # s.add_development_dependency 'capybara'
   s.add_development_dependency 'factory_girl_rails'
+  s.add_development_dependency 'rspec-rails'
   s.add_development_dependency 'pry'
+  s.add_development_dependency 'sqlite3'
 
   s.required_ruby_version = Gem::Requirement.new('>= 2.0')
 end

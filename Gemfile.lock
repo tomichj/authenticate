@@ -141,7 +141,6 @@ DEPENDENCIES
   authenticate!
   factory_girl_rails
   pry
-  rails
   rspec-rails
   sqlite3
 

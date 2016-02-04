@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
 
-gem 'rails'
+gemspec
+
 
 # Declare your gem's dependencies in authenticate.gemspec.
 # Bundler will treat runtime dependencies like base dependencies, and
 # development dependencies will be added by default to the :development group.
-gemspec
 
 # Declare any dependencies that are still in development here instead of in
 # your gemspec. These might include edge Rails or gems from your path or

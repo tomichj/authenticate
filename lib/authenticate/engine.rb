@@ -1,3 +1,6 @@
+require 'authenticate'
+require 'rails'
+
 module Authenticate
   class Engine < ::Rails::Engine
 
