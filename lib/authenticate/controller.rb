@@ -89,6 +89,15 @@ module Authenticate
       authenticate_session.current_user
     end
 
+    # Return true if it's an Authenticate controller. Useful if you want to apply a before
+    # filter to all controllers, except the ones in Authenticate:
+    #
+    #   before_action :my_filter, unless: :authenticate_controller?
+    #
+    def authenticate_controller?
+      is_a?(Authenticate::AuthenticateController)
+    end
+
     protected
 
     # User is not authorized, bounce 'em to sign in

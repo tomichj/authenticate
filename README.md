@@ -219,15 +219,21 @@ end
 
 ## Overriding Authenticate
 
-### Views
+### Routes
 
-You can quickly get started with a rails application using the built-in views. See [app/views](/app/views) for
-the default views. When you want to customize an Authenticate view, create your own copy of it in your app.
+Authenticate adds routes. See [config/routes.rb](/config/routes.rb) for the default routes.
 
+<<<<<<< 3ff489706880b789f9a307e6ead5c50a24e8ee10
 You can use the Authenticate view generator to copy the default views into your application:
+=======
+If you want to control and customizer the routes, you can turn off the built-in routes in
+the Authenticate configuration with `config.routes = false`.
+
+You can optionally run a generator to dump a copy of the default routes into your application for modification.
+>>>>>>> adding base controller, authenticate_controller? method, layout and associated docs
 
 ```sh
-$ rails generate authenticate:views
+$ rails generate authenticate:routes
 ```
 
 
@@ -244,18 +250,42 @@ $ rails generate authenticate:controllers
 ```
 
 
-### Routes
+### Views
 
-Authenticate adds routes. See [config/routes.rb](/config/routes.rb) for the default routes.
+You can quickly get started with a rails application using the built-in views. See [app/views](/app/views) for
+the default views. When you want to customize an Authenticate view, create your own copy of it in your app.
 
-If you want to control and customizer the routes, you can turn off the built-in routes in
-the Authenticate configuration with `config.routes = false`.
-
-You can optionally run a generator to dump a copy of the default routes into your application for modification.
+You can use the Authenticate view generator to copy the default views into your application: 
 
 ```sh
-$ rails generate authenticate:routes
+$ rails generate authenticate:views
 ```
+
+
+### Layout
+
+Authenticate uses your application's default layout. If you would like to change the layout clearance uses when
+rendering views, you can either deploy copies of the controllers and customize them, or you can specify
+the layout in an initializer. This needs to be done in a to_prepare callback in `config/application.rb`
+because it's executed once in production and before each request in development.
+                              
+You can specify the layout per-controller:
+
+```ruby
+config.to_prepare do
+  Authenticate::PasswordsController.layout 'my_passwords_layout'
+  Authenticate::SessionsController.layout 'my_sessions_layout'
+  Authenticate::UsersController.layout 'my_users_layout'
+end
+```
+
+
+### Translations
+
+All flash messages and email lines are stored in i18n translations. You can override them like any other translation.
+
+See [config/locales/authenticate.en.yml](/config/locales/authenticate.en.yml) for the default messages.
+
 
 
 ## Extending Authenticate
@@ -320,6 +350,8 @@ end
 ## Testing
 
 Authenticate has been tested with rails 4.2, other versions to follow.
+
+
 
 ## License
 

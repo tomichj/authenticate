@@ -10,19 +10,16 @@ Gem::Specification.new do |s|
   s.authors     = ['Justin Tomich']
   s.email       = ['justin@tomich.org']
   s.homepage    = 'http://github.com/tomichj/authenticate'
-  s.summary     = 'Rails authentication with email & password'
-  s.description = 'Rails authentication with email & password'
+  s.summary     = 'Clean Rails authentication with email & password'
+  s.description = 'Clean Rails authentication with email & password'
   s.license     = 'MIT'
 
-  # s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
   s.files = `git ls-files`.split("\n")
-  # s.test_files = `git ls-files -- {spec}/*`.split("\n")
-  s.test_files = Dir['spec/**/*_spec.rb']
-
-  s.extra_rdoc_files = %w(LICENSE README.md CHANGELOG.md)
-  s.rdoc_options = ['--charset=UTF-8']
+  s.test_files = `git ls-files -- {spec}/*`.split("\n")
 
   s.require_paths = ['lib']
+  s.extra_rdoc_files = %w(LICENSE README.md CHANGELOG.md)
+  s.rdoc_options = ['--charset=UTF-8']
 
   s.add_dependency 'bcrypt'
   s.add_dependency 'email_validator', '~> 1.6'

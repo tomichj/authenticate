@@ -1,4 +1,4 @@
-class Authenticate::SessionsController < ApplicationController
+class Authenticate::SessionsController < Authenticate::AuthenticateController
   before_action :redirect_signed_in_users, only: [:new]
   skip_before_action :require_authentication, only: [:create, :new, :destroy], raise: false
 
