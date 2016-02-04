@@ -223,14 +223,19 @@ end
 
 Authenticate adds routes. See [config/routes.rb](/config/routes.rb) for the default routes.
 
-<<<<<<< 3ff489706880b789f9a307e6ead5c50a24e8ee10
-You can use the Authenticate view generator to copy the default views into your application:
-=======
-If you want to control and customizer the routes, you can turn off the built-in routes in
-the Authenticate configuration with `config.routes = false`.
+If you want to control and customize the routes, you can turn off the built-in routes in
+the Authenticate configuration with `config.routes = false` and dump a copy of the default routes into your
+application for modification.
 
-You can optionally run a generator to dump a copy of the default routes into your application for modification.
->>>>>>> adding base controller, authenticate_controller? method, layout and associated docs
+To turn off Authenticate's built-in routes:
+
+```ruby
+Authenticate.configure do |config|
+  config.routes = false
+end
+```
+
+You can run a generator to dump a copy of the default routes into your application for modification.
 
 ```sh
 $ rails generate authenticate:routes
@@ -259,6 +264,24 @@ You can use the Authenticate view generator to copy the default views into your 
 
 ```sh
 $ rails generate authenticate:views
+```
+
+
+### Layout
+
+Authenticate uses your application's default layout. If you would like to change the layout clearance uses when
+rendering views, you can either deploy copies of the controllers and customize them, or you can specify
+the layout in an initializer. This needs to be done in a to_prepare callback in `config/application.rb`
+because it's executed once in production and before each request in development.
+                              
+You can specify the layout per-controller:
+
+```ruby
+config.to_prepare do
+  Authenticate::PasswordsController.layout 'my_passwords_layout'
+  Authenticate::SessionsController.layout 'my_sessions_layout'
+  Authenticate::UsersController.layout 'my_users_layout'
+end
 ```
 
 

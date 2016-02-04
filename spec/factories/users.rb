@@ -7,7 +7,17 @@ FactoryGirl.define do
 
   factory :user do
     email
-    encrypted_password 'password'
+    # encrypted_password 'password'
+    password 'password'
+
+    trait :without_email do
+      email nil
+    end
+
+    trait :without_password do
+      password nil
+      encrypted_password nil
+    end
 
     trait :with_session_token do
       session_token 'this_is_a_big_fake_long_token'
