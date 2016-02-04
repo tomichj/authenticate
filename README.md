@@ -11,7 +11,7 @@ Please use [GitHub Issues] to report bugs.
 
 [GitHub Issues]: https://github.com/tomichj/authenticate/issues
 
-
+![Build status](https://travis-ci.org/tomichj/authenticate.svg?branch=master) ![Code Climate](https://codeclimate.com/github/tomichj/authenticate/badges/gpa.svg)
 
 ## Philosophy
 
@@ -28,7 +28,7 @@ Authenticate:
 * loads modules into your user model to provide authentication functionality
 * loads `callbacks` that are triggered during authentication and access events. All authentication
 decisions are performed in callbacks, e.g. do you have a valid session, has your session timed out, etc.
-* loads a module into your controllers (typically application controller) to secure controller actions 
+* loads a module into your controllers (typically application controller) to secure controller actions
 
 The callback architecture is based on the system used by devise and warden, but significantly simplified.
 
@@ -36,8 +36,8 @@ The callback architecture is based on the system used by devise and warden, but 
 ### Session Token
 
 Authenticate generates and clears a token (called a 'session token') to identify the user from a saved cookie.
-When a user authenticates successfully, Authenticate generates and stores a 'session token' for your user in 
-your database. The session token is also stored in a cookie in the user's browser. 
+When a user authenticates successfully, Authenticate generates and stores a 'session token' for your user in
+your database. The session token is also stored in a cookie in the user's browser.
 The cookie is then presented upon each subsequent access attempt to your server.
 
 ### User Model
@@ -131,7 +131,7 @@ authentication again.
 
 To enable brute force protection, set max_consecutive_bad_logins_allowed to a non-nil positive integer.
 The user's consecutive bad logins will be tracked, and if they exceed the allowed maximumm the user's account
-will be locked. The lock will last `bad_login_lockout_period`, which can be any time period (e.g. `10.minutes`).  
+will be locked. The lock will last `bad_login_lockout_period`, which can be any time period (e.g. `10.minutes`).
 
 
 ### authentication_strategy
@@ -149,7 +149,7 @@ The strategy will also add username attribute validation, ensuring the username 
 
 ### Authentication
 
-Authenticate provides a session controller and views to authenticate users. After successful authentication, 
+Authenticate provides a session controller and views to authenticate users. After successful authentication,
 the user is redirected to the path they attempted to access, or as specified by the `redirect_url` property
  in your configuration. This defaults to '/' but can customized:
 
@@ -207,7 +207,7 @@ end
 You can quickly get started with a rails application using the built-in views. See [app/views](/app/views) for
 the default views. When you want to customize an Authenticate view, create your own copy of it in your app.
 
-You can use the Authenticate view generator to copy the default views into your application: 
+You can use the Authenticate view generator to copy the default views into your application:
 
 ```sh
 $ rails generate authenticate:views
@@ -217,8 +217,8 @@ $ rails generate authenticate:views
 ### Controllers
 
 If the customization at the views level is not enough, you can customize each controller, and the
-authenticate mailer. See [app/controllers](/app/controllers) for the default controllers, and 
-[app/mailers](/app/mailers) for the default mailer. 
+authenticate mailer. See [app/controllers](/app/controllers) for the default controllers, and
+[app/mailers](/app/mailers) for the default mailer.
 
 You can use the Authenticate controller generator to copy the default controllers and mailer into your application:
 
@@ -251,10 +251,10 @@ Authenticate can be further extended with two mechanisms:
 
 ### User Modules
 
-Add behavior to your User model for your callbacks to use. You can, of course, incldue behavrio yourself directly 
+Add behavior to your User model for your callbacks to use. You can, of course, incldue behavrio yourself directly
 in your User class, but you can also use the Authenticate module loading system.
 
-To add a custom module to Authenticate, e.g. `MyUserModule`: 
+To add a custom module to Authenticate, e.g. `MyUserModule`:
 
 ```ruby
 Authenticate.configuration do |config|
@@ -265,7 +265,7 @@ end
 
 ### Callbacks
 
-Callbacks can be added to Authenticate. Use `Authenticate.lifecycle.after_set_user` or 
+Callbacks can be added to Authenticate. Use `Authenticate.lifecycle.after_set_user` or
 `Authenticate.lifecycle.after_authentication`. See [Lifecycle](lib/authenticate/lifecycle.rb) for full details.
 
 Callbacks can `throw(:failure, message)` to signal an authentication/authorization failure. Callbacks can also perform
@@ -279,7 +279,7 @@ set in the `included` block. The callback is then added to the  User module via 
 module LoginCount
   extend ActiveSupport::Concern
 
-  included do    
+  included do
     # Add a callback that is triggered after every authentication
     Authenticate.lifecycle.after_authentication name:'login counter' do |user, session, options|
       user.count_login if user
