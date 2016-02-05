@@ -6,8 +6,8 @@ Authenticate.configure do |config|
   # config.cookie_path = '/'
   # config.secure_cookie = false # set to true in production https environments
   # config.http_only = false # set to true if you can
-  # config.timeout_in = 45.minutes
-  # config.max_session_lifetime = 8.hours
+  config.timeout_in = 45.minutes
+  config.max_session_lifetime = 5.minutes
   config.max_consecutive_bad_logins_allowed = 1
   config.bad_login_lockout_period = 2.minutes
   # config.authentication_strategy = :email
