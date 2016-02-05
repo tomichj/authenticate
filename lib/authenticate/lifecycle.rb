@@ -41,10 +41,7 @@ module Authenticate
 
     # This callback is triggered after the first time a user is set during per-hit authorization, or during login.
     def after_set_user(options = {}, method = :push, &block)
-      raise BlockNotGiven unless block_given?
-      options = process_opts(options)
-      # puts "register after_set_user #{options.inspect}"
-      after_set_user_callbacks.send(method, [block, options])
+      add_callback(after_set_user_callbacks, options, method, &block)
     end
 
 
@@ -52,13 +49,18 @@ module Authenticate
     # A callback to run after the user successfully authenticates, during the login process.
     # Mechanically identical to [#after_set_user].
     def after_authentication(options = {}, method = :push, &block)
-      raise BlockNotGiven unless block_given?
-      options = process_opts(options)
-      # puts "register after_authentication #{options}"
-      after_authentication_callbacks.send(method, [block, options])
+      add_callback(after_authentication_callbacks, options, method, &block)
     end
 
 
+    # Run callbacks of the given kind.
+    #
+    # * kind - :authenticate or :after_set_user
+    # * args - user, session, opts hash. Opts is an optional event, e.g. { event: :authentication }
+    #
+    # Example:
+    #   Authenticate.lifecycle.run_callbacks(:after_set_user, @current_user, self, { event: :authentication })
+    #
     def run_callbacks(kind, *args) # args - |user, session, opts|
       # Last callback arg MUST be a Hash
       options = args.last
@@ -68,11 +70,11 @@ module Authenticate
       send("#{kind}_callbacks").each do |callback, conditions|
         conditions = conditions.dup # make a copy, we mutate it
         debug "Lifecycle.running callback -- #{conditions.inspect}"
-        conditions.delete_if {|key, val| !@@conditions.include? key}
-        # d "conditions after filter:#{conditions.inspect}"
+        conditions.delete_if {|key, _val| !@@conditions.include? key}
+        # debug "conditions after filter:#{conditions.inspect}"
         invalid = conditions.find do |key, value|
-          # d "!!!!!!! conditions key:#{key} value:#{value}      options[key]:#{options[key].inspect}"
-          # d("!value.include?(options[key]):#{!value.include?(options[key])}") if value.is_a?(Array)
+          # debug "!!!!!!! conditions key:#{key} value:#{value}      options[key]:#{options[key].inspect}"
+          # debug("!value.include?(options[key]):#{!value.include?(options[key])}") if value.is_a?(Array)
           value.is_a?(Array) ? !value.include?(options[key]) : (value != options[key])
         end
         debug "Lifecycle.callback invalid? #{invalid.inspect}"
@@ -88,6 +90,13 @@ module Authenticate
     end
 
     private
+
+    def add_callback(callbacks, options = {}, method = :push, &block)
+      raise BlockNotGiven unless block_given?
+      options = process_opts(options)
+      callbacks.send(method, [block, options])
+    end
+
 
     # set event: to run callback on based on options
     def process_opts(options)
