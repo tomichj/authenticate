@@ -81,10 +81,4 @@ describe Authenticate::Session do
   end
 
 
-  def mock_request
-    req = double("request")
-    allow(req).to receive(:params)
-    allow(req).to receive(:remote_ip).and_return('111.111.111.111')
-    return req
-  end
 end

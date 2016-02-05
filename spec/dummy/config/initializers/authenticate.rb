@@ -10,5 +10,6 @@ Authenticate.configure do |config|
   config.max_session_lifetime = 5.minutes
   config.max_consecutive_bad_logins_allowed = 1
   config.bad_login_lockout_period = 2.minutes
+  config.reset_password_within = 5.minutes
   # config.authentication_strategy = :email
 end

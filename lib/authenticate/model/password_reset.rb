@@ -5,7 +5,7 @@ module Authenticate
     # Methods:
     # * update_password(new_password) - call password setter below, generate a new session token if user.valid?, & save
     # *
-
+    # *
     module PasswordReset
       extend ActiveSupport::Concern
 
@@ -59,9 +59,9 @@ module Authenticate
       #   reset_password_period_valid?   # returns true
       #
       def reset_password_period_valid?
-        reset_within = Authenticate.configuration.reset_password_within.ago.utc
+        reset_within = Authenticate.configuration.reset_password_within
         return true if reset_within.nil?
-        self.password_reset_sent_at &&  self.password_reset_sent_at.utc >= reset_within
+        self.password_reset_sent_at &&  self.password_reset_sent_at.utc >= reset_within.ago.utc
       end
 
       private

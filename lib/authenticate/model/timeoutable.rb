@@ -37,13 +37,12 @@ module Authenticate
 
         # Checks whether the user session has expired based on configured time.
         def timedout?
-          Rails.logger.info "User.timedout? timeout_in:#{timeout_in}  last_access_at:#{last_access_at}"
           return false if timeout_in.nil?
           return false if last_access_at.nil?
-          # result = Time.now.utc > (last_access_at + timeout_in)
-          Rails.logger.info "User.timedout? #{last_access_at >= timeout_in.ago}   timeout_in.ago:#{timeout_in.ago}  last_access_at:#{last_access_at}"
           last_access_at <= timeout_in.ago
         end
+
+        private
 
         def timeout_in
           Authenticate.configuration.timeout_in

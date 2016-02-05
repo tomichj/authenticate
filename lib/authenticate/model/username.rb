@@ -42,15 +42,7 @@ module Authenticate
           username = credentials[0]
           find_by_username username
         end
-
-        # def normalize_username(username)
-        #   username.to_s.downcase.gsub(/\s+/, '')
-        # end
       end
-
-      # def normalize_username
-      #   self.username = self.class.normalize_username(username)
-      # end
 
     end
 
