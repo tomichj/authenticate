@@ -17,7 +17,7 @@ Please use [GitHub Issues] to report bugs.
 
 * simple - Authenticate's code is straightforward and easy to read.
 * opinionated - set the "right" defaults, but let you control almost everything if you want
-* small footprint - as few public methods and modules as possible
+* small footprint - as few public methods and modules as possible. Methods only loaded into your user model if needed.
 * configuration driven - almost all configuration is performed in the initializer
 
 
@@ -102,6 +102,7 @@ Authenticate.configure do |config|
   config.allow_sign_up = true
   config.routes = true
   config.reset_password_within = 2.days
+end
 ```
 
 Configuration parameters are described in detail here: [Configuration](lib/authenticate/configuration.rb)
