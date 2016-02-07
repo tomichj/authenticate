@@ -7,18 +7,22 @@ module Authenticate
     # Protect from brute force attacks. Lock accounts that have too many failed consecutive logins.
     # Todo: email user to allow unlocking via a token.
     #
-    # = Columns
+    # To enable brute force protection, set the config params shown below. Example:
     #
+    #   Authenticate.configure do |config|
+    #     config.bad_login_lockout_period = 5.minutes
+    #     config.max_consecutive_bad_logins_allowed = 3
+    #   end
+    #
+    # = Columns
     # * failed_logins_count - each consecutive failed login increments this counter. Set back to 0 on successful login.
     # * lock_expires_at - datetime a locked account will again become available.
     #
     # = Configuration
-    #
     # * max_consecutive_bad_logins_allowed - how many failed logins are allowed?
     # * bad_login_lockout_period - how long is the user locked out? nil indicates forever.
     #
     # = Methods
-    #
     # The following methods are added to your user model:
     # * register_failed_login! - increment failed_logins_count, lock account if in violation
     # * lock! - lock the account, setting the lock_expires_at attribute

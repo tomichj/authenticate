@@ -10,7 +10,6 @@ en:
       link_text: Change my password
       opening: Someone has requested a link to change your password. You can do this through the link below.
   flashes:
-    failure_after_create: Bad email or password.
     failure_after_update: Password can't be blank.
     failure_when_forbidden: Please double check the URL or try submitting the form again.
     failure_when_not_signed_in: Please sign in to continue.
@@ -55,3 +54,12 @@ en:
     new:
       sign_in: Sign in
       title: Sign up
+  callbacks:
+    authenticatable:
+      failure:  Bad id or password
+    brute_force:
+      failure: "Your account is locked, will unlock in %{time_remaining}"
+    lifetimed:
+      failure: Your session has reached it's maximum allowed lifetime, you must log in again
+    timeoutable:
+      failure: Your session has expired

@@ -10,8 +10,8 @@ Gem::Specification.new do |s|
   s.authors     = ['Justin Tomich']
   s.email       = ['justin@tomich.org']
   s.homepage    = 'http://github.com/tomichj/authenticate'
-  s.summary     = 'Clean Rails authentication with email & password'
-  s.description = 'Clean Rails authentication with email & password'
+  s.summary     = 'Authentication for Rails applications'
+  s.description = 'Authentication for Rails applications'
   s.license     = 'MIT'
 
   s.files = `git ls-files`.split("\n")

@@ -2,10 +2,17 @@ module Authenticate
   module Model
 
     # Support 'forgot my password' functionality.
-    # Methods:
+    #
+    # = Columns
+    # * password_reset_token - token required to reset a password
+    # * password_reset_sent_at - datetime password reset token was emailed to user
+    # * email - email address of user
+    #
+    # = Methods
     # * update_password(new_password) - call password setter below, generate a new session token if user.valid?, & save
-    # *
-    # *
+    # * forgot_password! - generate a new password reset token, timestamp, and save
+    # * reset_password_period_valid? - is the password reset token still usable?
+    #
     module PasswordReset
       extend ActiveSupport::Concern
 

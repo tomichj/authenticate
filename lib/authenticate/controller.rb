@@ -14,7 +14,7 @@ module Authenticate
     def authenticate(params)
       # todo: get params from User model
       user_credentials = Authenticate.configuration.user_model_class.credentials(params)
-      puts "Controller::user_credentials: #{user_credentials.inspect}"
+      debug "Controller::user_credentials: #{user_credentials.inspect}"
       Authenticate.configuration.user_model_class.authenticate(user_credentials)
     end
 
@@ -101,7 +101,7 @@ module Authenticate
     protected
 
     # User is not authorized, bounce 'em to sign in
-    def unauthorized(msg = 'You must sign in') # get default message from locale
+    def unauthorized(msg = t('flashes.failure_when_not_signed_in'))
       respond_to do |format|
         format.any(:js, :json, :xml) { head :unauthorized }
         format.any {

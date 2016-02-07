@@ -6,21 +6,19 @@ module Authenticate
     # Expire user sessions that have not been accessed within a certain period of time.
     # Expired users will be asked for credentials again.
     #
-    # = Columns
-    #
-    # This module expects and tracks this column on your user model:
-    # * last_access_at - datetime of the last access by the user
-    #
-    # = Configuration
-    #
-    # * timeout_in - maximum idle time allowed before session is invalidated. nil shuts off this feature.
-    #
     # Timeoutable is enabled and configured with the `timeout_in` configuration parameter.
-    # `timeout_in` expects a timestamp. Example:
+    # Example:
     #
     #   Authenticate.configure do |config|
     #     config.timeout_in = 15.minutes
     #   end
+    #
+    # = Columns
+    # This module expects and tracks this column on your user model:
+    # * last_access_at - datetime of the last access by the user
+    #
+    # = Configuration
+    # * timeout_in - maximum idle time allowed before session is invalidated. nil shuts off this feature.
     #
     # You must specify a non-nil timeout_in in your initializer to enable Timeoutable.
     #

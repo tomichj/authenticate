@@ -16,7 +16,7 @@ module Authenticate
     # = Methods
     # * normalize_email - normalize the email, removing spaces etc, before saving
     #
-    # = class methods
+    # = Class Methods
     # * credentials(params) - return the credentials required for authorization by email
     # * authenticate(credentials) - find user with given email, validate their password, return the user if authenticated
     # * normalize_email(email) - clean up the given email and return it.

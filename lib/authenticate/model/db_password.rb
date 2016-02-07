@@ -7,22 +7,20 @@ module Authenticate
     # Encrypts and stores a password in the database to validate the authenticity of a user while logging in.
     #
     # Authenticate can plug in any crypto provider, but currently only features BCrypt.
+    #
     # A crypto provider must provide:
     # * encrypt(secret) - encrypt the secret, @return [String]
     # * match?(secret, encrypted) - does the secret match the encrypted? @return [Boolean]
     #
     # = Columns
-    #
     # * encrypted_password - the user's password, encrypted
     #
     # = Methods
-    #
     # The following methods are added to your user model:
     # * password=(new_password) - encrypt and set the user password
     # * password_match?(password) - checks to see if the user's password matches the given password
     #
     # = Validations
-    #
     # * :password validation, requiring the password is set unless we're skipping due to a password change
     #
     module DbPassword
@@ -33,22 +31,13 @@ module Authenticate
       end
 
       included do
+        private_class_method :crypto_provider
         include crypto_provider
         attr_reader :password
         attr_accessor :password_changing
         validates :password, presence: true, unless: :skip_password_validation?
       end
 
-
-
-      module ClassMethods
-
-        # We only have one crypto provider at the moment, but look up the provider in the config.
-        def crypto_provider
-          Authenticate.configuration.crypto_provider || Authenticate::Crypto::BCrypt
-        end
-
-      end
 
 
       def password_match?(password)
@@ -65,7 +54,16 @@ module Authenticate
 
       private
 
-        # If we already have an encrypted password and it's not changing, skip the validation.
+      module ClassMethods
+
+        # We only have one crypto provider at the moment, but look up the provider in the config.
+        def crypto_provider
+          Authenticate.configuration.crypto_provider || Authenticate::Crypto::BCrypt
+        end
+      end
+
+
+      # If we already have an encrypted password and it's not changing, skip the validation.
       def skip_password_validation?
         encrypted_password.present? && !password_changing
       end

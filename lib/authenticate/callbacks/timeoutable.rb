@@ -9,7 +9,7 @@ end
 # Fail users that have timed out. Otherwise update last_access_at.
 Authenticate.lifecycle.after_set_user name: 'timeoutable after set_user', except: :authentication do |user, session, options|
   if user && user.respond_to?(:timedout?)
-    throw(:failure, 'Your session has expired') if user.timedout?
+    throw(:failure, I18n.t('callbacks.timeoutable.failure')) if user.timedout?
     user.last_access_at = Time.now.utc
     user.save!
   end
