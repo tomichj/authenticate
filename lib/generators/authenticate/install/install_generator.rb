@@ -1,31 +1,33 @@
 require 'rails/generators/base'
 require 'rails/generators/active_record'
+require 'generators/authenticate/helpers'
 
 module Authenticate
   module Generators
     class InstallGenerator < Rails::Generators::Base
       include Rails::Generators::Migration
+      include Authenticate::Generators::Helpers
+
       source_root File.expand_path('../templates', __FILE__)
 
-      def create_initializer
-        copy_file 'authenticate.rb', 'config/initializers/authenticate.rb'
+      class_option :model, optional: true, type: :string, banner: 'model',
+                   desc: "Specify the model class name if you will use anything other than 'User'"
+
+      def initialize(*)
+        super
+        assign_names!(model_class_name)
       end
 
-      def inject_into_application_controller
-        inject_into_class(
-            "app/controllers/application_controller.rb",
-            ApplicationController,
-            "  include Authenticate::Controller\n"
-        )
+      def verify
+        if options[:model] && !File.exists?(model_path)
+          puts "Exiting: the model class you specified, #{options[:model]}, is not found."
+          exit 1
+        end
       end
 
       def create_or_inject_into_user_model
-        if File.exist? "app/models/user.rb"
-          inject_into_file(
-              'app/models/user.rb',
-              '  include Authenticate::User\n\n',
-              after: 'class User < ActiveRecord::Base\n'
-          )
+        if File.exist? model_path
+          inject_into_class(model_path, model_class_name, "  include Authenticate::User\n\n")
         else
           copy_file 'user.rb', 'app/models/user.rb'
         end
@@ -44,6 +46,26 @@ module Authenticate
         copy_migration 'add_authenticate_timeoutable_to_users.rb'
         copy_migration 'add_authenticate_password_reset_to_users.rb'
       end
+
+      def inject_into_application_controller
+        inject_into_class(
+            'app/controllers/application_controller.rb',
+            ApplicationController,
+            "  include Authenticate::Controller\n\n"
+        )
+      end
+
+      def create_initializer
+        copy_file 'authenticate.rb', 'config/initializers/authenticate.rb'
+        if options[:model]
+          inject_into_file(
+              'config/initializers/authenticate.rb',
+              "  config.user_model = '#{options[:model]}' \n",
+              after: "Authenticate.configure do |config|\n",
+          )
+        end
+      end
+
 
       private
 
@@ -96,8 +118,8 @@ module Authenticate
 
       def new_indexes
         @new_indexes ||= {
-            index_users_on_email: 'add_index :users, :email',
-            index_users_on_session_token: 'add_index :users, :session_token'
+            index_users_on_email: "add_index :#{table_name}, :email",
+            index_users_on_session_token: "add_index :#{table_name}, :session_token"
         }.reject { |index| existing_users_indexes.include?(index.to_s) }
       end
 
@@ -116,17 +138,17 @@ module Authenticate
       end
 
       def users_table_exists?
-        ActiveRecord::Base.connection.table_exists?(:users)
+        ActiveRecord::Base.connection.table_exists?(table_name)
       end
 
       def existing_users_columns
         return [] unless users_table_exists?
-        ActiveRecord::Base.connection.columns(:users).map(&:name)
+        ActiveRecord::Base.connection.columns(table_name).map(&:name)
       end
 
       def existing_users_indexes
         return [] unless users_table_exists?
-        ActiveRecord::Base.connection.indexes(:users).map(&:name)
+        ActiveRecord::Base.connection.indexes(table_name).map(&:name)
       end
 
       # for generating a timestamp when using `create_migration`

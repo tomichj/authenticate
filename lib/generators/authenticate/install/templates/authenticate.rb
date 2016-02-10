@@ -1,5 +1,7 @@
 Authenticate.configure do |config|
+
   # config.user_model = 'User'
+
   # config.cookie_name = 'authenticate_session_token'
   # config.cookie_expiration = { 1.month.from_now.utc }
   # config.cookie_domain = nil

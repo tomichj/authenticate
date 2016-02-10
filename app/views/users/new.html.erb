@@ -3,6 +3,16 @@
 
   <%= form_for @user do |form| %>
 
+      <% if @user.errors.any? %>
+          <ul>
+            <% @user.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+            <% end %>
+          </ul>
+          <br>
+      <% end %>
+
+
       <div class="field">
         <%= form.label :email %>
         <%= form.text_field :email, type: 'email' %>

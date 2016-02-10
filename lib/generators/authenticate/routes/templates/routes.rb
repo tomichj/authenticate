@@ -1,7 +1,7 @@
 resource :session, controller: 'authenticate/sessions', only: [:create, :new, :destroy]
   resources :passwords, controller: 'authenticate/passwords', only: [:new, :create]
 
-  resource :users, controller: 'authenticate/users', only: [:new, :create] do
+  resource :<%= @user_model %>, controller: 'authenticate/users', only: [:new, :create] do
     resources :passwords, controller: 'authenticate/passwords', only: [:edit, :update]
   end
 

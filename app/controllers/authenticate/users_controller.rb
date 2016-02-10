@@ -14,6 +14,8 @@ class Authenticate::UsersController < Authenticate::AuthenticateController
       login @user
       redirect_back_or url_after_create
     else
+      logger.info "@user: " + @user.inspect
+      logger.info "ERRORS?: " + @user.errors.inspect
       render template: 'users/new'
     end
   end
@@ -41,6 +43,7 @@ class Authenticate::UsersController < Authenticate::AuthenticateController
   end
 
   def user_params
-    params[:user] || Hash.new
+    key = Authenticate.configuration.user_model_param_key.to_sym
+    params[key] || Hash.new
   end
 end

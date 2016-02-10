@@ -1,7 +1,6 @@
 class CreateUsers < ActiveRecord::Migration
   def change
-
-    create_table :users do |t|
+    create_table :<%= table_name %> do |t|
     <% config[:new_columns].values.each do |column| -%>
       <%= column %>
     <% end -%>

@@ -1,6 +1,6 @@
 class AddAuthenticateToUsers < ActiveRecord::Migration
   def self.up
-    change_table :users do |t|
+    change_table :<%= table_name %> do |t|
 <% config[:new_columns].values.each do |column| -%>
       <%= column %>
 <% end -%>
@@ -12,7 +12,7 @@ class AddAuthenticateToUsers < ActiveRecord::Migration
   end
 
   def self.down
-    change_table :users do |t|
+    change_table :<%= table_name %> do |t|
 <% if config[:new_columns].any? -%>
       t.remove <%= new_columns.keys.map { |column| ":#{column}" }.join(", ") %>
 <% end -%>

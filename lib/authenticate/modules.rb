@@ -1,7 +1,6 @@
 module Authenticate
   module Modules
     extend ActiveSupport::Concern
-    include Authenticate::Debug
 
     # Module to help Authenticate's user model load Authenticate modules.
     #
@@ -59,7 +58,8 @@ module Authenticate
         end
 
         if failed_attributes.any?
-          fail MissingAttribute.new(failed_attributes)
+          # fail MissingAttribute.new(failed_attributes)
+          Rails.logger.warn "The following attribute(s) is (are) missing on your user model: #{failed_attributes.join(", ")}"
         end
       end
 

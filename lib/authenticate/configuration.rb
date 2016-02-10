@@ -186,6 +186,16 @@ module Authenticate
       @user_model_class ||= user_model.constantize
     end
 
+    def user_model_route_key
+      return :users if @user_model == '::User' # avoid nil in generator
+      Authenticate.configuration.user_model_class.model_name.route_key
+    end
+
+    def user_model_param_key
+      return :user if @user_model == '::User' # avoid nil in generator
+      Authenticate.configuration.user_model_class.model_name.param_key
+    end
+
     # The name of foreign key parameter for the configured user model.
     # This is derived from the `model_name` of the `user_model` setting.
     # In the default configuration, this is `user_id`.

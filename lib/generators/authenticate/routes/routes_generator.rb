@@ -1,8 +1,11 @@
 require 'rails/generators/base'
+require 'generators/authenticate/helpers'
 
 module Authenticate
   module Generators
     class RoutesGenerator < Rails::Generators::Base
+      include Authenticate::Generators::Helpers
+
       source_root File.expand_path('../templates', __FILE__)
 
       def add_authenticate_routes
@@ -20,7 +23,8 @@ module Authenticate
       private
 
       def authenticate_routes
-        File.read(routes_file_path)
+        @user_model = Authenticate.configuration.user_model_route_key
+        ERB.new(File.read(routes_file_path)).result(binding)
       end
 
       def routes_file_path
