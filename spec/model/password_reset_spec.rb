@@ -55,17 +55,17 @@ describe Authenticate::Model::PasswordReset do
       }
 
       it 'allows password update within time limit' do
-        expect(subject.update_password 'chongo').to be_truthy
+        expect(subject.update_password 'password2').to be_truthy
       end
 
       it 'clears password reset token' do
-        subject.update_password 'chongo'
+        subject.update_password 'password2'
         expect(subject.password_reset_token).to be_nil
       end
 
       it 'generates a new session token' do
         token = subject.session_token
-        subject.update_password 'chongo'
+        subject.update_password 'password2'
         expect(subject.session_token).to_not eq(token)
       end
 
@@ -73,7 +73,7 @@ describe Authenticate::Model::PasswordReset do
 
     it 'stops password update after time limit' do
       subject.password_reset_sent_at = 6.minutes.ago
-      expect(subject.update_password 'chongo').to be_falsey
+      expect(subject.update_password 'password2').to be_falsey
     end
 
   end

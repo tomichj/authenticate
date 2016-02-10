@@ -35,7 +35,10 @@ module Authenticate
         include crypto_provider
         attr_reader :password
         attr_accessor :password_changing
-        validates :password, presence: true, unless: :skip_password_validation?
+        validates :password,
+                  presence: true,
+                  length:{ in: password_length },
+                  unless: :skip_password_validation?
       end
 
 
@@ -60,12 +63,17 @@ module Authenticate
         def crypto_provider
           Authenticate.configuration.crypto_provider || Authenticate::Crypto::BCrypt
         end
+
+        def password_length
+          Authenticate.configuration.password_length
+        end
       end
 
 
       # If we already have an encrypted password and it's not changing, skip the validation.
       def skip_password_validation?
-        encrypted_password.present? && !password_changing
+        # encrypted_password.present? && !password_changing
+        false
       end
 
     end

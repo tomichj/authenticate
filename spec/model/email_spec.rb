@@ -14,7 +14,7 @@ describe Authenticate::Model::Email do
 
   it 'extracts credentials from params' do
     params = {session:{email:'foo', password:'bar'}}
-    expect(User.credentials(params)).to match_array(['foo', 'bar'])
+    expect(User.credentials(params)).to match_array(%w(foo bar))
   end
 
   it 'authenticates from credentials' do

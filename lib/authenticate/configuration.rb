@@ -99,6 +99,10 @@ module Authenticate
     # @return [ActiveSupport::CoreExtensions::Numeric::Time]
     attr_accessor :bad_login_lockout_period
 
+    # Range requirement for password length. Defaults to `8..128`.
+    # @return [Range]
+    attr_accessor :password_length
+
     # Strategy for authentication.
     #
     # Available strategies:
@@ -132,7 +136,6 @@ module Authenticate
     # @param [Boolean] value
     # @return [Boolean]
     attr_accessor :allow_sign_up
-
 
     # Enable or disable Authenticate's built-in routes. Defaults to 'true',
     # enabling Authenticate's built-in routes. Disable by setting to 'false'.
@@ -176,6 +179,7 @@ module Authenticate
       @modules = []
       @user_model = '::User'
       @authentication_strategy = :email
+      @password_length = 8..128
     end
 
     def user_model_class
@@ -213,7 +217,6 @@ module Authenticate
       modules << :brute_force if @max_consecutive_bad_logins_allowed
       modules
     end
-
 
   end # end of Configuration class
 

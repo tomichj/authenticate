@@ -93,10 +93,11 @@ Authenticate.configure do |config|
   config.cookie_http_only = false
   config.mailer_sender = 'reply@example.com'
   config.crypto_provider = Bcrypt
-  config.timeout_in = nil  # 45.minutes
+  config.timeout_in = nil
   config.max_session_lifetime = nil  # 8.hours
-  config.max_consecutive_bad_logins_allowed = nil # 5
+  config.max_consecutive_bad_logins_allowed = nil
   config.bad_login_lockout_period = nil # 5.minutes
+  config.password_length = 8..128
   config.authentication_strategy = :email
   config.redirect_url = '/'
   config.allow_sign_up = true
@@ -270,27 +271,9 @@ $ rails generate authenticate:views
 
 ### Layout
 
-Authenticate uses your application's default layout. If you would like to change the layout clearance uses when
+Authenticate uses your application's default layout. If you would like to change the layout Authenticate uses when
 rendering views, you can either deploy copies of the controllers and customize them, or you can specify
-the layout in an initializer. This needs to be done in a to_prepare callback in `config/application.rb`
-because it's executed once in production and before each request in development.
-                              
-You can specify the layout per-controller:
-
-```ruby
-config.to_prepare do
-  Authenticate::PasswordsController.layout 'my_passwords_layout'
-  Authenticate::SessionsController.layout 'my_sessions_layout'
-  Authenticate::UsersController.layout 'my_users_layout'
-end
-```
-
-
-### Layout
-
-Authenticate uses your application's default layout. If you would like to change the layout clearance uses when
-rendering views, you can either deploy copies of the controllers and customize them, or you can specify
-the layout in an initializer. This needs to be done in a to_prepare callback in `config/application.rb`
+the layout in an initializer. This should be done in a to_prepare callback in `config/application.rb`
 because it's executed once in production and before each request in development.
                               
 You can specify the layout per-controller:
