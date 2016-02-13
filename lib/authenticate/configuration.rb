@@ -74,6 +74,8 @@ module Authenticate
     attr_accessor :crypto_provider
 
     # Invalidate the session after the specified period of idle time.
+    # If the interval between the current access time and the last access time is greater than timeout_in,
+    # the session is invalidated. The user will be prompted for authentication again.
     # Defaults to nil, which is no idle timeout.
     #
     #   Authenticate.configure do |config|
@@ -84,18 +86,34 @@ module Authenticate
     attr_accessor :timeout_in
 
     # Allow a session to 'live' for no more than the given elapsed time, e.g. 8.hours.
-    # Defaults to nil, or no max session time.
+    # Defaults to nil, or no max session time. If set, a user session will expire once it has been active for
+    # max_session_lifetime. The user session is invalidated and the next access will will prompt
+    # the user for authentication.
+    #
+    # Authenticate.configure do |config|
+    #   config.max_session_lifetime = 8.hours
+    # end
+    #
     # @return [ActiveSupport::CoreExtensions::Numeric::Time]
     attr_accessor :max_session_lifetime
 
-    # Number of consecutive bad login attempts allowed.
+    # Number of consecutive bad login attempts allowed. This is called "brute force protection".
+    # The user's consecutive bad logins will be tracked, and if they exceed the allowed maximumm
+    # the user's account will be locked. The length of the lockout is determined by [#bad_login_lockout_period].
+    #
     # Default is nil, which disables this feature.
+    #
+    # Authenticate.configure do |config|
+    #   config.max_consecutive_bad_logins_allowed = 4
+    #   config.bad_login_lockout_period = 10.minutes
+    # end
+    #
     # @return [Integer]
     attr_accessor :max_consecutive_bad_logins_allowed
 
-    # Time period to lock an account for if the user exceeds
-    # max_consecutive_bad_logins_allowed (and it's set to nonzero).
+    # Time period to lock an account for if the user exceeds max_consecutive_bad_logins_allowed.
     # If set to nil, account is locked out indefinitely.
+    #
     # @return [ActiveSupport::CoreExtensions::Numeric::Time]
     attr_accessor :bad_login_lockout_period
 

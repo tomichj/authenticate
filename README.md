@@ -43,19 +43,13 @@ The cookie is then presented upon each subsequent access attempt to your server.
 
 ## Install
 
-To get started, add Authenticate to your `Gemfile`:
+To get started, add Authenticate to your `Gemfile` and run `bundle install` to install it:
 
 ```ruby
 gem 'authenticate'
 ```
 
-Then run:
-
-```sh
-bundle install
-```
-
-Then run the installation generator:
+Then run the authenticate install generator:
 
 ```sh
 rails generate authenticate:install
@@ -66,12 +60,10 @@ The generator does the following:
 * Insert `include Authenticate::User` into your `User` model. If you don't have a User model, one is created.
 * Insert `include Authenticate::Controller` into your `ApplicationController`
 * Add an initializer at `config/intializers/authenticate.rb`.
-* Create migrations to either create a users table or add additional columns to :user. A primary migration is added,
-'create users' or 'add_authenticate_to_users'. This migration is required. Two additonal migrations are created
-to support the 'brute_force' and 'timeoutable' modules. You may delete the brute_force and timeoutable migrations,
-but those migrations are required if you use those Authenticate features (see Configure, next).
+* Create migrations to create a users table or add columns to your existing table.
 
-Finally, you'll need to run the migrations that Authenticate just generated:
+
+You'll need to run the migrations that Authenticate just generated:
 
 ```sh
 rake db:migrate
@@ -94,9 +86,9 @@ Authenticate.configure do |config|
   config.mailer_sender = 'reply@example.com'
   config.crypto_provider = Bcrypt
   config.timeout_in = nil
-  config.max_session_lifetime = nil  # 8.hours
+  config.max_session_lifetime = nil
   config.max_consecutive_bad_logins_allowed = nil
-  config.bad_login_lockout_period = nil # 5.minutes
+  config.bad_login_lockout_period = nil
   config.password_length = 8..128
   config.authentication_strategy = :email
   config.redirect_url = '/'
@@ -109,83 +101,30 @@ end
 Configuration parameters are described in detail here: [Configuration](lib/authenticate/configuration.rb)
 
 
-### User Model
-
-Authenticate assumes your user class is '::User' by default. You can elect to use another user class.
-Set the user model class name using `user_model` in configuration. For example, if your user model
-class is `Profile`:
-
-```ruby
-Authenticate.configure do |config|
-  config.user_model = '::Profile'
-end
-```
-
-Your user model will also need to `include Authenticate::User`. This is done automatically for you using
-the Authenticate install generator, see [install](#install) above.
-
-
-### timeout_in
-
-* timeout_in: the interval to timeout the user session without activity.
-
-If your configuration sets timeout_in to a non-nil value, then the last user access is tracked.
-If the interval between the current access time and the last access time is greater than timeout_in,
-the session is invalidated. The user will be prompted for authentication again.
-
-
-### max_session_lifetime
-
-* max_session_lifetime: the maximum interval a session is valid, regardless of user activity.
-
-If your configuration sets max_session_lifetime, a User session will expire once it has been active for
-max_session_lifetime. The user session is invalidated and the next access will will prompt the user for
-authentication again.
-
-
-### max_consecutive_bad_logins_allowed & bad_login_lockout_period
-
-* max_consecutive_bad_logins_allowed: an integer
-* bad_login_lockout_period: a ActiveSupport::CoreExtensions::Numeric::Time
-
-To enable brute force protection, set max_consecutive_bad_logins_allowed to a non-nil positive integer.
-The user's consecutive bad logins will be tracked, and if they exceed the allowed maximumm the user's account
-will be locked. The lock will last `bad_login_lockout_period`, which can be any time period (e.g. `10.minutes`).
-
-
-### authentication_strategy
-
-The default authentication strategy is :email. This requires that your User model have an attribute named `email`.
-The User account will be identified by this email address. The strategy will add email attribute validation to
-the User, ensuring that it exists, is properly formatted, and is unique.
-
-You may instead opt for :username. The username strategy will identify users with an attribute named `username`.
-The strategy will also add username attribute validation, ensuring the username exists and is unique.
-
-
 
 ## Use
 
-### Authentication
-
-Authenticate provides a session controller and views to authenticate users. After successful authentication,
-the user is redirected to the path they attempted to access, or as specified by the `redirect_url` property
- in your configuration. This defaults to '/' but can customized:
-
-```ruby
-Authenticate.configure do |config|
-  config.redirect_url = '/specials'
-end
-```
-
-
 ### Access Control
 
-Use the `require_authentication` filter to control access to controller actions.
+Use the `require_authentication` filter to control access to controller actions. To control access to
+all controller actions, add the filter to your `ApplicationController`, e.g.:
 
 ```ruby
 class ApplicationController < ActionController::Base
     before_action :require_authentication
+end
+```
+
+
+### Authentication
+
+Authenticate provides a session controller and views to authenticate users with an email and password.
+After successful authentication, the user is redirected to the path they attempted to access, 
+or as specified by the `redirect_url` property in your configuration. This defaults to '/' but can customized:
+
+```ruby
+Authenticate.configure do |config|
+  config.redirect_url = '/specials'
 end
 ```
 
@@ -205,6 +144,7 @@ Example:
 <% end %>
 ```
 
+
 ### Logout
 
 Log the user out. The user session_token will be deleted from the database, and the session cookie will
@@ -219,11 +159,28 @@ end
 ```
 
 
+### Password Resets
+
+Authenticate provides password reset controllers and views. When a user requests a password reset, Authenticate
+delivers an email to that user. Change your `mailer_sender`, which is used in the email's "from" header:
+
+```ruby
+Authenticate.configure do |config|
+  config.mailer_sender = 'reply@example.com'
+end
+```
+
+
 ## Overriding Authenticate
+
+### User Model
+
+You can [use an alternate user model class](https://github.com/tomichj/authenticate/wiki/custom-user-model).
+
 
 ### Routes
 
-Authenticate adds routes. See [config/routes.rb](/config/routes.rb) for the default routes.
+Authenticate adds routes to your application. See [config/routes.rb](/config/routes.rb) for the default routes.
 
 If you want to control and customize the routes, you can turn off the built-in routes in
 the Authenticate configuration with `config.routes = false` and dump a copy of the default routes into your
@@ -237,7 +194,8 @@ Authenticate.configure do |config|
 end
 ```
 
-You can run a generator to dump a copy of the default routes into your application for modification.
+You can run a generator to dump a copy of the default routes into your application for modification. The generator
+will also switch off the routes as shown immediately above by setting `config.routes = false`. 
 
 ```sh
 $ rails generate authenticate:routes
