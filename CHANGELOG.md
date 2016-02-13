@@ -2,7 +2,8 @@
 
 ## [0.2.2] - February 9, 2016
 
-Password length requirements added, defaults to 8..128
+Password length range requirements added, defaults to 8..128.
+Generators and app now respect model class more completely, including in routes.
 
 [0.2.2]: https://github.com/tomichj/authenticate/compare/v0.2.1...v0.2.2
 
