@@ -14,15 +14,6 @@ module Authenticate
       debug 'SESSION initialize: @session_token: ' + @session_token.inspect
     end
 
-    # consecutive_failed_logins_limit
-    # timeout - time elapsed since last thingy. last_access_at column
-    # max session lifetime
-    # confirmation / awaiting confirmation
-    # reset password
-    # change password
-    # trackable - sign_in_count, last_sign_in_at, last_sign_in_ip
-
-
     # Finish user login process, *after* the user has been authenticated.
     # Called when user creates an account or signs back into the app.
     #

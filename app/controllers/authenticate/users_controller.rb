@@ -14,8 +14,6 @@ class Authenticate::UsersController < Authenticate::AuthenticateController
       login @user
       redirect_back_or url_after_create
     else
-      logger.info "@user: " + @user.inspect
-      logger.info "ERRORS?: " + @user.errors.inspect
       render template: 'users/new'
     end
   end
@@ -33,17 +31,17 @@ class Authenticate::UsersController < Authenticate::AuthenticateController
   end
 
   def user_from_params
-    email = user_params.delete(:email)
-    password = user_params.delete(:password)
-
-    Authenticate.configuration.user_model_class.new(user_params).tap do |user|
-      user.email = email
-      user.password = password
-    end
+    param_key = Authenticate.configuration.user_model_param_key.to_sym # :user, :user_profile, etc
+    user_params = params[param_key] ? user_params(param_key) : Hash.new
+    Authenticate.configuration.user_model_class.new(user_params)
   end
 
-  def user_params
-    key = Authenticate.configuration.user_model_param_key.to_sym
-    params[key] || Hash.new
+  # Override this method to allow additional user attributes.
+  # Default impl allows username and email to service both styles of authentication.
+  #
+  # * param_key - String used for parameter names, ActiveModel::Naming.param_key
+  #
+  def user_params(param_key)
+    params.require(param_key).permit(:username, :email, :password)
   end
 end

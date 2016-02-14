@@ -18,7 +18,7 @@ module Authenticate
       extend ActiveSupport::Concern
 
       def self.required_fields(klass)
-        [:username]
+        [:username, :email]
       end
 
       included do
@@ -42,6 +42,7 @@ module Authenticate
           username = credentials[0]
           find_by_username username
         end
+
       end
 
     end

@@ -13,9 +13,9 @@ module Authenticate
     # After calling this, call login(user) to complete the process.
     def authenticate(params)
       # todo: get params from User model
-      user_credentials = Authenticate.configuration.user_model_class.credentials(params)
-      debug "Controller::user_credentials: #{user_credentials.inspect}"
-      Authenticate.configuration.user_model_class.authenticate(user_credentials)
+      credentials = Authenticate.configuration.user_model_class.credentials(params)
+      debug "Controller::credentials: #{credentials.inspect}"
+      Authenticate.configuration.user_model_class.authenticate(credentials)
     end
 
 
@@ -90,7 +90,7 @@ module Authenticate
     end
 
     # Return true if it's an Authenticate controller. Useful if you want to apply a before
-    # filter to all controllers, except the ones in Authenticate:
+    # filter to all controllers, except the ones in Authenticate, e.g.
     #
     #   before_action :my_filter, unless: :authenticate_controller?
     #
