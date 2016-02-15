@@ -80,7 +80,7 @@ Authenticate.configure do |config|
   config.cookie_name = 'authenticate_session_token'
   config.cookie_expiration = { 1.year.from_now.utc }
   config.cookie_domain = nil
-  config.cookie_path = '/
+  config.cookie_path = '/'
   config.secure_cookie = false
   config.cookie_http_only = false
   config.mailer_sender = 'reply@example.com'
@@ -176,6 +176,11 @@ end
 ### User Model
 
 You can [use an alternate user model class](https://github.com/tomichj/authenticate/wiki/custom-user-model).
+
+
+### Username Authentication
+
+You can [authenticate with username](https://github.com/tomichj/authenticate/wiki/Authenticate-with-username).
 
 
 ### Routes

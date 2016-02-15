@@ -1,5 +1,14 @@
 # Authenticate Changelog
 
+## [0.2.3] - February 13, 2016
+
+Small bugfix for :username authentication.
+Improved documentation, started adding wiki pages.
+
+[0.2.3]: https://github.com/tomichj/authenticate/compare/v0.2.2...v0.2.3
+
+
+
 ## [0.2.2] - February 9, 2016
 
 Password length range requirements added, defaults to 8..128.
