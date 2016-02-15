@@ -17,7 +17,7 @@ module Authenticate
     module Username
       extend ActiveSupport::Concern
 
-      def self.required_fields(klass)
+      def self.required_fields(_klass)
         [:username, :email]
       end
 

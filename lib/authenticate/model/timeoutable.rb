@@ -29,7 +29,7 @@ module Authenticate
     module Timeoutable
         extend ActiveSupport::Concern
 
-        def self.required_fields(klass)
+        def self.required_fields(_klass)
           [:last_access_at]
         end
 
@@ -45,6 +45,6 @@ module Authenticate
         def timeout_in
           Authenticate.configuration.timeout_in
         end
-      end
+    end
   end
 end

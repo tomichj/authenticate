@@ -25,7 +25,7 @@ module Authenticate
     module Lifetimed
       extend ActiveSupport::Concern
 
-      def self.required_fields(klass)
+      def self.required_fields(_klass)
         [:current_sign_in_at]
       end
 

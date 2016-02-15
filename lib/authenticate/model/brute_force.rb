@@ -33,7 +33,7 @@ module Authenticate
     module BruteForce
       extend ActiveSupport::Concern
 
-      def self.required_fields(klass)
+      def self.required_fields(_klass)
         [:failed_logins_count, :lock_expires_at]
       end
 

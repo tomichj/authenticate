@@ -25,7 +25,7 @@ module Authenticate
     module Email
       extend ActiveSupport::Concern
 
-      def self.required_fields(klass)
+      def self.required_fields(_klass)
         [:email]
       end
 

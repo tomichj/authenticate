@@ -16,7 +16,7 @@ module Authenticate
     module PasswordReset
       extend ActiveSupport::Concern
 
-      def self.required_fields(klass)
+      def self.required_fields(_klass)
         [:password_reset_token, :password_reset_sent_at, :email]
       end
 
