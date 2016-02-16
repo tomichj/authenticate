@@ -2,6 +2,9 @@ require 'spec_helper'
 
 
 describe Authenticate::Session do
+  before(:all) do
+    Authenticate.configuration = Authenticate::Configuration.new
+  end
 
   describe 'session token' do
     it 'finds a user from session token' do

@@ -72,8 +72,7 @@ module Authenticate
 
       # If we already have an encrypted password and it's not changing, skip the validation.
       def skip_password_validation?
-        # encrypted_password.present? && !password_changing
-        false
+        encrypted_password.present? && !password_changing
       end
 
     end

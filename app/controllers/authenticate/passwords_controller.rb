@@ -68,7 +68,7 @@ class Authenticate::PasswordsController < Authenticate::AuthenticateController
   end
 
   def find_user_for_create
-    Authenticate.configuration.user_model_class.find_by_email params[:password][:email]
+    Authenticate.configuration.user_model_class.find_by_normalized_email params[:password][:email]
   end
 
   def find_user_for_edit

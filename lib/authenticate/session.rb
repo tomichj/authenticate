@@ -21,8 +21,6 @@ module Authenticate
     def login(user, &block)
       debug 'session.login()'
       @current_user = user
-      debug "session.login @current_user: #{@current_user.inspect}"
-      # todo extract token gen to two different strategies
       @current_user.generate_session_token if user.present?
 
       message = catch(:failure) do
@@ -44,7 +42,6 @@ module Authenticate
       end
     end
 
-
     # Get the user represented by this session.
     #
     # @return [User]
@@ -63,7 +60,6 @@ module Authenticate
       debug 'session.authenticated?'
       current_user.present?
     end
-
 
     # Invalidate the session token, unset the current user and remove the cookie.
     #

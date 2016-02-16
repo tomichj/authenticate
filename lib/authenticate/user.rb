@@ -49,6 +49,18 @@ module Authenticate
       save validate: false
     end
 
+    module ClassMethods
+
+      def normalize_email(email)
+        email.to_s.downcase.gsub(/\s+/, '')
+      end
+
+      # We need to find users by email even if they don't use email to log in
+      def find_by_normalized_email(email)
+        find_by_email normalize_email(email)
+      end
+
+      end
 
   end
 end

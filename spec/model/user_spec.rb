@@ -1,6 +1,9 @@
 require 'spec_helper'
 
 describe Authenticate::User do
+  before(:all) do
+    Authenticate.configuration = Authenticate::Configuration.new
+  end
 
   context 'session tokens' do
     it 'generates a new session token' do

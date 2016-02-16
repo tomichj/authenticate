@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec-rails'
   s.add_development_dependency 'pry'
   s.add_development_dependency 'sqlite3'
+  s.add_development_dependency 'shoulda-matchers', '~> 2.8'
 
   s.required_ruby_version = Gem::Requirement.new('>= 2.0')
 end

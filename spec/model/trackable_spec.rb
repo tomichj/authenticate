@@ -3,6 +3,10 @@ require 'authenticate/model/trackable'
 
 
 describe Authenticate::Model::Trackable do
+  before(:all) do
+    Authenticate.configuration = Authenticate::Configuration.new
+  end
+
   subject {create(:user)}
 
   context '#last_sign_in_at' do

@@ -3,6 +3,9 @@ require 'authenticate/model/lifetimed'
 
 
 describe Authenticate::Model::Lifetimed do
+  before(:all) do
+    Authenticate.configuration = Authenticate::Configuration.new
+  end
 
   context '#max_session_lifetime_exceeded?' do
     before {

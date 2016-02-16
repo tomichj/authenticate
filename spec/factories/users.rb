@@ -23,8 +23,9 @@ FactoryGirl.define do
       session_token 'this_is_a_big_fake_long_token'
     end
 
-    trait :with_forgotten_password do
+    trait :with_password_reset_token_and_timestamp do
       password_reset_token Authenticate::Token.new
+      password_reset_sent_at 10.seconds.ago
     end
   end
 end

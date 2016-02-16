@@ -56,7 +56,7 @@ en:
       title: Sign up
   callbacks:
     authenticatable:
-      failure:  Bad id or password
+      failure:  Invalid id or password
     brute_force:
       failure: "Your account is locked, will unlock in %{time_remaining}"
     lifetimed:

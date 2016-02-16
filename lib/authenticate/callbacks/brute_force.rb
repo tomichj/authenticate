@@ -21,7 +21,6 @@ Authenticate.lifecycle.prepend_after_authentication name: 'brute force protectio
   # if the user is still locked, let them know how long they are locked for.
   if user && user.locked?
     remaining = time_ago_in_words(user.lock_expires_at)
-    # throw(:failure, "Your account is locked, will unlock in #{remaining.to_s}")
     throw(:failure, I18n.t('callbacks.brute_force.failure', time_remaining: remaining.to_s))
   end
 

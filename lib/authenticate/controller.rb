@@ -12,9 +12,7 @@ module Authenticate
     # Validate a user's identity with (typically) email/ID & password, and return the User if valid, or nil.
     # After calling this, call login(user) to complete the process.
     def authenticate(params)
-      # todo: get params from User model
       credentials = Authenticate.configuration.user_model_class.credentials(params)
-      debug "Controller::credentials: #{credentials.inspect}"
       Authenticate.configuration.user_model_class.authenticate(credentials)
     end
 

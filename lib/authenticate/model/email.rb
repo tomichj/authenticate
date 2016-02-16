@@ -51,11 +51,7 @@ module Authenticate
 
         def find_by_credentials(credentials)
           email = credentials[0]
-          find_by_email normalize_email(email)
-        end
-
-        def normalize_email(email)
-          email.to_s.downcase.gsub(/\s+/, '')
+          find_by_normalized_email(email)
         end
 
       end

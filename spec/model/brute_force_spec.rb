@@ -3,12 +3,13 @@ require 'authenticate/model/brute_force'
 
 
 describe Authenticate::Model::BruteForce do
-  before {
+  before(:all) do
+    Authenticate.configuration = Authenticate::Configuration.new
     Authenticate.configure do |config|
       config.max_consecutive_bad_logins_allowed = 2
       config.bad_login_lockout_period = 2.minutes
     end
-  }
+  end
 
   it 'knows when it is locked' do
     user = User.new

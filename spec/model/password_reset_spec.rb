@@ -4,6 +4,7 @@ require 'authenticate/model/password_reset'
 
 describe Authenticate::Model::PasswordReset do
   before(:all) {
+    Authenticate.configuration = Authenticate::Configuration.new
     Authenticate.configuration.reset_password_within = 5.minutes
   }
   context 'forgot_password!' do

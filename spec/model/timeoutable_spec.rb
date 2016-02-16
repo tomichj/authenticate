@@ -4,6 +4,7 @@ require 'authenticate/model/timeoutable'
 
 describe Authenticate::Model::Timeoutable do
   before(:all) {
+    Authenticate.configuration = Authenticate::Configuration.new
     Authenticate.configuration.timeout_in = 45.minutes
   }
   subject { create(:user) }
