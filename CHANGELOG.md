@@ -1,5 +1,17 @@
 # Authenticate Changelog
 
+## [0.3.0] - February 24, 2016
+
+Moved normalize_email and find_normalized_email methods to base User module.
+Added full suite of controller and feature tests.
+Bug fixes: 
+* failed login count fix was off by one.
+* password validation now done only in correct circumstances
+
+[0.3.0]: https://github.com/tomichj/authenticate/compare/v0.2.2...v0.3.0
+
+
+
 ## [0.2.3] - February 13, 2016
 
 Small bugfix for :username authentication.

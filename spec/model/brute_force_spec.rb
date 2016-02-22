@@ -3,7 +3,7 @@ require 'authenticate/model/brute_force'
 
 
 describe Authenticate::Model::BruteForce do
-  before(:all) do
+  before(:each) do
     Authenticate.configuration = Authenticate::Configuration.new
     Authenticate.configure do |config|
       config.max_consecutive_bad_logins_allowed = 2
@@ -23,11 +23,13 @@ describe Authenticate::Model::BruteForce do
       user = User.new
       user.register_failed_login!
       user.register_failed_login!
+      user.register_failed_login!
       expect(user.locked?).to be_truthy
     end
 
     it 'sets lockout period' do
       user = User.new
+      user.register_failed_login!
       user.register_failed_login!
       user.register_failed_login!
       expect(user.lock_expires_at).to_not be_nil
