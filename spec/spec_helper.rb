@@ -1,20 +1,11 @@
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-$LOAD_PATH.unshift(File.dirname(__FILE__))
-
-
 ENV["RAILS_ENV"] ||= 'test'
 
-MY_ORM = :active_record
-
-# require 'simplecov'
-# SimpleCov.root File.join(File.dirname(__FILE__), '..', 'lib')
-# SimpleCov.start
-
+# $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
+# $LOAD_PATH.unshift(File.dirname(__FILE__))
 
 require 'rails/all'
 require 'rspec/rails'
 require 'factory_girl_rails'
-# require 'timecop'
 require 'shoulda-matchers'
 
 require 'authenticate'
@@ -23,31 +14,19 @@ require 'controller_helpers'
 ENGINE_RAILS_ROOT=File.join(File.dirname(__FILE__), '../')
 Dir[File.join(ENGINE_RAILS_ROOT, "spec/factories/**/*.rb")].each {|f| require f }
 
-def setup_orm; end
-def teardown_orm; end
-
-require "orm/#{MY_ORM}"
-
-# require "rails_app/config/environment"
-require "dummy/config/environment"
-
-# class TestMailer < ActionMailer::Base;end
-
-Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
+require 'dummy/config/environment'
+# Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
 
 RSpec.configure do |config|
-  config.fixture_path = "#{::Rails.root}/spec/factories"
-
   config.include Authenticate::Testing::ControllerHelpers, type: :controller
 
   config.include RSpec::Rails::ControllerExampleGroup, :file_path => /controller(.)*_spec.rb$/
   config.mock_with :rspec
+
   config.include FactoryGirl::Syntax::Methods
-
   config.use_transactional_fixtures = true
+  config.fixture_path = "#{::Rails.root}/spec/factories"
 
-  config.before(:suite) { setup_orm }
-  config.after(:suite) { teardown_orm }
   config.before(:each) { ActionMailer::Base.deliveries.clear }
 end
 

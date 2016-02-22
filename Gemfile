@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gemspec
 
+# gem 'capybara'
 
 # Declare your gem's dependencies in authenticate.gemspec.
 # Bundler will treat runtime dependencies like base dependencies, and
