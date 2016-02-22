@@ -41,7 +41,7 @@ module Authenticate
       def register_failed_login!
         self.failed_logins_count ||= 0
         self.failed_logins_count += 1
-        lock! if self.failed_logins_count >= max_bad_logins
+        lock! if self.failed_logins_count > max_bad_logins
       end
 
       def lock!

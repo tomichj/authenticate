@@ -100,6 +100,7 @@ module Authenticate
 
     # User is not authorized, bounce 'em to sign in
     def unauthorized(msg = t('flashes.failure_when_not_signed_in'))
+      authenticate_session.deauthenticate
       respond_to do |format|
         format.any(:js, :json, :xml) { head :unauthorized }
         format.any {
