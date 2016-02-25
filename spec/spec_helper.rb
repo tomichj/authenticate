@@ -21,7 +21,6 @@ RSpec.configure do |config|
   config.mock_with :rspec
   config.use_transactional_fixtures = true
   config.infer_base_class_for_anonymous_controllers = false
-  config.fixture_path = "#{::Rails.root}/spec/factories"
 
   config.after(:each, :type => :feature) do
     DatabaseCleaner.clean       # Truncate the database

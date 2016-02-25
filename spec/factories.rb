@@ -7,7 +7,6 @@ FactoryGirl.define do
 
   factory :user do
     email
-    # encrypted_password 'password'
     password 'password'
 
     trait :without_email do
