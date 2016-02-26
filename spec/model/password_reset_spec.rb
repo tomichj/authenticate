@@ -3,10 +3,6 @@ require 'authenticate/model/password_reset'
 
 
 describe Authenticate::Model::PasswordReset do
-  before(:all) {
-    Authenticate.configuration = Authenticate::Configuration.new
-    Authenticate.configuration.reset_password_within = 5.minutes
-  }
   context 'forgot_password!' do
     subject { create(:user) }
     before { subject.forgot_password! }
@@ -23,14 +19,13 @@ describe Authenticate::Model::PasswordReset do
 
   context '#reset_password_period_valid?' do
     subject { create(:user) }
-    before(:each) {
-      Authenticate.configuration.reset_password_within = 5.minutes
-    }
 
     it 'always true if reset_password_within config param is nil' do
+      within = Authenticate.configuration.reset_password_within
       subject.password_reset_sent_at = 10.days.ago
       Authenticate.configuration.reset_password_within = nil
       expect(subject.reset_password_period_valid?).to be_truthy
+      Authenticate.configuration.reset_password_within = within
     end
 
     it 'false if time exceeded' do
@@ -46,9 +41,6 @@ describe Authenticate::Model::PasswordReset do
 
   context '#update_password' do
     subject { create(:user) }
-    before(:each) {
-      Authenticate.configuration.reset_password_within = 5.minutes
-    }
 
     context 'within time time' do
       before(:each) {

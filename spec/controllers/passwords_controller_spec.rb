@@ -1,11 +1,11 @@
 require 'spec_helper'
+require 'support/controllers/controller_helpers'
 
 describe Authenticate::PasswordsController, type: :controller do
   it { is_expected.to be_a Authenticate::Controller }
 
   describe 'get to #new' do
     it 'renders the new form' do
-      user = create(:user)
       get :new
       expect(response).to be_success
       expect(response).to render_template(:new)

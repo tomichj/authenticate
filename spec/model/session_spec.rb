@@ -2,27 +2,23 @@ require 'spec_helper'
 
 
 describe Authenticate::Session do
-  before(:all) do
-    Authenticate.configuration = Authenticate::Configuration.new
-  end
-
   describe 'session token' do
     it 'finds a user from session token' do
       user = create(:user, :with_session_token)
-      request = {}
-      cookies = {authenticate_session_token: user.session_token}
+      request = mock_request
+      cookies = cookies_for user
       session = Authenticate::Session.new(request, cookies)
       expect(session.current_user).to eq user
     end
-    it 'returns nil without a session token' do
-      request = {}
-      cookies = {session_token: nil}
+    it 'nil user without a session token' do
+      request = mock_request
+      cookies = {}
       session = Authenticate::Session.new(request, cookies)
       expect(session.current_user).to be_nil
     end
     it 'returns nil with a bogus session token' do
-      request = {}
-      cookies = {session_token: 'some made up value'}
+      request = mock_request
+      cookies = {Authenticate.configuration.cookie_name.freeze.to_sym => 'some made up value'}
       session = Authenticate::Session.new(request, cookies)
       expect(session.current_user).to be_nil
     end
@@ -30,23 +26,20 @@ describe Authenticate::Session do
 
   describe '#login' do
     it 'sets current_user' do
-      user = build(:user, :with_session_token)
+      user = create(:user)
       session = Authenticate::Session.new(mock_request, {})
       session.login(user)
       expect(session.current_user).to eq user
     end
     context 'with a block' do
       it 'passes the success status to the block when login succeeds' do
-        user = build(:user, :with_session_token)
+        user = create(:user)
         session = Authenticate::Session.new(mock_request, {})
-        session.login user do |status|
+        session.login(user) do |status|
           expect(status.success?).to eq true
         end
       end
       it 'passes the failure status to the block when login fails' do
-        Authenticate.configure do |config|
-          config.max_consecutive_bad_logins_allowed = nil
-        end
         session = Authenticate::Session.new(mock_request, {})
         session.login nil do |status|
           expect(status.success?).to eq false
@@ -68,20 +61,17 @@ describe Authenticate::Session do
         expect{session.login(user)}.to change{user.sign_in_count}.by(1)
       end
       it 'fails login if a callback fails' do
-        failure_message = 'THIS IS A FORCED FAIL'
-        Authenticate.lifecycle.after_authentication do |user, session, opts|
-          throw(:failure, failure_message)
-        end
-        user = create(:user, :with_session_token, last_access_at: 10.minutes.ago)
-        cookies = {authenticate_session_token: user.session_token}
+        cookies = {}
         session = Authenticate::Session.new(mock_request, cookies)
-        session.login user do |status|
+        session.login nil do |status|
           expect(status.success?).to eq false
-          expect(status.message).to eq failure_message
+          expect(status.message).to eq I18n.t('callbacks.authenticatable.failure')
         end
       end
     end
   end
+end
 
-
+def cookies_for user
+  { Authenticate.configuration.cookie_name.freeze.to_sym => user.session_token }
 end

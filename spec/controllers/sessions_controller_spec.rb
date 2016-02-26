@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'support/controllers/controller_helpers'
 
 describe Authenticate::SessionsController, type: :controller do
   it { is_expected.to be_a Authenticate::Controller }
@@ -27,9 +28,6 @@ describe Authenticate::SessionsController, type: :controller do
   describe 'post to #create' do
     context 'without password' do
       it 'renders page with error' do
-        Authenticate.configure do |config|
-          config.max_consecutive_bad_logins_allowed = 2
-        end
         user = create(:user)
         post :create, session: { email: user.email }
         expect(response).to render_template :new
@@ -82,9 +80,7 @@ describe Authenticate::SessionsController, type: :controller do
       it 'unset the current user' do
         expect(controller.current_user).to be_nil
       end
-
     end
-
   end
 
 end

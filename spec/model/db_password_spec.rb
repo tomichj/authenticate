@@ -3,13 +3,7 @@ require 'authenticate/model/db_password'
 
 
 describe Authenticate::Model::DbPassword do
-  before(:all) do
-    Authenticate.configuration = Authenticate::Configuration.new
-  end
-
-
   describe 'Passwords' do
-
     context '#password_match?' do
       subject { create(:user, password: 'password') }
 
@@ -31,12 +25,6 @@ describe Authenticate::Model::DbPassword do
     end
 
     describe 'Validations' do
-      before(:all) {
-        Authenticate.configure do |config|
-          config.password_length = 8..128
-        end
-      }
-
       context 'on a new user' do
         it 'should not be valid without a password' do
           user = build(:user, :without_password)

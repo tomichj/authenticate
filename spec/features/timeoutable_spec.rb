@@ -3,10 +3,6 @@ require 'support/features/feature_helpers'
 
 feature 'visitor session time' do
   before do
-    Authenticate.configure do |config|
-      config.timeout_in = 20.minutes
-      config.max_session_lifetime = nil
-    end
     @user = create(:user)
   end
 

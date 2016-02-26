@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'support/controllers/controller_helpers'
 
 describe Authenticate::UsersController, type: :controller do
   it { is_expected.to be_a Authenticate::Controller }
@@ -76,6 +77,6 @@ describe Authenticate::UsersController, type: :controller do
         expect(response).to redirect_to Authenticate.configuration.redirect_url
       end
     end
-
   end
+
 end

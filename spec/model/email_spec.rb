@@ -3,10 +3,6 @@ require 'authenticate/model/email'
 
 
 describe Authenticate::Model::Email do
-  before(:all) do
-    Authenticate.configuration = Authenticate::Configuration.new
-  end
-
   it 'validates email' do
     user = build(:user, :without_email)
     user.save

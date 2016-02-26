@@ -206,12 +206,12 @@ module Authenticate
 
     def user_model_route_key
       return :users if @user_model == '::User' # avoid nil in generator
-      Authenticate.configuration.user_model_class.model_name.route_key
+      user_model_class.model_name.route_key
     end
 
     def user_model_param_key
       return :user if @user_model == '::User' # avoid nil in generator
-      Authenticate.configuration.user_model_class.model_name.param_key
+      user_model_class.model_name.param_key
     end
 
     # The name of foreign key parameter for the configured user model.

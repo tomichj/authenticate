@@ -8,19 +8,32 @@ require 'capybara/rails'
 require 'capybara/rspec'
 require 'database_cleaner'
 require 'factory_girl_rails'
-require 'controller_helpers'
 require 'timecop'
 
 Rails.backtrace_cleaner.remove_silencers!
 DatabaseCleaner.strategy = :truncation
 
-RSpec.configure do |config|
-  config.include Authenticate::Testing::ControllerHelpers, type: :controller
-  config.include FactoryGirl::Syntax::Methods
+# No longer autoloading support, individually requiring instead.
+#
+# Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
-  config.mock_with :rspec
+
+RSpec.configure do |config|
+  config.include FactoryGirl::Syntax::Methods
+  config.infer_spec_type_from_file_location!
+  config.order = :random
   config.use_transactional_fixtures = true
-  config.infer_base_class_for_anonymous_controllers = false
+
+  # config.mock_with :rspec
+
+  config.expect_with :rspec do |expectations|
+    expectations.syntax = :expect
+  end
+
+  config.mock_with :rspec do |mocks|
+    mocks.syntax = :expect
+  end
+
 
   config.after(:each, :type => :feature) do
     DatabaseCleaner.clean       # Truncate the database
@@ -31,8 +44,7 @@ end
 
 
 def restore_default_configuration
-  Authenticate.configuration = nil
-  Authenticate.configure {}
+  puts 'restore_default_configuration called!!!!!!!!!!!!!!!!!!!!!'
 end
 
 def mock_request(params = {})

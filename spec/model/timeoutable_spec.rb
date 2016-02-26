@@ -3,19 +3,19 @@ require 'authenticate/model/timeoutable'
 
 
 describe Authenticate::Model::Timeoutable do
-  before(:all) {
-    Authenticate.configuration = Authenticate::Configuration.new
-    Authenticate.configuration.timeout_in = 45.minutes
-  }
   subject { create(:user) }
 
   it 'does not timeout while last_access_at is valid' do
-    subject.last_access_at = 10.minutes.ago
-    expect(subject.timedout?).to be_falsey
+    Timecop.freeze do
+      subject.last_access_at = 10.minutes.ago
+      expect(subject.timedout?).to be_falsey
+    end
   end
 
   it 'does timeout when last_access_at is stale' do
-    subject.last_access_at = 46.minutes.ago
-    expect(subject.timedout?).to be_truthy
+    Timecop.freeze do
+      subject.last_access_at = 46.minutes.ago
+      expect(subject.timedout?).to be_truthy
+    end
   end
 end

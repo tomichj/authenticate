@@ -1,7 +1,6 @@
 require 'spec_helper'
 require 'support/features/feature_helpers'
 
-
 feature 'visitor signs up' do
   scenario 'navigates to sign up page' do
     visit sign_in_path

@@ -1,9 +1,8 @@
 require 'spec_helper'
 require 'support/features/feature_helpers'
 
-
 feature 'visitor updates password' do
-  before do
+  before(:each) do
     @user = create(:user, :with_password_reset_token_and_timestamp)
   end
 

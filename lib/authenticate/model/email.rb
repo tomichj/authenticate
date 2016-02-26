@@ -41,6 +41,7 @@ module Authenticate
       module ClassMethods
 
         def credentials(params)
+          return [] if params.nil? || params[:session].nil?
           [params[:session][:email], params[:session][:password]]
         end
 

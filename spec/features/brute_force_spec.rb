@@ -3,10 +3,8 @@ require 'support/features/feature_helpers'
 
 feature 'visitor has consecutive bad logins' do
   before do
-    Authenticate.configure do |config|
-      config.max_consecutive_bad_logins_allowed = 2
-      config.bad_login_lockout_period = 10.minutes
-    end
+    # puts Authenticate.configuration.max_consecutive_bad_logins_allowed.inspect
+    # puts Authenticate.configuration.bad_login_lockout_period.inspect
     @user = create(:user)
   end
 
@@ -33,7 +31,7 @@ feature 'visitor has consecutive bad logins' do
     sign_in_with @user.email, 'badpassword'
     sign_in_with @user.email, 'badpassword'
 
-    Timecop.travel 20.minutes do
+    Timecop.travel 50.minutes do
       sign_in_with @user.email, @user.password
       expect_user_to_be_signed_in
     end

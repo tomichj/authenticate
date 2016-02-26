@@ -2,12 +2,6 @@ require 'spec_helper'
 require 'support/features/feature_helpers'
 
 feature 'visitor signs in' do
-  before do
-    Authenticate.configure do |config|
-      config.max_consecutive_bad_logins_allowed = nil
-    end
-  end
-
   scenario 'with valid email and password' do
     user = create(:user)
     sign_in_with user.email, user.password

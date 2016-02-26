@@ -1,15 +1,8 @@
 Authenticate.configure do |config|
-  # config.user_model = 'User'
-  # config.cookie_name = 'authenticate_session_token'
-  # config.cookie_expiration = { 1.month.from_now.utc }
-  # config.cookie_domain = nil
-  # config.cookie_path = '/'
-  # config.secure_cookie = false # set to true in production https environments
-  # config.http_only = false # set to true if you can
   config.timeout_in = 45.minutes
-  config.max_session_lifetime = 5.minutes
-  config.max_consecutive_bad_logins_allowed = 1
-  config.bad_login_lockout_period = 2.minutes
+  config.max_session_lifetime = 20.minutes
+  config.max_consecutive_bad_logins_allowed = 2
+  config.bad_login_lockout_period = 10.minutes
   config.reset_password_within = 5.minutes
-  # config.authentication_strategy = :email
+  config.password_length = 8..128
 end

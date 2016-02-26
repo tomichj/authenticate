@@ -2,7 +2,9 @@ require 'spec_helper'
 require 'support/features/feature_helpers'
 
 feature 'visitor requests password reset' do
-  before { ActionMailer::Base.deliveries.clear }
+  before(:each) do
+    ActionMailer::Base.deliveries.clear
+  end
 
   scenario 'navigates to Forgot Password page' do
     visit sign_in_path

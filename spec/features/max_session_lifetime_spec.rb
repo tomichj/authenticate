@@ -2,10 +2,7 @@ require 'spec_helper'
 require 'support/features/feature_helpers'
 
 feature 'visitor has consecutive bad logins' do
-  before do
-    Authenticate.configure do |config|
-      config.max_session_lifetime = 20.minutes
-    end
+  before(:each) do
     @user = create(:user)
   end
 
