@@ -7,7 +7,7 @@ require 'shoulda-matchers'
 require 'capybara/rails'
 require 'capybara/rspec'
 require 'database_cleaner'
-require 'factory_girl_rails'
+require 'factory_girl'
 require 'timecop'
 
 Rails.backtrace_cleaner.remove_silencers!
@@ -17,6 +17,8 @@ DatabaseCleaner.strategy = :truncation
 #
 # Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
+# Load factory girl factories.
+Dir[File.join(File.dirname(__FILE__), 'factories/**/*.rb')].each { |f| require f }
 
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
