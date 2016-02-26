@@ -153,14 +153,14 @@ PLATFORMS
 
 DEPENDENCIES
   authenticate!
-  capybara
-  database_cleaner
-  factory_girl_rails
+  capybara (~> 2.6.2)
+  database_cleaner (~> 1.5.1)
+  factory_girl_rails (~> 4.4.1)
   pry
-  rspec-rails
+  rspec-rails (~> 3.1.0)
   shoulda-matchers (~> 2.8)
   sqlite3
-  timecop
+  timecop (~> 0.8.0)
 
 BUNDLED WITH
    1.11.2
