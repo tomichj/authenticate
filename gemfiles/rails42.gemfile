@@ -2,8 +2,13 @@
 
 source "https://rubygems.org"
 
+gem 'shoulda-matchers', '~> 2.8'
+gem 'capybara', '~> 2.6.2'
+gem 'database_cleaner', '~> 1.5.1'
+gem 'timecop', '~> 0.8.0'
+
 gem "bundler", "~> 1.3"
-gem "factory_girl_rails", "~> 4.2"
+gem "factory_girl_rails", "~> 4.4.1"
 gem "rspec-rails", "~> 3.1"
 gem "sqlite3", "~> 1.3"
 gem "pry", :require => false
