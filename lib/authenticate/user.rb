@@ -4,7 +4,7 @@ require 'authenticate/callbacks/authenticatable'
 
 module Authenticate
 
-  # Required to be included in your configued user class, which is `User` by
+  # Required to be included in your configured user class, which is `User` by
   # default, but can be changed with {Configuration#user_model=}.
   #
   #   class User
@@ -27,6 +27,9 @@ module Authenticate
   # - generate_session_token - generates and sets the Authenticate session token
   # - reset_session_token! - calls generate_session_token and save! immediately
   #
+  # Every user will have these two class methods to normalize email addresses:
+  # - normalize_email(email) - normalize the given email address by downcasing, removing spaces.
+  # - find_by_normalized_email(email) - find a user by his/her normalized email address
   module User
     extend ActiveSupport::Concern
 
