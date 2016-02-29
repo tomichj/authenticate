@@ -5,8 +5,8 @@ module Authenticate
   # Heavily borrowed from warden (https://github.com/hassox/warden).
   #
   # = Events:
-  #   :set_user - called after the user object is loaded, either through id/password or via session token.
-  #   :authentication - called after the user authenticates with id & password
+  # * :set_user - called after the user object is loaded, either through id/password or via session token.
+  # * :authentication - called after the user authenticates with id & password
   #
   # Callbacks are added via after_set_user or after_authentication.
   #
@@ -16,17 +16,17 @@ module Authenticate
   # = Options
   #
   # The callback options may optionally specify when to run the callback:
-  #   only - executes the callback only if it matches the event(s) given
-  #   except - executes the callback except if it matches the event(s) given
+  # * only - executes the callback only if it matches the event(s) given
+  # * except - executes the callback except if it matches the event(s) given
   #
   # The callback may also specify a 'name' key in options. This is for debugging purposes only.
   #
   # = Callback block parameters
   #
   # Callbacks are invoked with the following block parameters: |user, session, opts|
-  #   user - the user object just loaded
-  #   session - the Authenticate::Session
-  #   opts - any options you want passed into the callback
+  # * user - the user object just loaded
+  # * session - the Authenticate::Session
+  # * opts - any options you want passed into the callback
   #
   # = Example
   #

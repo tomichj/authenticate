@@ -1,8 +1,10 @@
 module Authenticate
   class Configuration
 
-    # ActiveRecord model class name that represents your user.
-    # Specify as a String. Defaults to '::User'.
+    # ActiveRecord model class name that represents your user. Specify as a String.
+    #
+    # Defaults to '::User'.
+    #
     # To set to a different class:
     #
     #   Authenticate.configure do |config|
@@ -13,12 +15,20 @@ module Authenticate
     attr_accessor :user_model
 
     # Name of the session cookie Authenticate will send to client browser.
+    #
     # Defaults to 'authenticate_session_token'.
+    #
     # @return [String]
     attr_accessor :cookie_name
 
-    # A lambda called to set the remember token cookie expires attribute. Defaults to 1 year expiration.
-    # Note this is NOT the session's max lifetime, see #max_session_lifetime.
+    # A lambda called to set the remember token cookie expires attribute.
+    #
+    # Defaults to 1 year expiration.
+    #
+    # Note this is NOT the authenticate session's max lifetime, but only the cookie's lifetime.
+    #
+    # See #max_session_lifetime for more on the session lifetime.
+    #
     # To set cookie expiration yourself:
     #
     #   Authenticate.configure do |config|
@@ -29,44 +39,59 @@ module Authenticate
     attr_accessor :cookie_expiration
 
     # The domain to set for the Authenticate session cookie.
-    # Defaults to nil, which will cause the cookie domain to set
-    # to the domain of the request.
+    #
+    # Defaults to nil, which will cause the cookie domain to set to the domain of the request.
+    #
     # @return [String]
     attr_accessor :cookie_domain
 
     # Controls which paths the session token cookie is valid for.
+    #
     # Defaults to `"/"` for the entire domain.
+    #
     # For more, see [RFC6265](http://tools.ietf.org/html/rfc6265#section-5.1.4).
     # @return [String]
     attr_accessor :cookie_path
 
-    # Controls the secure setting on the session cookie. Defaults to `false`.
-    # When set, the browser will only send the cookie to the server over HTTPS.
+    # Controls the secure setting on the session cookie.
+    #
+    # Defaults to `false`.
+    #
+    # When set to 'true', the browser will only send the cookie to the server over HTTPS.
     # If set to true over an insecure http (not https) connection, the cookie will not
     # be usable and the user will not be successfully authenticated.
     #
     # You should set this value to true in live environments to prevent session hijacking.
+    #
+    # Set to false in development environments.
     #
     # For more, see [RFC6265](http://tools.ietf.org/html/rfc6265#section-5.2.5).
     # @return [Boolean]
     attr_accessor :secure_cookie
 
     # Controls whether the  HttpOnly flag should be set on the session cookie.
-    # Defaults to `false`. If `true`, the cookie will not be made available to JavaScript.
+    # If `true`, the cookie will not be made available to JavaScript.
+    #
+    # Defaults to `true`.
+    #
     # For more see [RFC6265](http://tools.ietf.org/html/rfc6265#section-5.2.6).
     # @return [Boolean]
     attr_accessor :cookie_http_only
 
-    # Controls the 'from' address for Authenticate emails.
+    # Controls the 'from' address for Authenticate emails. Set this to a value appropriate to your application.
+    #
     # Defaults to reply@example.com.
+    #
     # @return [String]
     attr_accessor :mailer_sender
 
     # Determines what crypto is used when authenticating and setting passwords.
-    # Defaults to {Authenticate::Model::BCrypt}. At the moment Bcrypt is the only
-    # option offered.
     #
-    # Crypto implementations must provide:
+    # Defaults to {Authenticate::Model::BCrypt}.
+    #
+    # At the moment Bcrypt is the only option offered.
+    #
+    # Crypto implementations must implement:
     #   * match?(secret, encrypted)
     #   * encrypt(secret)
     #
@@ -76,6 +101,7 @@ module Authenticate
     # Invalidate the session after the specified period of idle time.
     # If the interval between the current access time and the last access time is greater than timeout_in,
     # the session is invalidated. The user will be prompted for authentication again.
+    #
     # Defaults to nil, which is no idle timeout.
     #
     #   Authenticate.configure do |config|
@@ -86,9 +112,11 @@ module Authenticate
     attr_accessor :timeout_in
 
     # Allow a session to 'live' for no more than the given elapsed time, e.g. 8.hours.
-    # Defaults to nil, or no max session time. If set, a user session will expire once it has been active for
-    # max_session_lifetime. The user session is invalidated and the next access will will prompt
-    # the user for authentication.
+    #
+    # Defaults to nil, or no max session time.
+    #
+    # If set, a user session will expire once it has been active for max_session_lifetime.
+    # The user session is invalidated and the next access will will prompt the user for authentication.
     #
     # Authenticate.configure do |config|
     #   config.max_session_lifetime = 8.hours
@@ -97,8 +125,8 @@ module Authenticate
     # @return [ActiveSupport::CoreExtensions::Numeric::Time]
     attr_accessor :max_session_lifetime
 
-    # Number of consecutive bad login attempts allowed. This is called "brute force protection".
-    # The user's consecutive bad logins will be tracked, and if they exceed the allowed maximumm
+    # Number of consecutive bad login attempts allowed. Commonly called "brute force protection".
+    # The user's consecutive bad logins will be tracked, and if they exceed the allowed maximum,
     # the user's account will be locked. The length of the lockout is determined by [#bad_login_lockout_period].
     #
     # Default is nil, which disables this feature.
@@ -112,20 +140,24 @@ module Authenticate
     attr_accessor :max_consecutive_bad_logins_allowed
 
     # Time period to lock an account for if the user exceeds max_consecutive_bad_logins_allowed.
+    #
     # If set to nil, account is locked out indefinitely.
     #
     # @return [ActiveSupport::CoreExtensions::Numeric::Time]
     attr_accessor :bad_login_lockout_period
 
-    # Range requirement for password length. Defaults to `8..128`.
+    # Range requirement for password length.
+    #
+    # Defaults to `8..128`.
+    #
     # @return [Range]
     attr_accessor :password_length
 
     # Strategy for authentication.
     #
     # Available strategies:
-    #   :email - requires user have attribute :email
-    #   :username - requires user have attribute :username
+    # * :email - requires user have attribute :email
+    # * :username - requires user have attribute :username
     #
     # Defaults to :email. To set to :username:
     #
@@ -143,34 +175,47 @@ module Authenticate
     attr_accessor :authentication_strategy
 
     # The default path Authenticate will redirect signed in users to.
-    # Defaults to `"/"`. This can often be overridden for specific scenarios by
-    # overriding controller methods that rely on it.
+    #
+    # Defaults to `"/"`.
+    #
+    # This can also be overridden for specific scenarios by overriding controller methods that rely on it.
     # @return [String]
     attr_accessor :redirect_url
 
     # Controls whether the "sign up" route, allowing creation of users, is enabled.
-    # Defaults to `true`. Set to `false` to disable user creation routes.
-    # The setting is ignored if routes are disabled.
+    #
+    # Defaults to `true`.
+    #
+    # Set to `false` to disable user creation routes. The setting is ignored if routes are disabled.
+    #
     # @param [Boolean] value
     # @return [Boolean]
     attr_accessor :allow_sign_up
 
-    # Enable or disable Authenticate's built-in routes. Defaults to 'true',
-    # enabling Authenticate's built-in routes. Disable by setting to 'false'.
+    # Enable or disable Authenticate's built-in routes.
+    #
+    # Defaults to 'true'.
+    #
     # If you disable the routes, your application is responsible for all routes.
+    #
     # You can deploy a copy of Authenticate's routes with `rails generate authenticate:routes`,
     # which will also set `config.routes = false`.
+    #
     # @return [Boolean]
     attr_accessor :routes
 
     # The time period within which the password must be reset or the token expires.
     # If set to nil, the password reset token does not expire.
+    #
     # Defaults to `2.days`.
+    #
     # @return [ActiveSupport::CoreExtensions::Numeric::Time]
     attr_accessor :reset_password_within
 
     # An array of additional modules to load into the User module.
+    #
     # Defaults to an empty array.
+    #
     # @return [Array]
     attr_accessor :modules
 
@@ -188,7 +233,7 @@ module Authenticate
       @cookie_domain = nil
       @cookie_path = '/'
       @secure_cookie = false
-      @cookie_http_only = false
+      @cookie_http_only = true
       @mailer_sender = 'reply@example.com'
       @redirect_url = '/'
       @allow_sign_up = true
