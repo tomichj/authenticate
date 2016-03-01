@@ -28,7 +28,7 @@ Authenticate:
 * loads modules into your user model to provide authentication functionality
 * loads `callbacks` that are triggered during authentication and access events. All authentication
 decisions are performed in callbacks, e.g. do you have a valid session, has your session timed out, etc.
-* loads a module into your controllers (typically application controller) to secure controller actions
+* loads a module into your controllers (typically `ApplicationController`) to secure controller actions
 
 The callback architecture is based on the system used by devise and warden, but significantly simplified.
 
