@@ -8,7 +8,7 @@ module Authenticate
     class ControllersGenerator < Rails::Generators::Base
       source_root File.expand_path("../../../../..", __FILE__)
 
-      def create_views
+      def create_controllers
         directory 'app/controllers'
       end
 
