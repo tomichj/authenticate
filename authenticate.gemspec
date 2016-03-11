@@ -21,19 +21,18 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = %w(LICENSE README.md CHANGELOG.md)
   s.rdoc_options = ['--charset=UTF-8']
 
-  s.add_dependency 'bcrypt'
+  s.add_dependency 'bcrypt', '~> 3.1'
   s.add_dependency 'email_validator', '~> 1.6'
   s.add_dependency 'rails', '>= 4.0', '< 5.1'
 
-  # s.add_development_dependency 'factory_girl_rails', '~> 4.4.1'
-  s.add_development_dependency 'factory_girl'
-  s.add_development_dependency 'rspec-rails', '~> 3.1.0'
-  s.add_development_dependency 'pry'
-  s.add_development_dependency 'sqlite3'
+  s.add_development_dependency 'factory_girl', '~> 4.4'
+  s.add_development_dependency 'rspec-rails', '~> 3.1'
+  s.add_development_dependency 'pry', '~> 0.10'
+  s.add_development_dependency 'sqlite3', '~> 1.3'
   s.add_development_dependency 'shoulda-matchers', '~> 2.8'
-  s.add_development_dependency 'capybara', '~> 2.6.2'
-  s.add_development_dependency 'database_cleaner', '~> 1.5.1'
-  s.add_development_dependency 'timecop', '~> 0.8.0'
+  s.add_development_dependency 'capybara', '~> 2.6'
+  s.add_development_dependency 'database_cleaner', '~> 1.5'
+  s.add_development_dependency 'timecop', '~> 0.8'
 
   s.required_ruby_version = Gem::Requirement.new('>= 2.0')
 end
