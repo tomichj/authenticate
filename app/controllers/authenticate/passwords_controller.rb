@@ -56,7 +56,7 @@ class Authenticate::PasswordsController < Authenticate::AuthenticateController
   def deliver_email(user)
     mail = ::AuthenticateMailer.change_password(user)
 
-    if Gem::Version.new(Rails::VERSION::STRING) >= Gem::Version.new('4.2.0')
+    if mail.respond_to?(:deliver_later)
       mail.deliver_later
     else
       mail.deliver

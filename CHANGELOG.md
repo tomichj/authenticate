@@ -1,5 +1,17 @@
 # Authenticate Changelog
 
+## [0.3.1] - March 10, 2016
+
+User controller now allows arbitrary parameters without having to explicitly declare
+them. Still requires email and password.
+Mailer now checks for mail.respond_to?(:deliver_later) rather than rails version, 
+to decide deliver vs deliver_later.
+Removed unused user_id_parameter config method.
+
+[0.3.1]: https://github.com/tomichj/authenticate/compare/v0.3.0...v0.3.1
+
+
+
 ## [0.3.0] - February 24, 2016
 
 Moved normalize_email and find_normalized_email methods to base User module.

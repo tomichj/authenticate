@@ -24,7 +24,7 @@ describe Authenticate::Configuration do
     end
 
     it 'get a param key for a user model' do
-      expect(@conf.user_model_param_key).to eq('gug_profile')
+      expect(@conf.user_model_param_key).to eq(:gug_profile)
     end
 
     describe '#authentication_strategy' do

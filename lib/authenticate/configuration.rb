@@ -249,22 +249,18 @@ module Authenticate
       @user_model_class ||= user_model.constantize
     end
 
+    # The routing key for user routes. See `routes.rb`.
+    # @return [Symbol]
     def user_model_route_key
       return :users if @user_model == '::User' # avoid nil in generator
       user_model_class.model_name.route_key
     end
 
+    # The key for accessing user parameters.
+    # @return [Symbol]
     def user_model_param_key
       return :user if @user_model == '::User' # avoid nil in generator
-      user_model_class.model_name.param_key
-    end
-
-    # The name of foreign key parameter for the configured user model.
-    # This is derived from the `model_name` of the `user_model` setting.
-    # In the default configuration, this is `user_id`.
-    # @return [Symbol]
-    def user_id_parameter
-      "#{user_model_class.model_name.singular}_id".to_sym
+      user_model_class.model_name.param_key.to_sym
     end
 
     # Is the user sign up route enabled?
