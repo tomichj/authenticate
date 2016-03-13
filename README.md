@@ -11,7 +11,8 @@ Please use [GitHub Issues] to report bugs.
 
 [GitHub Issues]: https://github.com/tomichj/authenticate/issues
 
-![Build status](https://travis-ci.org/tomichj/authenticate.svg?branch=master) ![Code Climate](https://codeclimate.com/github/tomichj/authenticate/badges/gpa.svg)
+[![Gem Version](https://badge.fury.io/rb/authenticate.svg)](https://badge.fury.io/rb/authenticate) ![Build status](https://travis-ci.org/tomichj/authenticate.svg?branch=master) ![Code Climate](https://codeclimate.com/github/tomichj/authenticate/badges/gpa.svg)
+
 
 ## Philosophy
 
