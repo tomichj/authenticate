@@ -1,6 +1,6 @@
 Description:
-    Override the default authenticate views. This generator will copy all of the
-    base authenticate views into your project.
+    Override the default authenticate views and locale file. This generator will copy all of the
+    base authenticate views and locale file into your project.
 
 Examples:
     rails generate authenticate:views
@@ -11,3 +11,4 @@ Examples:
     View: app/views/passwords/new.html.erb
     View: app/views/sessions/new.html.erb
     View: app/views/users/new.html.erb
+    Locale: config/locales/en.yml
