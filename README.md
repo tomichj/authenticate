@@ -214,7 +214,38 @@ If the customization at the views level is not enough, you can customize each co
 authenticate mailer. See [app/controllers](/app/controllers) for the default controllers, and
 [app/mailers](/app/mailers) for the default mailer.
 
-You can use the Authenticate controller generator to copy the default controllers and mailer into your application:
+To override an authenticate controller, subclass an authenticate controller and update your routes to point to it.
+
+For example, to customize `Authenticate::SessionController`:
+
+* subclass the controller:
+
+```ruby
+class SessionsController < Authenticate::SessionController
+  # render sign in screen
+  def new
+    # ...
+  end
+  ...
+end
+```
+
+* update your routes to use your new controller. 
+
+Start by dumping a copy of authenticate routes to your `config/routes.rb`:
+
+```sh
+$ rails generate authenticate:routes 
+```
+
+Now update `config/routes.rb` to point to your new controller:
+```ruby
+resource :session, controller: 'sessions', only: [:create, :new, :destroy]
+  ...
+```
+
+You can also use the Authenticate controller generator to copy the default controllers and mailer into 
+your application:
 
 ```sh
 $ rails generate authenticate:controllers
