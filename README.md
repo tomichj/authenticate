@@ -60,7 +60,7 @@ The generator does the following:
 
 * Insert `include Authenticate::User` into your `User` model. If you don't have a User model, one is created.
 * Insert `include Authenticate::Controller` into your `ApplicationController`
-* Add an initializer at `config/intializers/authenticate.rb`.
+* Add an initializer at `config/initializers/authenticate.rb`.
 * Create migrations to create a users table or add columns to your existing table.
 
 
