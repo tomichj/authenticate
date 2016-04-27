@@ -26,6 +26,7 @@ describe Authenticate::UsersController, type: :controller do
       end
     end
   end
+
   describe 'post to #create' do
     context 'not signed in' do
       context 'with valid attributes' do
@@ -33,7 +34,7 @@ describe Authenticate::UsersController, type: :controller do
         subject { post :create, user: user_attributes }
 
         it 'creates user' do
-          expect{ subject }.to change{ User.count }.by(1)
+          expect { subject }.to change { User.count }.by(1)
         end
 
         it 'assigned user' do
@@ -55,7 +56,7 @@ describe Authenticate::UsersController, type: :controller do
         subject { post :create, user: user_attributes }
 
         it 'creates user' do
-          expect{ subject }.to change{ User.count }.by(1)
+          expect { subject }.to change { User.count }.by(1)
         end
 
         it 'assigned user' do
@@ -68,8 +69,8 @@ describe Authenticate::UsersController, type: :controller do
           expect(response).to redirect_to '/url_in_the_session'
         end
       end
-
     end
+
     context 'signed in' do
       it 'redirects to redirect_url' do
         sign_in
@@ -78,5 +79,4 @@ describe Authenticate::UsersController, type: :controller do
       end
     end
   end
-
 end

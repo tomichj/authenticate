@@ -37,7 +37,7 @@ describe Authenticate::SessionsController, type: :controller do
     context 'with good password' do
       before do
         @user = create(:user)
-        post :create, session:{ email: @user.email, password: @user.password }
+        post :create, session: { email: @user.email, password: @user.password }
       end
       it { is_expected.to respond_with 302 }
 
@@ -63,6 +63,7 @@ describe Authenticate::SessionsController, type: :controller do
 
       it { is_expected.to redirect_to sign_in_url }
     end
+
     context 'with a session cookie' do
       before do
         @user = create(:user, session_token: 'old-session-token')
@@ -82,5 +83,4 @@ describe Authenticate::SessionsController, type: :controller do
       end
     end
   end
-
 end

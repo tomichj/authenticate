@@ -1,18 +1,17 @@
 require 'spec_helper'
 require 'authenticate/model/db_password'
 
-
 describe Authenticate::Model::DbPassword do
   describe 'Passwords' do
     context '#password_match?' do
       subject { create(:user, password: 'password') }
 
       it 'matches a password' do
-        expect(subject.password_match? 'password').to be_truthy
+        expect(subject.password_match?('password')).to be_truthy
       end
 
       it 'fails to match a bad password' do
-        expect(subject.password_match? 'bad password').to be_falsey
+        expect(subject.password_match?('bad password')).to be_falsey
       end
 
       it 'saves passwords' do
@@ -20,7 +19,7 @@ describe Authenticate::Model::DbPassword do
         subject.save!
 
         user = User.find(subject.id)
-        expect(user.password_match? 'new_password').to be_truthy
+        expect(user.password_match?('new_password')).to be_truthy
       end
     end
 
@@ -49,7 +48,7 @@ describe Authenticate::Model::DbPassword do
       context 'on an existing user' do
         subject { create(:user, password: 'password') }
 
-        it { is_expected.to be_valid  }
+        it { is_expected.to be_valid }
 
         it 'should not be valid with an empty password' do
           subject.password = ''
@@ -64,6 +63,5 @@ describe Authenticate::Model::DbPassword do
         end
       end
     end
-
   end
 end

@@ -1,4 +1,27 @@
 module Authenticate
+  #
+  # The authenticate controller methods.
+  #
+  # Typically, you include this concern into your ApplicationController. A basic implementation might look like this:
+  #
+  #    class ApplicationController < ActionController::Base
+  #       include Authenticate::Controller
+  #       before_action :require_authentication
+  #       protect_from_forgery with: :exception
+  #     end
+  #
+  # Methods, generally called from authenticate's app controllers:
+  # * authenticate(params) - validate a user's identity
+  # * login(user, &block) - complete login after validating a user's identity, creating an Authenticate session
+  # * logout - log a user out, invalidating their Authenticate session.
+  #
+  # Action/Filter:
+  # * require_authentication - restrict access to authenticated users, often from ApplicationController
+  #
+  # Helpers, used anywhere:
+  # * current_user - get the current user from the current Authenticate session.
+  # * authenticated? - has the user been logged in?
+  #
   module Controller
     extend ActiveSupport::Concern
     include Debug
@@ -8,7 +31,6 @@ module Authenticate
       attr_writer :authenticate_session
     end
 
-
     # Validate a user's identity with (typically) email/ID & password, and return the User if valid, or nil.
     # After calling this, call login(user) to complete the process.
     def authenticate(params)
@@ -16,13 +38,11 @@ module Authenticate
       Authenticate.configuration.user_model_class.authenticate(credentials)
     end
 
-
     # Complete the user's sign in process: after calling authenticate, or after user creates account.
     # Runs all valid callbacks and sends the user a session token.
     def login(user, &block)
       authenticate_session.login user, &block
     end
-
 
     # Log the user out. Typically used in session controller.
     #
@@ -36,7 +56,6 @@ module Authenticate
     def logout
       authenticate_session.deauthenticate
     end
-
 
     # Use this filter as a before_action to restrict controller actions to authenticated users.
     # Consider using in application_controller to restrict access to all controllers.
@@ -53,17 +72,13 @@ module Authenticate
     #
     def require_authentication
       debug 'Controller::require_authentication'
-      unless authenticated?
-        unauthorized
-      end
-
+      unauthorized unless authenticated?
       message = catch(:failure) do
         current_user = authenticate_session.current_user
-        Authenticate.lifecycle.run_callbacks(:after_set_user, current_user, authenticate_session, {event: :set_user })
+        Authenticate.lifecycle.run_callbacks(:after_set_user, current_user, authenticate_session, event: :set_user)
       end
       unauthorized(message) if message
     end
-
 
     # Has the user been logged in? Exposed as a helper, can be called from views.
     #
@@ -76,7 +91,6 @@ module Authenticate
     def authenticated?
       authenticate_session.authenticated?
     end
-
 
     # Get the current user from the current Authenticate session.
     # Exposed as a helper , can be called from controllers, views, and other helpers.
@@ -103,9 +117,7 @@ module Authenticate
       authenticate_session.deauthenticate
       respond_to do |format|
         format.any(:js, :json, :xml) { head :unauthorized }
-        format.any {
-          redirect_unauthorized(msg)
-        }
+        format.any { redirect_unauthorized(msg) }
       end
     end
 
@@ -113,7 +125,7 @@ module Authenticate
       store_location
 
       if flash_message
-        flash[:notice] = flash_message  # TODO use locales
+        flash[:notice] = flash_message # TODO: use locales
       end
 
       if authenticated?
@@ -123,12 +135,10 @@ module Authenticate
       end
     end
 
-
     def redirect_back_or(default)
       redirect_to(stored_location || default)
       clear_stored_location
     end
-
 
     # Used as the redirect location when {#unauthorized} is called and there is a
     # currently signed in user.
@@ -152,11 +162,11 @@ module Authenticate
     def store_location
       if request.get?
         value = {
-            expires: nil,
-            httponly: true,
-            path: nil,
-            secure: Authenticate.configuration.secure_cookie,
-            value: request.original_fullpath
+          expires: nil,
+          httponly: true,
+          path: nil,
+          secure: Authenticate.configuration.secure_cookie,
+          value: request.original_fullpath
         }
         cookies[:authenticate_return_to] = value
       end
@@ -173,6 +183,5 @@ module Authenticate
     def authenticate_session
       @authenticate_session ||= Authenticate::Session.new(request, cookies)
     end
-
   end
 end

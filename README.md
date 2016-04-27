@@ -7,7 +7,8 @@ open to significant modification.
 
 Authenticate is inspired by, and draws from, Devise, Warden, Authlogic, Clearance, Sorcery, and restful_authentication.
 
-Please use [GitHub Issues] to report bugs.
+Please use [GitHub Issues] to report bugs. You can contact me directly on twitter 
+[@JustinTomich](https://twitter.com/justintomich).
 
 [GitHub Issues]: https://github.com/tomichj/authenticate/issues
 

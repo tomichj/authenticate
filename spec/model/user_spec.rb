@@ -17,5 +17,4 @@ describe Authenticate::User do
       expect(new_user.session_token).to_not eq old_token
     end
   end
-
 end

@@ -1,6 +1,6 @@
 module Authenticate
   module Model
-
+    #
     # Use :username as the identifier for the user. Username must be unique.
     #
     # = Columns
@@ -11,7 +11,7 @@ module Authenticate
     #
     # = class methods
     # * credentials(params) - return the credentials required for authorization by username
-    # * authenticate(credentials) - find user with given username, validate their password, return the user if authenticated
+    # * authenticate(credentials) - find user with given username, validate their password, return user if authenticated
     # * find_by_credentials(credentials) - find and return the user with the username in the credentials
     #
     module Username
@@ -28,6 +28,7 @@ module Authenticate
                   uniqueness: { allow_blank: true }
       end
 
+      # Class methods for managing username-based authentication
       module ClassMethods
         def credentials(params)
           [params[:session][:username], params[:session][:password]]
@@ -42,10 +43,7 @@ module Authenticate
           username = credentials[0]
           find_by_username username
         end
-
       end
-
     end
-
   end
 end

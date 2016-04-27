@@ -6,7 +6,7 @@ require 'rails/generators/base'
 module Authenticate
   module Generators
     class ViewsGenerator < Rails::Generators::Base
-      source_root File.expand_path("../../../../..", __FILE__)
+      source_root File.expand_path('../../../../..', __FILE__)
 
       def create_views
         directory 'app/views'
@@ -15,7 +15,6 @@ module Authenticate
       def create_locales
         directory 'config/locales'
       end
-
     end
   end
 end

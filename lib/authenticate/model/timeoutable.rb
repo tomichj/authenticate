@@ -2,7 +2,6 @@ require 'authenticate/callbacks/timeoutable'
 
 module Authenticate
   module Model
-
     # Expire user sessions that have not been accessed within a certain period of time.
     # Expired users will be asked for credentials again.
     #
@@ -27,24 +26,24 @@ module Authenticate
     # * timeout_in - look up timeout period in config, @return [ActiveSupport::CoreExtensions::Numeric::Time]
     #
     module Timeoutable
-        extend ActiveSupport::Concern
+      extend ActiveSupport::Concern
 
-        def self.required_fields(_klass)
-          [:last_access_at]
-        end
+      def self.required_fields(_klass)
+        [:last_access_at]
+      end
 
-        # Checks whether the user session has expired based on configured time.
-        def timedout?
-          return false if timeout_in.nil?
-          return false if last_access_at.nil?
-          last_access_at <= timeout_in.ago
-        end
+      # Checks whether the user session has expired based on configured time.
+      def timedout?
+        return false if timeout_in.nil?
+        return false if last_access_at.nil?
+        last_access_at <= timeout_in.ago
+      end
 
-        private
+      private
 
-        def timeout_in
-          Authenticate.configuration.timeout_in
-        end
+      def timeout_in
+        Authenticate.configuration.timeout_in
+      end
     end
   end
 end

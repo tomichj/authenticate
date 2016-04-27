@@ -1,9 +1,8 @@
 require 'authenticate/crypto/bcrypt'
 
-
 module Authenticate
   module Model
-
+    #
     # Encrypts and stores a password in the database to validate the authenticity of a user while logging in.
     #
     # Authenticate can plug in any crypto provider, but currently only features BCrypt.
@@ -37,28 +36,23 @@ module Authenticate
         attr_accessor :password_changing
         validates :password,
                   presence: true,
-                  length:{ in: password_length },
+                  length: { in: password_length },
                   unless: :skip_password_validation?
       end
 
-
-
       def password_match?(password)
-        match?(password, self.encrypted_password)
+        match?(password, encrypted_password)
       end
 
       def password=(new_password)
         @password = new_password
-
-        if new_password.present?
-          self.encrypted_password = encrypt(new_password)
-        end
+        self.encrypted_password = encrypt(new_password) if new_password.present?
       end
 
       private
 
+      # Class methods for database password management.
       module ClassMethods
-
         # We only have one crypto provider at the moment, but look up the provider in the config.
         def crypto_provider
           Authenticate.configuration.crypto_provider || Authenticate::Crypto::BCrypt
@@ -69,13 +63,10 @@ module Authenticate
         end
       end
 
-
       # If we already have an encrypted password and it's not changing, skip the validation.
       def skip_password_validation?
         encrypted_password.present? && !password_changing
       end
-
     end
   end
 end
-

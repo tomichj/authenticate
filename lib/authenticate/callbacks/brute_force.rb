@@ -1,8 +1,7 @@
 # Prevents a locked user from logging in, and unlocks users that expired their lock time.
 # Runs as a hook after authentication.
-Authenticate.lifecycle.prepend_after_authentication name: 'brute force protection' do |user, session, options|
+Authenticate.lifecycle.prepend_after_authentication name: 'brute force protection' do |user, session, _options|
   include ActionView::Helpers::DateHelper
-
   unless session.authenticated? || Authenticate.configuration.max_consecutive_bad_logins_allowed.nil?
     user_credentials = User.credentials(session.request.params)
     user ||= User.find_by_credentials(user_credentials)
@@ -23,5 +22,4 @@ Authenticate.lifecycle.prepend_after_authentication name: 'brute force protectio
     remaining = time_ago_in_words(user.lock_expires_at)
     throw(:failure, I18n.t('callbacks.brute_force.failure', time_remaining: remaining.to_s))
   end
-
 end

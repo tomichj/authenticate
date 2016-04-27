@@ -1,6 +1,10 @@
+# Authenticate
 module Authenticate
+  #
+  # Configuration for Authenticate.
+  #
   class Configuration
-
+    #
     # ActiveRecord model class name that represents your user. Specify as a String.
     #
     # Defaults to '::User'.
@@ -224,12 +228,11 @@ module Authenticate
     # @return [Boolean]
     attr_accessor :debug
 
-
     def initialize
       # Defaults
       @debug = false
       @cookie_name = 'authenticate_session_token'
-      @cookie_expiration =  -> { 1.year.from_now.utc }
+      @cookie_expiration = -> { 1.year.from_now.utc }
       @cookie_domain = nil
       @cookie_path = '/'
       @secure_cookie = false
@@ -286,10 +289,12 @@ module Authenticate
       modules << :brute_force if @max_consecutive_bad_logins_allowed
       modules
     end
-
   end # end of Configuration class
-
-
+  #
+  # Access to Authenticate's configuration, e.g.:
+  #
+  #   puts Authenticate.configuration.redirect_url
+  #
   def self.configuration
     @configuration ||= Configuration.new
   end
@@ -301,5 +306,4 @@ module Authenticate
   def self.configure
     yield configuration
   end
-
 end

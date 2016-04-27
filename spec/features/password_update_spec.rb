@@ -28,7 +28,6 @@ feature 'visitor updates password' do
   end
 end
 
-
 def update_password(user, password)
   visit_password_reset_page_for user
   fill_in 'password_reset_password', with: password
@@ -38,4 +37,3 @@ end
 def visit_password_reset_page_for(user)
   visit edit_users_password_path(id: user, token: user.password_reset_token)
 end
-

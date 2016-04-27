@@ -1,3 +1,6 @@
+#
+# Controller to reate new users.
+#
 class Authenticate::UsersController < Authenticate::AuthenticateController
   before_action :redirect_signed_in_users, only: [:create, :new]
   skip_before_action :require_authentication, only: [:create, :new], raise: false
@@ -21,15 +24,12 @@ class Authenticate::UsersController < Authenticate::AuthenticateController
   private
 
   def redirect_signed_in_users
-    if authenticated?
-      redirect_to Authenticate.configuration.redirect_url
-    end
+    redirect_to Authenticate.configuration.redirect_url if authenticated?
   end
 
   def url_after_create
     Authenticate.configuration.redirect_url
   end
-
 
   def user_from_params
     email = user_params.delete(:email)
@@ -42,8 +42,6 @@ class Authenticate::UsersController < Authenticate::AuthenticateController
   end
 
   def user_params
-    params[Authenticate.configuration.user_model_param_key] || Hash.new
+    params[Authenticate.configuration.user_model_param_key] || {}
   end
-
-
 end

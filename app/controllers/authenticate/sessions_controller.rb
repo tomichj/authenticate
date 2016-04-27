@@ -1,7 +1,9 @@
+#
+# Allow authenticate users to log in and log out.
+#
 class Authenticate::SessionsController < Authenticate::AuthenticateController
   before_action :redirect_signed_in_users, only: [:new]
   skip_before_action :require_authentication, only: [:create, :new, :destroy], raise: false
-
 
   def new
     render template: 'sessions/new'
@@ -27,9 +29,7 @@ class Authenticate::SessionsController < Authenticate::AuthenticateController
   private
 
   def redirect_signed_in_users
-    if authenticated?
-      redirect_to url_for_signed_in_users
-    end
+    redirect_to url_for_signed_in_users if authenticated?
   end
 
   def url_after_create

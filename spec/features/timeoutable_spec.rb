@@ -26,5 +26,4 @@ feature 'visitor session time' do
       expect_user_to_be_signed_out
     end
   end
-
 end

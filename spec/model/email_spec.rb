@@ -1,7 +1,6 @@
 require 'spec_helper'
 require 'authenticate/model/email'
 
-
 describe Authenticate::Model::Email do
   it 'validates email' do
     user = build(:user, :without_email)
@@ -12,7 +11,7 @@ describe Authenticate::Model::Email do
   end
 
   it 'extracts credentials from params' do
-    params = {session:{email:'foo', password:'bar'}}
+    params = { session: { email: 'foo', password: 'bar' } }
     expect(User.credentials(params)).to match_array(%w(foo bar))
   end
 
@@ -20,5 +19,4 @@ describe Authenticate::Model::Email do
     user = create(:user)
     expect(User.authenticate([user.email, user.password])).to eq(user)
   end
-
 end

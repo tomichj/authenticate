@@ -6,7 +6,7 @@ require 'rails/generators/base'
 module Authenticate
   module Generators
     class ControllersGenerator < Rails::Generators::Base
-      source_root File.expand_path("../../../../..", __FILE__)
+      source_root File.expand_path('../../../../..', __FILE__)
 
       def create_controllers
         directory 'app/controllers'
@@ -15,7 +15,6 @@ module Authenticate
       def create_mailers
         directory 'app/mailers'
       end
-
     end
   end
 end

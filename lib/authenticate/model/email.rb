@@ -2,7 +2,7 @@ require 'email_validator'
 
 module Authenticate
   module Model
-
+    #
     # Use :email as the identifier for the user. Email must be unique.
     #
     # = Columns
@@ -18,7 +18,7 @@ module Authenticate
     #
     # = Class Methods
     # * credentials(params) - return the credentials required for authorization by email
-    # * authenticate(credentials) - find user with given email, validate their password, return the user if authenticated
+    # * authenticate(credentials) - find user with given email, validate their password, return user if authenticated
     # * normalize_email(email) - clean up the given email and return it.
     # * find_by_credentials(credentials) - find and return the user with the email address in the credentials
     #
@@ -37,9 +37,11 @@ module Authenticate
                   uniqueness: { allow_blank: true }
       end
 
-
+      # Class methods for authenticating using email as the user identifier.
       module ClassMethods
-
+        # Retrieve credentials from params.
+        #
+        # @return [id, pw]
         def credentials(params)
           return [] if params.nil? || params[:session].nil?
           [params[:session][:email], params[:session][:password]]
@@ -54,18 +56,14 @@ module Authenticate
           email = credentials[0]
           find_by_normalized_email(email)
         end
-
       end
 
-      # Sets the email on this instance to the value returned by
-      # {.normalize_email}
+      # Sets the email on this instance to the value returned by class method #normalize_email
       #
       # @return [String]
       def normalize_email
         self.email = self.class.normalize_email(email)
       end
     end
-
   end
 end
-

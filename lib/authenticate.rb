@@ -7,6 +7,6 @@ require 'authenticate/user'
 require 'authenticate/engine'
 require 'authenticate/modules'
 
+# Top level module of authenticate gem.
 module Authenticate
-  # Your code goes here...
 end

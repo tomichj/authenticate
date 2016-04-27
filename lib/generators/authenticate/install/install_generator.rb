@@ -9,8 +9,10 @@ module Authenticate
       include Authenticate::Generators::Helpers
 
       source_root File.expand_path('../templates', __FILE__)
-
-      class_option :model, optional: true, type: :string, banner: 'model',
+      class_option :model,
+                   optional: true,
+                   type: :string,
+                   banner: 'model',
                    desc: "Specify the model class name if you will use anything other than 'User'"
 
       def initialize(*)
@@ -19,7 +21,7 @@ module Authenticate
       end
 
       def verify
-        if options[:model] && !File.exists?(model_path)
+        if options[:model] && !File.exist?(model_path)
           puts "Exiting: the model class you specified, #{options[:model]}, is not found."
           exit 1
         end
@@ -49,9 +51,9 @@ module Authenticate
 
       def inject_into_application_controller
         inject_into_class(
-            'app/controllers/application_controller.rb',
-            ApplicationController,
-            "  include Authenticate::Controller\n\n"
+          'app/controllers/application_controller.rb',
+          ApplicationController,
+          "  include Authenticate::Controller\n\n"
         )
       end
 
@@ -59,20 +61,19 @@ module Authenticate
         copy_file 'authenticate.rb', 'config/initializers/authenticate.rb'
         if options[:model]
           inject_into_file(
-              'config/initializers/authenticate.rb',
-              "  config.user_model = '#{options[:model]}' \n",
-              after: "Authenticate.configure do |config|\n",
+            'config/initializers/authenticate.rb',
+            "  config.user_model = '#{options[:model]}' \n",
+            after: "Authenticate.configure do |config|\n"
           )
         end
       end
-
 
       private
 
       def create_new_users_migration
         config = {
-            new_columns: new_columns,
-            new_indexes: new_indexes
+          new_columns: new_columns,
+          new_indexes: new_indexes
         }
         copy_migration 'create_users.rb', config
       end
@@ -80,8 +81,8 @@ module Authenticate
       def create_add_columns_migration
         if migration_needed?
           config = {
-              new_columns: new_columns,
-              new_indexes: new_indexes
+            new_columns: new_columns,
+            new_indexes: new_indexes
           }
           copy_migration('add_authenticate_to_users.rb', config)
         end
@@ -90,9 +91,9 @@ module Authenticate
       def copy_migration(migration_name, config = {})
         unless migration_exists?(migration_name)
           migration_template(
-              "db/migrate/#{migration_name}",
-              "db/migrate/#{migration_name}",
-              config
+            "db/migrate/#{migration_name}",
+            "db/migrate/#{migration_name}",
+            config
           )
         end
       end
@@ -103,23 +104,23 @@ module Authenticate
 
       def new_columns
         @new_columns ||= {
-            email: 't.string :email',
-            encrypted_password: 't.string :encrypted_password, limit: 128',
-            session_token: 't.string :session_token, limit: 128',
+          email: 't.string :email',
+          encrypted_password: 't.string :encrypted_password, limit: 128',
+          session_token: 't.string :session_token, limit: 128',
 
-            # trackable, lifetimed
-            current_sign_in_at: 't.datetime :current_sign_in_at',
-            current_sign_in_ip: 't.string :current_sign_in_ip, limit: 128',
-            last_sign_in_at: 't.datetime :last_sign_in_at',
-            last_sign_in_ip: 't.string :last_sign_in_ip, limit: 128',
-            sign_in_count: 't.integer :sign_in_count'
+          # trackable, lifetimed
+          current_sign_in_at: 't.datetime :current_sign_in_at',
+          current_sign_in_ip: 't.string :current_sign_in_ip, limit: 128',
+          last_sign_in_at: 't.datetime :last_sign_in_at',
+          last_sign_in_ip: 't.string :last_sign_in_ip, limit: 128',
+          sign_in_count: 't.integer :sign_in_count'
         }.reject { |column| existing_users_columns.include?(column.to_s) }
       end
 
       def new_indexes
         @new_indexes ||= {
-            index_users_on_email: "add_index :#{table_name}, :email",
-            index_users_on_session_token: "add_index :#{table_name}, :session_token"
+          index_users_on_email: "add_index :#{table_name}, :email",
+          index_users_on_session_token: "add_index :#{table_name}, :session_token"
         }.reject { |index| existing_users_indexes.include?(index.to_s) }
       end
 
@@ -128,7 +129,7 @@ module Authenticate
       end
 
       def existing_migrations
-        @existing_migrations ||= Dir.glob("db/migrate/*.rb").map do |file|
+        @existing_migrations ||= Dir.glob('db/migrate/*.rb').map do |file|
           migration_name_without_timestamp(file)
         end
       end
@@ -155,8 +156,6 @@ module Authenticate
       def self.next_migration_number(dir)
         ActiveRecord::Generators::Base.next_migration_number(dir)
       end
-
-
     end
   end
 end

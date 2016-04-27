@@ -21,7 +21,7 @@ module Authenticate
       end
 
       def namespaced?
-        !!namespace
+        !namespace.nil?
       end
 
       def model_name
@@ -56,7 +56,6 @@ module Authenticate
         @class_path.map!(&:underscore)
         @file_name = @class_path.pop
       end
-
     end
   end
 end

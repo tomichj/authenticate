@@ -3,7 +3,6 @@ require 'authenticate/token'
 require 'authenticate/callbacks/authenticatable'
 
 module Authenticate
-
   # Required to be included in your configured user class, which is `User` by
   # default, but can be changed with {Configuration#user_model=}.
   #
@@ -52,8 +51,8 @@ module Authenticate
       save validate: false
     end
 
+    # Class methods added to users.
     module ClassMethods
-
       def normalize_email(email)
         email.to_s.downcase.gsub(/\s+/, '')
       end
@@ -62,9 +61,6 @@ module Authenticate
       def find_by_normalized_email(email)
         find_by_email normalize_email(email)
       end
-
-      end
-
+    end
   end
 end
-

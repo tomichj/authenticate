@@ -1,0 +1,27 @@
+AllCops:
+  Exclude:
+    - 'bin/rails'
+    - 'spec/dummy/**/*'
+    - 'lib/generators/authenticate/install/templates/db/migrate/**/*'
+    - 'lib/generators/authenticate/routes/templates/routes.rb'
+
+Metrics/LineLength:
+  Max: 120
+
+Documentation:
+  Exclude:
+    - 'lib/generators/**/*'
+
+Metrics/MethodLength:
+  Max: 16
+
+Metrics/ClassLength:
+  Exclude:
+    - 'lib/generators/authenticate/install/install_generator.rb'
+
+Metrics/AbcSize:
+  Max: 18
+
+Lint/IneffectiveAccessModifier:
+  Exclude:
+    - 'lib/generators/authenticate/**/*'

@@ -6,18 +6,19 @@ RSpec::Matchers.define :deny_access do
   match do |controller|
     redirects_to_sign_in?(controller) && sets_flash?(controller)
   end
-  def redirects_to_sign_in? controller
+
+  def redirects_to_sign_in?(controller)
     expect(controller).to redirect_to(controller.sign_in_url)
   end
-  def sets_flash? controller
-    controller.flash[:notice].match /sign in to continue/
+
+  def sets_flash?(controller)
+    controller.flash[:notice].match(/sign in to continue/)
   end
 end
 
-
+# A dummy 'secured' controller to test
 class SecuredAppsController < ActionController::Base
   include Authenticate::Controller
-
   before_action :require_authentication, only: :show
 
   def new
@@ -28,7 +29,6 @@ class SecuredAppsController < ActionController::Base
     head :ok
   end
 end
-
 
 describe SecuredAppsController, type: :controller do
   before do

@@ -14,7 +14,7 @@ class Authenticate::PasswordsController < Authenticate::AuthenticateController
   #
   # POST /users/password
   def create
-    if user = find_user_for_create
+    if (user = find_user_for_create)
       user.forgot_password!
       deliver_email(user)
     end
@@ -41,11 +41,11 @@ class Authenticate::PasswordsController < Authenticate::AuthenticateController
 
     if !@user.reset_password_period_valid?
       redirect_to sign_in_path, notice: flash_failure_token_expired
-    elsif @user.update_password password_reset_params
+    elsif @user.update_password password_reset_params # password changed, log user back in!
       login @user
       redirect_to url_after_update, notice: flash_success_password_changed
     else
-      # failed to update password for some reason
+      # failed to update password for some reason, perhaps password was too short or otherwise sucked.
       flash.now[:notice] = flash_failure_after_update
       render template: 'passwords/edit'
     end

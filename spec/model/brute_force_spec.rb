@@ -1,7 +1,6 @@
 require 'spec_helper'
 require 'authenticate/model/brute_force'
 
-
 describe Authenticate::Model::BruteForce do
   before(:each) do
     @user = create(:user)
@@ -46,10 +45,10 @@ describe Authenticate::Model::BruteForce do
   end
 
   context '#unlock!' do
-    before(:each) {
+    before(:each) do
       @user.lock!
       @user.unlock!
-    }
+    end
     it 'zeros failed_logins_count' do
       expect(@user.failed_logins_count).to be(0)
     end

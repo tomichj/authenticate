@@ -26,5 +26,4 @@ feature 'visitor has consecutive bad logins' do
       expect_user_to_be_signed_out
     end
   end
-
 end

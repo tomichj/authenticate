@@ -1,7 +1,6 @@
 require 'spec_helper'
 require 'authenticate/model/password_reset'
 
-
 describe Authenticate::Model::PasswordReset do
   context 'forgot_password!' do
     subject { create(:user) }
@@ -14,7 +13,6 @@ describe Authenticate::Model::PasswordReset do
     it 'sets password reset sent at' do
       expect(subject.password_reset_sent_at).to_not be_nil
     end
-
   end
 
   context '#reset_password_period_valid?' do
@@ -43,12 +41,10 @@ describe Authenticate::Model::PasswordReset do
     subject { create(:user) }
 
     context 'within time time' do
-      before(:each) {
-        subject.password_reset_sent_at = 1.minutes.ago
-      }
+      before(:each) { subject.password_reset_sent_at = 1.minutes.ago }
 
       it 'allows password update within time limit' do
-        expect(subject.update_password 'password2').to be_truthy
+        expect(subject.update_password('password2')).to be_truthy
       end
 
       it 'clears password reset token' do
@@ -61,14 +57,11 @@ describe Authenticate::Model::PasswordReset do
         subject.update_password 'password2'
         expect(subject.session_token).to_not eq(token)
       end
-
     end
 
     it 'stops password update after time limit' do
       subject.password_reset_sent_at = 6.minutes.ago
-      expect(subject.update_password 'password2').to be_falsey
+      expect(subject.update_password('password2')).to be_falsey
     end
-
   end
-
 end

@@ -1,5 +1,6 @@
+# Authenticate Lifecycle methods within
 module Authenticate
-
+  #
   # Lifecycle stores and runs callbacks for authorization events.
   #
   # Heavily borrowed from warden (https://github.com/hassox/warden).
@@ -37,21 +38,21 @@ module Authenticate
   #
   class Lifecycle
     include Debug
-    @@conditions = [:only, :except, :event]
+
+    def initialize
+      @conditions = [:only, :except, :event].freeze
+    end
 
     # This callback is triggered after the first time a user is set during per-hit authorization, or during login.
     def after_set_user(options = {}, method = :push, &block)
       add_callback(after_set_user_callbacks, options, method, &block)
     end
 
-
-
     # A callback to run after the user successfully authenticates, during the login process.
     # Mechanically identical to [#after_set_user].
     def after_authentication(options = {}, method = :push, &block)
       add_callback(after_authentication_callbacks, options, method, &block)
     end
-
 
     # Run callbacks of the given kind.
     #
@@ -64,26 +65,15 @@ module Authenticate
     def run_callbacks(kind, *args) # args - |user, session, opts|
       # Last callback arg MUST be a Hash
       options = args.last
-      debug "START Lifecycle.run_callbacks kind:#{kind} options:#{options.inspect}"
-
-      # each callback has 'conditions' stored with it
-      send("#{kind}_callbacks").each do |callback, conditions|
-        conditions = conditions.dup # make a copy, we mutate it
-        debug "Lifecycle.running callback -- #{conditions.inspect}"
-        conditions.delete_if {|key, _val| !@@conditions.include? key}
-        # debug "conditions after filter:#{conditions.inspect}"
+      send("#{kind}_callbacks").each do |callback, conditions| # each callback has 'conditions' stored with it
+        conditions = conditions.dup.delete_if { |key, _val| !@conditions.include? key }
         invalid = conditions.find do |key, value|
-          # debug "!!!!!!! conditions key:#{key} value:#{value}      options[key]:#{options[key].inspect}"
-          # debug("!value.include?(options[key]):#{!value.include?(options[key])}") if value.is_a?(Array)
           value.is_a?(Array) ? !value.include?(options[key]) : (value != options[key])
         end
-        debug "Lifecycle.callback invalid? #{invalid.inspect}"
         callback.call(*args) unless invalid
       end
-      debug "FINISHED Lifecycle.run_callbacks #{kind}"
       nil
     end
-
 
     def prepend_after_authentication(options = {}, &block)
       after_authentication(options, :unshift, &block)
@@ -97,7 +87,6 @@ module Authenticate
       callbacks.send(method, [block, options])
     end
 
-
     # set event: to run callback on based on options
     def process_opts(options)
       if options.key?(:only)
@@ -108,7 +97,6 @@ module Authenticate
       options
     end
 
-
     def after_set_user_callbacks
       @after_set_user_callbacks ||= []
     end
@@ -118,7 +106,9 @@ module Authenticate
     end
   end
 
-
+  # Invoke lifecycle methods. Example:
+  #   Authenticate.lifecycle.run_callbacks(:after_set_user, current_user, authenticate_session, { event: :set_user })
+  #
   def self.lifecycle
     @lifecycle ||= Lifecycle.new
   end

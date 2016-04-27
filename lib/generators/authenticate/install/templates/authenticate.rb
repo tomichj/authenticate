@@ -1,5 +1,4 @@
 Authenticate.configure do |config|
-
   # config.user_model = 'User'
 
   # config.cookie_name = 'authenticate_session_token'

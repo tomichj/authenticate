@@ -36,9 +36,7 @@ feature 'visitor has consecutive bad logins' do
       expect_user_to_be_signed_in
     end
   end
-
 end
-
 
 def expect_locked_account
   expect(page).to have_content 'Your account is locked'

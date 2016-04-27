@@ -1,7 +1,6 @@
 module Features
+  # Helpers for feature tests
   module FeatureHelpers
-
-
     def sign_in_with(email, password)
       visit sign_in_path
       fill_in 'session_email', with: email
@@ -11,7 +10,7 @@ module Features
 
     def sign_out
       within '#header' do
-        click_link I18n.t("layouts.application.sign_out")
+        click_link I18n.t('layouts.application.sign_out')
       end
     end
 
@@ -27,7 +26,6 @@ module Features
     def expect_user_to_be_signed_out
       expect(page).to have_content 'Sign in'
     end
-
   end
 end
 

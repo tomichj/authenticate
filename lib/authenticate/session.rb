@@ -2,6 +2,7 @@ require 'authenticate/login_status'
 require 'authenticate/debug'
 
 module Authenticate
+  # Represents an Authenticate session.
   class Session
     include Debug
 
@@ -16,19 +17,19 @@ module Authenticate
 
     # Finish user login process, *after* the user has been authenticated.
     # Called when user creates an account or signs back into the app.
+    # Runs all callbacks checking for any login failure. If a login failure
+    # occurs, user is NOT logged in.
     #
     # @return [User]
-    def login(user, &block)
-      debug 'session.login()'
+    def login(user)
       @current_user = user
       @current_user.generate_session_token if user.present?
 
       message = catch(:failure) do
-        Authenticate.lifecycle.run_callbacks(:after_set_user, @current_user, self, { event: :authentication })
-        Authenticate.lifecycle.run_callbacks(:after_authentication, @current_user, self, { event: :authentication })
+        Authenticate.lifecycle.run_callbacks(:after_set_user, @current_user, self, event: :authentication)
+        Authenticate.lifecycle.run_callbacks(:after_authentication, @current_user, self, event: :authentication)
       end
 
-      debug "session.login after lifecycle callbacks, message: #{message}"
       status = message.present? ? Failure.new(message) : Success.new
       if status.success?
         @current_user.save
@@ -37,9 +38,7 @@ module Authenticate
         @current_user = nil
       end
 
-      if block_given?
-        block.call(status)
-      end
+      yield(status) if block_given?
     end
 
     # Get the user represented by this session.
@@ -47,9 +46,7 @@ module Authenticate
     # @return [User]
     def current_user
       debug 'session.current_user'
-      if @session_token.present?
-        @current_user ||= load_user
-      end
+      @current_user ||= load_user if @session_token.present?
       @current_user
     end
 
@@ -66,9 +63,7 @@ module Authenticate
     # @return [void]
     def deauthenticate
       # nuke session_token in db
-      if current_user.present?
-        current_user.reset_session_token!
-      end
+      current_user.reset_session_token! if current_user.present?
 
       # nuke notion of current_user
       @current_user = nil
@@ -87,16 +82,15 @@ module Authenticate
 
     def write_cookie
       cookie_hash = {
-          path: Authenticate.configuration.cookie_path,
-          secure: Authenticate.configuration.secure_cookie,
-          httponly: Authenticate.configuration.cookie_http_only,
-          value: @current_user.session_token,
-          expires: Authenticate.configuration.cookie_expiration.call
+        path: Authenticate.configuration.cookie_path,
+        secure: Authenticate.configuration.secure_cookie,
+        httponly: Authenticate.configuration.cookie_http_only,
+        value: @current_user.session_token,
+        expires: Authenticate.configuration.cookie_expiration.call
       }
       cookie_hash[:domain] = Authenticate.configuration.cookie_domain if Authenticate.configuration.cookie_domain
-      # @cookies.signed[cookie_name] = cookie_hash
+      # Consider adding an option for a signed cookie
       @cookies[cookie_name] = cookie_hash
-      debug 'session.write_cookie WROTE COOKIE I HOPE. Cookie guts:' + @cookies[cookie_name].inspect
     end
 
     def cookie_name
@@ -106,7 +100,5 @@ module Authenticate
     def load_user
       Authenticate.configuration.user_model_class.where(session_token: @session_token).first
     end
-
   end
 end
-

@@ -2,7 +2,7 @@ require 'authenticate/callbacks/lifetimed'
 
 module Authenticate
   module Model
-
+    #
     # Imposes a maximum allowed lifespan on a user's session, after which the session is expired and requires
     # re-authentication.
     #
@@ -41,7 +41,6 @@ module Authenticate
       def max_session_lifetime
         Authenticate.configuration.max_session_lifetime
       end
-
     end
   end
 end

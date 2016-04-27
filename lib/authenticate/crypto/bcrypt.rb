@@ -1,6 +1,6 @@
 module Authenticate
   module Crypto
-
+    #
     # All crypto providers must implement encrypt(secret) and match?(secret, encrypted)
     module BCrypt
       require 'bcrypt'
@@ -20,11 +20,11 @@ module Authenticate
 
       def cost=(val)
         if val < ::BCrypt::Engine::MIN_COST
-          raise ArgumentError.new("bcrypt cost cannot be set below the engine's min cost (#{::BCrypt::Engine::MIN_COST})")
+          msg = "bcrypt cost cannot be set below the engine's min cost (#{::BCrypt::Engine::MIN_COST})"
+          raise ArgumentError.new(msg), msg
         end
         @cost = val
       end
-
     end
   end
 end

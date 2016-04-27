@@ -29,7 +29,6 @@ feature 'visitor signs up' do
   end
 end
 
-
 def expect_sign_up_page
   expect(current_path).to eq sign_up_path
 end

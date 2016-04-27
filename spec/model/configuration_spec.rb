@@ -2,9 +2,9 @@ require 'spec_helper'
 require 'authenticate/configuration'
 
 describe Authenticate::Configuration do
-
   context 'user model' do
     module Gug
+      # Faux user model
       class Profile
         extend ActiveModel::Naming
       end
@@ -42,7 +42,7 @@ describe Authenticate::Configuration do
 
       context 'with strategy set to username' do
         before do
-            @conf.authentication_strategy = :username
+          @conf.authentication_strategy = :username
         end
         it 'includes username in modules' do
           expect(@conf.modules).to include :username
@@ -51,11 +51,6 @@ describe Authenticate::Configuration do
           expect(@conf.modules).to_not include :email
         end
       end
-
     end
-
   end
-
-
-
 end

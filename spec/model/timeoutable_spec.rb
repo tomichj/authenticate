@@ -1,7 +1,6 @@
 require 'spec_helper'
 require 'authenticate/model/timeoutable'
 
-
 describe Authenticate::Model::Timeoutable do
   subject { create(:user) }
 

@@ -1,8 +1,8 @@
 require 'authenticate/controller'
 
 module Controllers
+  # Helpers for controller tests
   module ControllerHelpers
-
     def sign_in
       user = create(:user)
       sign_in_as user
@@ -15,7 +15,6 @@ module Controllers
     def sign_out
       controller.logout
     end
-
   end
 end
 

@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-
 describe Authenticate::Session do
   describe 'session token' do
     it 'finds a user from session token' do
@@ -18,7 +17,7 @@ describe Authenticate::Session do
     end
     it 'returns nil with a bogus session token' do
       request = mock_request
-      cookies = {Authenticate.configuration.cookie_name.freeze.to_sym => 'some made up value'}
+      cookies = { Authenticate.configuration.cookie_name.freeze.to_sym => 'some made up value' }
       session = Authenticate::Session.new(request, cookies)
       expect(session.current_user).to be_nil
     end
@@ -56,9 +55,9 @@ describe Authenticate::Session do
     context 'modules' do
       it 'runs the callbacks' do
         user = create(:user, :with_session_token, sign_in_count: 0)
-        cookies = {authenticate_session_token: user.session_token}
+        cookies = { authenticate_session_token: user.session_token }
         session = Authenticate::Session.new(mock_request, cookies)
-        expect{session.login(user)}.to change{user.sign_in_count}.by(1)
+        expect { session.login(user) }. to change { user.sign_in_count }.by(1)
       end
       it 'fails login if a callback fails' do
         cookies = {}
@@ -72,6 +71,6 @@ describe Authenticate::Session do
   end
 end
 
-def cookies_for user
+def cookies_for(user)
   { Authenticate.configuration.cookie_name.freeze.to_sym => user.session_token }
 end

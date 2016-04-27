@@ -16,7 +16,7 @@ module Authenticate
         inject_into_file(
           'config/initializers/authenticate.rb',
           "  config.routes = false \n",
-          after: "Authenticate.configure do |config|\n",
+          after: "Authenticate.configure do |config|\n"
         )
       end
 
@@ -30,7 +30,6 @@ module Authenticate
       def routes_file_path
         File.expand_path(find_in_source_paths('routes.rb'))
       end
-
     end
   end
 end

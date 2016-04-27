@@ -2,8 +2,7 @@ require 'authenticate/callbacks/brute_force'
 
 module Authenticate
   module Model
-
-
+    #
     # Protect from brute force attacks. Lock accounts that have too many failed consecutive logins.
     # Todo: email user to allow unlocking via a token.
     #
@@ -37,7 +36,6 @@ module Authenticate
         [:failed_logins_count, :lock_expires_at]
       end
 
-
       def register_failed_login!
         self.failed_logins_count ||= 0
         self.failed_logins_count += 1
@@ -45,11 +43,11 @@ module Authenticate
       end
 
       def lock!
-        self.update_attribute(:lock_expires_at, Time.now.utc + lockout_period)
+        update_attribute(:lock_expires_at, Time.now.utc + lockout_period)
       end
 
       def unlock!
-        self.update_attributes({failed_logins_count: 0, lock_expires_at: nil})
+        update_attributes(failed_logins_count: 0, lock_expires_at: nil)
       end
 
       def locked?
@@ -57,7 +55,7 @@ module Authenticate
       end
 
       def unlocked?
-        self.lock_expires_at.nil?
+        lock_expires_at.nil?
       end
 
       private

@@ -1,6 +1,5 @@
 module Authenticate
   module Model
-
     # Support 'forgot my password' functionality.
     #
     # = Columns
@@ -68,7 +67,7 @@ module Authenticate
       def reset_password_period_valid?
         reset_within = Authenticate.configuration.reset_password_within
         return true if reset_within.nil?
-        self.password_reset_sent_at &&  self.password_reset_sent_at.utc >= reset_within.ago.utc
+        password_reset_sent_at && password_reset_sent_at.utc >= reset_within.ago.utc
       end
 
       private
@@ -77,7 +76,6 @@ module Authenticate
         self.password_reset_token = nil
         self.password_reset_sent_at = nil
       end
-
     end
   end
 end

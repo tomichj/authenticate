@@ -18,5 +18,4 @@ feature 'visitor signs out' do
     visit sign_out_path
     expect_user_to_be_signed_out
   end
-
 end

@@ -2,7 +2,7 @@ require 'authenticate/callbacks/trackable'
 
 module Authenticate
   module Model
-
+    #
     # Track information about your user sign ins. This module is always enabled.
     #
     # = Methods
@@ -24,11 +24,13 @@ module Authenticate
       end
 
       def update_tracked_fields(request)
-        old_current, new_current = self.current_sign_in_at, Time.now.utc
+        old_current = current_sign_in_at
+        new_current = Time.now.utc
         self.last_sign_in_at     = old_current || new_current
         self.current_sign_in_at  = new_current
 
-        old_current, new_current = self.current_sign_in_ip, request.remote_ip
+        old_current = current_sign_in_ip
+        new_current = request.remote_ip
         self.last_sign_in_ip     = old_current || new_current
         self.current_sign_in_ip  = new_current
 
@@ -40,7 +42,6 @@ module Authenticate
         update_tracked_fields(request)
         save(validate: false)
       end
-
     end
   end
 end

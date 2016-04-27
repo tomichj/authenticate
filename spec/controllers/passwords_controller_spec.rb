@@ -31,7 +31,7 @@ describe Authenticate::PasswordsController, type: :controller do
       bad_email = 'bunk_email_address@non_existent_domain.com'
       it 'does not send an email' do
         ActionMailer::Base.deliveries.clear
-        post :create, password: { email: bad_email}
+        post :create, password: { email: bad_email }
         expect(ActionMailer::Base.deliveries).to be_empty
       end
       it 'always responds with redirect to avoid leaking user information' do
@@ -64,7 +64,7 @@ describe Authenticate::PasswordsController, type: :controller do
         user = create(:user, :with_password_reset_token_and_timestamp, password_reset_sent_at: 2.years.ago)
         get :edit, id: user.id, token: user.password_reset_token
         expect(response).to be_redirect
-        expect(flash[:notice]).to match /password change request has expired/
+        expect(flash[:notice]).to match(/password change request has expired/)
       end
     end
     context 'with a blank password_reset_token' do
@@ -104,16 +104,14 @@ describe Authenticate::PasswordsController, type: :controller do
         expect(response).to render_template(:edit)
       end
     end
-
   end
 
   def update_params(user, options = {})
     new_password = options.fetch(:new_password)
     {
-        id: user,
-        token: user.password_reset_token,
-        password_reset: { password: new_password }
+      id: user,
+      token: user.password_reset_token,
+      password_reset: { password: new_password }
     }
   end
-
 end
