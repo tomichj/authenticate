@@ -1,5 +1,14 @@
 # Authenticate Changelog
 
+## [0.3.2] - April 28, 2016
+
+Error now raised if User model is missing required attributes.
+All code now conforms to a rubocode profile.
+
+[0.3.2]: https://github.com/tomichj/authenticate/compare/v0.3.1...v0.3.2
+
+
+
 ## [0.3.1] - March 10, 2016
 
 User controller now allows arbitrary parameters without having to explicitly declare
