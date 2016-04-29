@@ -33,7 +33,6 @@ module Authenticate
         private_class_method :crypto_provider
         include crypto_provider
         attr_reader :password
-        attr_accessor :password_changing
         validates :password,
                   presence: true,
                   length: { in: password_length },
@@ -46,7 +45,7 @@ module Authenticate
 
       def password=(new_password)
         @password = new_password
-        self.encrypted_password = encrypt(new_password) if new_password.present?
+        self.encrypted_password = encrypt(new_password) unless new_password.nil?
       end
 
       private
@@ -65,7 +64,7 @@ module Authenticate
 
       # If we already have an encrypted password and it's not changing, skip the validation.
       def skip_password_validation?
-        encrypted_password.present? && !password_changing
+        encrypted_password.present? && !encrypted_password_changed?
       end
     end
   end

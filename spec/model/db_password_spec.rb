@@ -33,14 +33,12 @@ describe Authenticate::Model::DbPassword do
         it 'should be not be valid with a short password' do
           user = build(:user)
           user.password = 'short'
-          user.password_changing = true
           expect(user).to_not be_valid
         end
 
         it 'is valid with a long password' do
           user = build(:user)
           user.password = 'thisisalongpassword'
-          user.password_changing = true
           expect(user).to be_valid
         end
       end
@@ -52,13 +50,11 @@ describe Authenticate::Model::DbPassword do
 
         it 'should not be valid with an empty password' do
           subject.password = ''
-          subject.password_changing = true
           expect(subject).to_not be_valid
         end
 
         it 'should be valid with a new (valid) password' do
           subject.password = 'new password'
-          subject.password_changing = true
           expect(subject).to be_valid
         end
       end

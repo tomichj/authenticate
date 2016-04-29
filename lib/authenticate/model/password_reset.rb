@@ -31,15 +31,11 @@ module Authenticate
       # @return [Boolean] Was the save successful?
       def update_password(new_password)
         return false unless reset_password_period_valid?
-
-        self.password_changing = true
         self.password = new_password
-
         if valid?
           clear_reset_password_token
           generate_session_token
         end
-
         save
       end
 

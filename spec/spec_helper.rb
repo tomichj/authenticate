@@ -20,7 +20,7 @@ DatabaseCleaner.strategy = :truncation
 # Load factory girl factories.
 Dir[File.join(File.dirname(__FILE__), 'factories/**/*.rb')].each { |f| require f }
 
-# Build test database in rails
+# Build test database in spec/dummy/db/
 if defined?(ActiveRecord::Migration.maintain_test_schema!)
   ActiveRecord::Migration.maintain_test_schema! # rails 4.1+
 else
