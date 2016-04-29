@@ -46,7 +46,7 @@ module Authenticate
     # @return [User]
     def current_user
       debug 'session.current_user'
-      @current_user ||= load_user if @session_token.present?
+      @current_user ||= load_user_from_session_token if @session_token.present?
       @current_user
     end
 
@@ -97,7 +97,7 @@ module Authenticate
       Authenticate.configuration.cookie_name.freeze.to_sym
     end
 
-    def load_user
+    def load_user_from_session_token
       Authenticate.configuration.user_model_class.where(session_token: @session_token).first
     end
   end

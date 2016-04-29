@@ -1,5 +1,16 @@
 # Authenticate Changelog
 
+## [0.3.3] - April 29, 2016
+
+Password change uses active record's dirty bit to detect that password was updated. 
+password_updated attribute removed.
+spec_helper now calls ActiveRecord::Migration.maintain_test_schema! (or check_pending!) to handle dummy test db.
+Added CodeClimate config.
+
+[0.3.3]: https://github.com/tomichj/authenticate/compare/v0.3.2...v0.3.3
+
+
+
 ## [0.3.2] - April 28, 2016
 
 Error now raised if User model is missing required attributes.
