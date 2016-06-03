@@ -1,5 +1,13 @@
 # Authenticate Changelog
 
+## [0.4.0] - June 2, 2016
+
+Install generator User:  ActiveRecord::Base for Rails 4 apps, ApplicationRecord for rails 5 (issue #2).
+
+[0.4.0]: https://github.com/tomichj/authenticate/compare/v0.3.3...v0.4.0
+
+
+
 ## [0.3.3] - April 29, 2016
 
 Password change uses active record's dirty bit to detect that password was updated. 

@@ -31,7 +31,9 @@ module Authenticate
         if File.exist? model_path
           inject_into_class(model_path, model_class_name, "  include Authenticate::User\n\n")
         else
-          copy_file 'user.rb', 'app/models/user.rb'
+          @model_base_class = model_base_class
+          # copy_file 'user.rb', 'app/models/user.rb'
+          template 'user.rb.erb', 'app/models/user.rb'
         end
       end
 
@@ -155,6 +157,10 @@ module Authenticate
       # for generating a timestamp when using `create_migration`
       def self.next_migration_number(dir)
         ActiveRecord::Generators::Base.next_migration_number(dir)
+      end
+
+      def model_base_class
+        (Rails.version >= '5.0.0') ? 'ApplicationRecord' : 'ActiveRecord::Base'
       end
     end
   end

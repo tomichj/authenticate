@@ -343,7 +343,6 @@ module LoginCount
 end
 
 # config/initializers/authenticate.rb
-# You could also just `include LoginCount` in your user model.
 Authenticate.configuration do |config|
   config.modules = [LoginCount]
 end
