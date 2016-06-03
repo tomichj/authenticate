@@ -3,9 +3,8 @@ require 'support/features/feature_helpers'
 
 feature 'visitor has consecutive bad logins' do
   before do
-    # puts Authenticate.configuration.max_consecutive_bad_logins_allowed.inspect
-    # puts Authenticate.configuration.bad_login_lockout_period.inspect
     @user = create(:user)
+    Authenticate.configuration.max_consecutive_bad_logins_allowed = 2
   end
 
   scenario 'less than max bad logins does not lock account' do
