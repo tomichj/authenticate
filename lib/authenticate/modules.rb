@@ -2,6 +2,10 @@ module Authenticate
   #
   # Modules injects Authenticate modules into the app User model.
   #
+  # Modules are loaded into the user model with class method `load_modules`. Authenticate::User calls
+  # `load_modules`. Modules are specified in the config as constants; `load_modules` requires them,
+  # turns them into constants, checks for required fields (see below), and then includes them into the user.
+  #
   # Any module being loaded into User can optionally define a class method `required_fields(klass)` defining
   # any required attributes in the User model. For example, the :username module declares:
   #
@@ -15,6 +19,8 @@ module Authenticate
   #
   # If the model class is missing a required field, Authenticate will fail with a MissingAttribute error.
   # The error will declare what required fields are missing.
+  #
+  #
   module Modules
     extend ActiveSupport::Concern
     #
