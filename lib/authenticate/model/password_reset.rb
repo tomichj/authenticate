@@ -63,6 +63,7 @@ module Authenticate
       def reset_password_period_valid?
         reset_within = Authenticate.configuration.reset_password_within
         return true if reset_within.nil?
+        return true if password_reset_sent_at.nil? && password_reset_token.nil?
         password_reset_sent_at && password_reset_sent_at.utc >= reset_within.ago.utc
       end
 

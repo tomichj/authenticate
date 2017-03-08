@@ -241,7 +241,7 @@ $ rails generate authenticate:routes
 
 Now update `config/routes.rb` to point to your new controller:
 ```ruby
-resource :session, controller: 'sessions', only: [:create, :new, :destroy]
+resource :sessions, controller: 'sessions', only: [:create, :new, :destroy]
   ...
 ```
 
@@ -338,7 +338,7 @@ module LoginCount
 
   def count_login
     self.login_count ||= 0
-    self.login_counter += 1
+    self.login_count += 1
   end
 end
 

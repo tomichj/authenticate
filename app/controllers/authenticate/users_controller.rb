@@ -1,5 +1,5 @@
 #
-# Controller to reate new users.
+# Controller to create new users.
 #
 class Authenticate::UsersController < Authenticate::AuthenticateController
   before_action :redirect_signed_in_users, only: [:create, :new]
