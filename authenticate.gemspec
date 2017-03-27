@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'bcrypt', '~> 3.1'
   s.add_dependency 'email_validator', '~> 1.6'
-  s.add_dependency 'rails', '>= 4.0', '< 5.1'
+  s.add_dependency 'rails', '>= 4.0', '< 5.2'
 
   s.add_development_dependency 'factory_girl', '~> 4.4'
   s.add_development_dependency 'rspec-rails', '~> 3.1'
