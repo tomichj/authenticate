@@ -1,17 +1,20 @@
-language: ruby
+cache: bundler
+
+language:
+  - ruby
 
 rvm:
   - 2.1.8
   - 2.2.4
-  - 2.3.0
+  - 2.3.3
 
 gemfile:
-  - gemfiles/rails42.gemfile
+  - gemfiles/4.2.gemfile
 
-branches:
-  only:
-    - master
+#branches:
+#  only:
+#    - master
 
 sudo: false
 
-script: bundle exec rspec --color --format documentation
+#script: bundle exec rspec --color --format documentation

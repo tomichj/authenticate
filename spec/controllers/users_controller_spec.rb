@@ -7,12 +7,12 @@ describe Authenticate::UsersController, type: :controller do
   describe 'get to #new' do
     context 'not signed in' do
       it 'renders form' do
-        get :new
+        do_get :new
         expect(response).to be_success
         expect(response).to render_template(:new)
       end
       it 'defaults email field to the value provided in the query string' do
-        get :new, user: { email: 'dude@example.com' }
+        do_get :new, params: { user: { email: 'dude@example.com' } }
         expect(assigns(:user).email).to eq 'dude@example.com'
         expect(response).to be_success
         expect(response).to render_template(:new)
@@ -21,7 +21,7 @@ describe Authenticate::UsersController, type: :controller do
     context 'signed in' do
       it 'redirects user to the redirect_url' do
         sign_in
-        get :new
+        do_get :new
         expect(response).to redirect_to Authenticate.configuration.redirect_url
       end
     end
@@ -31,7 +31,7 @@ describe Authenticate::UsersController, type: :controller do
     context 'not signed in' do
       context 'with valid attributes' do
         let(:user_attributes) { attributes_for(:user) }
-        subject { post :create, user: user_attributes }
+        subject { do_post :create, params: { user: user_attributes } }
 
         it 'creates user' do
           expect { subject }.to change { User.count }.by(1)
@@ -53,7 +53,7 @@ describe Authenticate::UsersController, type: :controller do
           @request.cookies[:authenticate_return_to] = '/url_in_the_session'
         end
         let(:user_attributes) { attributes_for(:user) }
-        subject { post :create, user: user_attributes }
+        subject { do_post :create, params: { user: user_attributes } }
 
         it 'creates user' do
           expect { subject }.to change { User.count }.by(1)
@@ -74,7 +74,7 @@ describe Authenticate::UsersController, type: :controller do
     context 'signed in' do
       it 'redirects to redirect_url' do
         sign_in
-        post :create, user: {}
+        do_post :create, params: { user: {} }
         expect(response).to redirect_to Authenticate.configuration.redirect_url
       end
     end

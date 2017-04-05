@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = %w(LICENSE README.md CHANGELOG.md)
   s.rdoc_options = ['--charset=UTF-8']
 
-  s.add_dependency 'bcrypt', '~> 3.1'
+  s.add_dependency 'bcrypt'
   s.add_dependency 'email_validator', '~> 1.6'
   s.add_dependency 'rails', '>= 4.0', '< 5.2'
 
@@ -33,6 +33,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'capybara', '~> 2.6'
   s.add_development_dependency 'database_cleaner', '~> 1.5'
   s.add_development_dependency 'timecop', '~> 0.8'
+  s.add_development_dependency 'appraisal'
+  s.add_development_dependency 'rake'
 
   s.required_ruby_version = Gem::Requirement.new('>= 2.0')
 end

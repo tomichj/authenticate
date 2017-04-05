@@ -46,24 +46,24 @@ describe SecuredAppsController, type: :controller do
     before { sign_in }
 
     it 'allows access to new' do
-      get :new
+      do_get :new
       expect(subject).to_not deny_access
     end
 
     it 'allows access to show' do
-      get :show
+      do_get :show
       expect(subject).to_not deny_access
     end
   end
 
   context 'with an unauthenticated visitor' do
     it 'allows access to new' do
-      get :new
+      do_get :new
       expect(subject).to_not deny_access
     end
 
     it 'denies access to show' do
-      get :show
+      do_get :show
       expect(subject).to deny_access
     end
   end

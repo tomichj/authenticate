@@ -7,7 +7,7 @@ describe Authenticate::SessionsController, type: :controller do
   describe 'get to #new' do
     context 'when user not signed in' do
       before do
-        get :new
+        do_get :new
       end
       it { is_expected.to respond_with 200 }
       it { is_expected.to render_template :new }
@@ -17,7 +17,7 @@ describe Authenticate::SessionsController, type: :controller do
     context 'when user is signed in' do
       before do
         sign_in
-        get :new
+        do_get :new
       end
 
       it { is_expected.not_to set_flash }
@@ -29,7 +29,7 @@ describe Authenticate::SessionsController, type: :controller do
     context 'without password' do
       it 'renders page with error' do
         user = create(:user)
-        post :create, session: { email: user.email }
+        do_post :create, params: { session: { email: user.email } }
         expect(response).to render_template :new
         expect(flash[:notice]).to match(/Invalid id or password/)
       end
@@ -37,7 +37,7 @@ describe Authenticate::SessionsController, type: :controller do
     context 'with good password' do
       before do
         @user = create(:user)
-        post :create, session: { email: @user.email, password: @user.password }
+        do_post :create, params: { session: { email: @user.email, password: @user.password } }
       end
       it { is_expected.to respond_with 302 }
 
@@ -58,7 +58,7 @@ describe Authenticate::SessionsController, type: :controller do
     context 'with a signed out user' do
       before do
         sign_out
-        get :destroy
+        do_get :destroy
       end
 
       it { is_expected.to redirect_to sign_in_url }
@@ -68,7 +68,7 @@ describe Authenticate::SessionsController, type: :controller do
       before do
         @user = create(:user, session_token: 'old-session-token')
         @request.cookies['authenticate_session_token'] = 'old-session-token'
-        get :destroy
+        do_get :destroy
       end
 
       it { is_expected.to redirect_to sign_in_url }
