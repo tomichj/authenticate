@@ -16,12 +16,9 @@ gemfile:
 matrix:
   exclude:
     - rvm: 2.1.8
-      gemfile: gemfiles/rails50.gemfile
+      gemfile: gemfiles/5.0.gemfile
 
-#branches:
-#  only:
-#    - master
+install:
+  - "bin/setup"
 
 sudo: false
-
-#script: bundle exec rspec --color --format documentation
