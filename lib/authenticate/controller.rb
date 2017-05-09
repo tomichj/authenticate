@@ -158,26 +158,19 @@ module Authenticate
 
     private
 
-    # Write location to return to in a cookie. This is 12-factor compliant, cloud-safe.
+    # Write location to return to in user's session (normally a cookie).
     def store_location
       if request.get?
-        value = {
-          expires: nil,
-          httponly: true,
-          path: nil,
-          secure: Authenticate.configuration.secure_cookie,
-          value: request.original_fullpath
-        }
-        cookies[:authenticate_return_to] = value
+        session[:authenticate_return_to] = request.original_fullpath
       end
     end
 
     def stored_location
-      cookies[:authenticate_return_to]
+      session[:authenticate_return_to]
     end
 
     def clear_stored_location
-      cookies.delete :authenticate_return_to
+      session[:authenticate_return_to] = nil
     end
 
     def authenticate_session

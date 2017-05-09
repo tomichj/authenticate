@@ -50,7 +50,7 @@ describe Authenticate::UsersController, type: :controller do
 
       context 'with valid attributes and a session return cookie' do
         before do
-          @request.cookies[:authenticate_return_to] = '/url_in_the_session'
+          @request.session[:authenticate_return_to] = '/url_in_the_session'
         end
         let(:user_attributes) { attributes_for(:user) }
         subject { do_post :create, params: { user: user_attributes } }
