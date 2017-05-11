@@ -23,10 +23,19 @@ class Authenticate::PasswordsController < Authenticate::AuthenticateController
 
   # Screen to enter your new password.
   #
-  # GET /users/passwords/3/edit?token=abcdef
+  # A get with the token in the url is expected:
+  #   GET /users/passwords/3/edit?token=abcdef
+  #
+  # This results in a redirect with the token removed from the url & copied to the session:
+  #   GET /users/passwords/3/edit
+  #
   def edit
     @user = find_user_for_edit
-    if !@user.reset_password_period_valid?
+
+    if params[:token]
+      session[:password_reset_token] = params[:token]
+      redirect_to edit_users_password_url(@user)
+    elsif !@user.reset_password_period_valid?
       redirect_to sign_in_path, notice: flash_failure_token_expired
     else
       render template: 'passwords/edit'
@@ -87,7 +96,9 @@ class Authenticate::PasswordsController < Authenticate::AuthenticateController
   end
 
   def find_user_by_id_and_password_reset_token
-    Authenticate.configuration.user_model_class.where(id: params[:id], password_reset_token: params[:token].to_s).first
+    token = session[:password_reset_token] || params[:token]
+    # Authenticate.configuration.user_model_class.where(id: params[:id], password_reset_token: token).first
+    Authenticate.configuration.user_model_class.find_by_id_and_password_reset_token params[:id], token.to_s
   end
 
   def flash_create_description
