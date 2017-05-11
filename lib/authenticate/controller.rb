@@ -42,6 +42,11 @@ module Authenticate
     # Runs all valid callbacks and sends the user a session token.
     def login(user, &block)
       authenticate_session.login user, &block
+
+      if authenticated? && Authenticate.configuration.rotate_csrf_on_sign_in?
+        session.delete(:_csrf_token)
+        form_authenticity_token
+      end
     end
 
     # Log the user out. Typically used in session controller.

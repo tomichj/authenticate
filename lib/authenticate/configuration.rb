@@ -169,7 +169,10 @@ module Authenticate
     #     config.authentication_strategy = :username
     #   end
     #
-    # Or, you can plug in your own authentication class, eg:
+    # Authenticate is designed to authenticate via :email. Some support for username is included.
+    # Username still requires an :email attribute on your User model.
+    #
+    # Alternatively, you can plug in your own authentication class:
     #
     #   Configuration.configure do |config|
     #     config.authentication_strategy = MyFunkyAuthClass
@@ -185,6 +188,13 @@ module Authenticate
     # This can also be overridden for specific scenarios by overriding controller methods that rely on it.
     # @return [String]
     attr_accessor :redirect_url
+
+    # Rotate CSRF token on sign in if true.
+    #
+    # Defaults to false, but will default to true in 1.0.
+    #
+    # @return [Boolean]
+    attr_accessor :rotate_csrf_on_sign_in
 
     # Controls whether the "sign up" route, allowing creation of users, is enabled.
     #
@@ -239,6 +249,7 @@ module Authenticate
       @cookie_http_only = true
       @mailer_sender = 'reply@example.com'
       @redirect_url = '/'
+      @rotate_csrf_on_sign_in = false
       @allow_sign_up = true
       @routes = true
       @reset_password_within = 2.days
@@ -275,6 +286,10 @@ module Authenticate
     # @return [Boolean] are Authenticate's built-in routes enabled?
     def routes_enabled?
       @routes
+    end
+
+    def rotate_csrf_on_sign_in?
+      rotate_csrf_on_sign_in
     end
 
     # List of symbols naming modules to load.
