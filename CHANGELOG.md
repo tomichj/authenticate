@@ -1,8 +1,40 @@
 # Authenticate Changelog
 
+
+## [0.6.0] - , 2017
+
+### Security
+- Prevent [password reset token leakage] through HTTP referrer across domains. password#edit removes the password 
+  reset token from the url, sets it into the user's session (typically a cookie), and redirects to password#url 
+  without the token in the url.
+
+- Prevent [session fixation] attacks by rotating CSRF tokens on sign-in by setting
+  `Authentication.configuration.rotate_csrf_on_sign_in` to `true`. This is recommended for
+  all applications. The setting defaults to `false` in this release, but will default to `true`
+  in a future release.
+
+### Fixed
+- Location to return to after login is now written to session. Was previously
+  written explicitly to a cookie.
+
+[password reset token leakage]: https://security.stackexchange.com/questions/69074/how-to-implement-password-reset-functionality-without-becoming-susceptible-to-cr
+[session fixation]: http://guides.rubyonrails.org/security.html#session-fixation
+[0.6.0]: https://github.com/tomichj/authenticate/compare/v0.5.0...v0.6.0
+
+
+
+## [0.5.0] - March 26, 2017
+
+### Support for rails 5.1.
+
+[0.5.0]: https://github.com/tomichj/authenticate/compare/v0.4.0...v0.5.0
+
+
+
 ## [0.4.0] - June 2, 2016
 
-Install generator User:  ActiveRecord::Base for Rails 4 apps, ApplicationRecord for rails 5 (issue #2).
+### Fixed
+- Install generator User:  ActiveRecord::Base for Rails 4 apps, ApplicationRecord for rails 5 (issue #2).
 
 [0.4.0]: https://github.com/tomichj/authenticate/compare/v0.3.3...v0.4.0
 

@@ -40,7 +40,7 @@ describe Authenticate::Model::PasswordReset do
   context '#update_password' do
     subject { create(:user) }
 
-    context 'within time time' do
+    context 'within time limit' do
       before(:each) { subject.password_reset_sent_at = 1.minutes.ago }
 
       it 'allows password update within time limit' do
@@ -57,19 +57,21 @@ describe Authenticate::Model::PasswordReset do
         subject.update_password 'password2'
         expect(subject.session_token).to_not eq(token)
       end
-
-      it 'prevents update if token is nil'
     end
 
-    it 'stops password update after time limit' do
-      subject.password_reset_sent_at = 6.minutes.ago
-      expect(subject.update_password('password2')).to be_falsey
+    context 'after time limit' do
+      it 'stops password update' do
+        subject.password_reset_sent_at = 6.minutes.ago
+        expect(subject.update_password('password2')).to be_falsey
+      end
     end
 
-    it 'stops password update if password_reset_token set but password_reset_sent_at isnt' do
-      subject.password_reset_sent_at = nil
-      subject.password_reset_token = 'notNilResetToken'
-      expect(subject.update_password('password2')).to be_falsey
+    context 'password_reset_sent_at is nil' do
+      it 'stops password update' do
+        subject.password_reset_sent_at = nil
+        subject.password_reset_token = 'notNilResetToken'
+        expect(subject.update_password('password2')).to be_falsey
+      end
     end
   end
 end
