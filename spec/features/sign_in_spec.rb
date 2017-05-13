@@ -27,3 +27,22 @@ feature 'visitor signs in' do
     expect_user_to_be_signed_out
   end
 end
+
+feature 'visitor goes to sign in page' do
+  scenario 'signed out user is not redirected' do
+    visit sign_in_path
+    expect_sign_in_path
+  end
+
+  scenario 'signed in user is redirected' do
+    user = create(:user)
+    sign_in_with user.email, user.password
+    visit sign_in_path
+    expect_path_is_redirect_url
+    expect_user_to_be_signed_in
+  end
+end
+
+def expect_sign_in_path
+  expect(current_path).to eq sign_in_path
+end

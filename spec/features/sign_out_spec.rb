@@ -12,10 +12,21 @@ feature 'visitor signs out' do
     expect_user_to_be_signed_out
   end
 
-  scenario 'sign out and sign out again' do
+  scenario 'sign out again' do
     sign_in_with(@user.email, @user.password)
     visit sign_out_path
     visit sign_out_path
     expect_user_to_be_signed_out
   end
+
+  scenario 'redirects to sign in' do
+    sign_in_with(@user.email, @user.password)
+    visit sign_out_path
+    expect_sign_in_path
+  end
+end
+
+
+def expect_sign_in_path
+  expect(current_path).to eq sign_in_path
 end

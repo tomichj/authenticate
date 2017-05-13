@@ -10,6 +10,7 @@ feature 'visitor requests password reset' do
     visit sign_in_path
     click_link 'Forgot Password'
     expect(current_path).to eq new_password_path
+    expect(page).to have_content I18n.t("passwords.new.description")
   end
 
   scenario 'uses valid email' do
@@ -21,11 +22,12 @@ feature 'visitor requests password reset' do
     expect_password_reset_email_for user
   end
 
-  scenario 'with a non-user-account email' do
+  scenario 'with an unknown email' do
     request_password_reset_for 'fake.email@example.com'
 
     expect_password_change_request_success_message
     expect_mailer_to_have_no_deliveries
+    expect(current_path).to eq sign_in_path
   end
 
   scenario 'with invalid email' do

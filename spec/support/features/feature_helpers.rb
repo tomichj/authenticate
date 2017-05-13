@@ -20,11 +20,15 @@ module Features
     end
 
     def expect_page_to_display_sign_in_error
-      expect(page).to have_content 'Invalid id or password'
+      expect(page).to have_content I18n.t('callbacks.authenticatable.failure')
     end
 
     def expect_user_to_be_signed_out
       expect(page).to have_content 'Sign in'
+    end
+
+    def expect_path_is_redirect_url
+      expect(current_path).to eq(Authenticate.configuration.redirect_url)
     end
   end
 end
