@@ -91,11 +91,12 @@ module Authenticate
       end
 
       def copy_migration(migration_name, config = {})
+        puts "migration_version: #{migration_version}"
         unless migration_exists?(migration_name)
           migration_template(
             "db/migrate/#{migration_name}",
             "db/migrate/#{migration_name}",
-            config
+            config.merge(migration_version: migration_version)
           )
         end
       end
@@ -161,6 +162,12 @@ module Authenticate
 
       def model_base_class
         (Rails.version >= '5.0.0') ? 'ApplicationRecord' : 'ActiveRecord::Base'
+      end
+
+      def migration_version
+        if Rails.version >= '5.0.0'
+          "[#{Rails::VERSION::MAJOR}.#{Rails::VERSION::MINOR}]"
+        end
       end
     end
   end

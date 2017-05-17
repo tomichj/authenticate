@@ -1,4 +1,4 @@
-class CreateUsers < ActiveRecord::Migration
+class CreateUsers < ActiveRecord::Migration<%= migration_version %>
   def change
     create_table :<%= table_name %> do |t|
     <% config[:new_columns].values.each do |column| -%>

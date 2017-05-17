@@ -1,4 +1,4 @@
-class AddAuthenticateToUsers < ActiveRecord::Migration
+class AddAuthenticateToUsers < ActiveRecord::Migration<%= migration_version %>
   def self.up
     change_table :<%= table_name %> do |t|
 <% config[:new_columns].values.each do |column| -%>
