@@ -1,5 +1,13 @@
 # Authenticate Changelog
 
+## [0.6.1] - May 16, 2017
+
+### Fixed
+- install migrations now correctly support rails 4.2.x and rails 5.x.
+
+[0.6.1]: https://github.com/tomichj/authenticate/compare/v0.6.0...v0.6.1
+
+
 
 ## [0.6.0] - May 16, 2017
 
