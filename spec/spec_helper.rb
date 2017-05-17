@@ -9,7 +9,7 @@ if ActiveRecord::VERSION::STRING >= '5.0'
 end
 
 require 'rspec/rails'
-require 'shoulda-matchers'
+# require 'shoulda-matchers'
 require 'capybara/rails'
 require 'capybara/rspec'
 require 'database_cleaner'
@@ -23,7 +23,7 @@ DatabaseCleaner.strategy = :truncation
 # Load factory girl factories.
 Dir[File.join(File.dirname(__FILE__), 'factories/**/*.rb')].each { |f| require f }
 
-# Build test database in spec/dummy/db/
+# Build test database in spec/dummy/db. There's probably a better way to do this.
 if defined?(ActiveRecord::Migration.maintain_test_schema!)
   ActiveRecord::Migration.maintain_test_schema! # rails 4.1+
 else
@@ -33,8 +33,6 @@ end
 if ActiveRecord::VERSION::STRING >= '4.2' && ActiveRecord::VERSION::STRING < '5.0'
   ActiveRecord::Base.raise_in_transactional_callbacks = true
 end
-
-puts 'MAJOR:' + Rails::VERSION::MAJOR.to_s
 
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
