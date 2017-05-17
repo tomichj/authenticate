@@ -196,6 +196,7 @@ application for modification.
 To turn off Authenticate's built-in routes:
 
 ```ruby
+# config/initializers/authenticate.rb
 Authenticate.configure do |config|
   config.routes = false
 end
@@ -222,6 +223,7 @@ For example, to customize `Authenticate::SessionController`:
 * subclass the controller:
 
 ```ruby
+# app/controllers/sessions_controller.rb
 class SessionsController < Authenticate::SessionController
   # render sign in screen
   def new
@@ -239,10 +241,11 @@ Start by dumping a copy of authenticate routes to your `config/routes.rb`:
 $ rails generate authenticate:routes 
 ```
 
-Now update `config/routes.rb` to point to your new controller:
+Now update your routes to point to your new controller:
+
 ```ruby
+# config/routes.rb
 resource :sessions, controller: 'sessions', only: [:create, :new, :destroy]
-  ...
 ```
 
 You can also use the Authenticate controller generator to copy the default controllers and mailer into 
