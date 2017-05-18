@@ -7,16 +7,19 @@ rvm:
   - 2.1.8
   - 2.2.4
   - 2.3.3
+  - 2.4.1
 
 gemfile:
   - gemfiles/4.2.gemfile
   - gemfiles/5.0.gemfile
+  - gemfiles/5.1.gemfile
 
 
 matrix:
   exclude:
     - rvm: 2.1.8
       gemfile: gemfiles/5.0.gemfile
+      gemfile: gemfiles/5.1.gemfile
 
 install:
   - "bin/setup"
