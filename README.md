@@ -354,7 +354,7 @@ end
 
 ## Testing
 
-Authenticate has been tested with rails 4.2, other versions to follow.
+Authenticate has been tested with rails 4.2, 5.0, and 5.1, using the Appraisal gem.
 
 
 
