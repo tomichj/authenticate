@@ -1,5 +1,14 @@
 # Authenticate Changelog
 
+## [0.6.2] - May 18, 2017
+
+### API Change
+- Session#initialize(request, cookies) is now just Session#initialize(request)
+
+[0.6.1]: https://github.com/tomichj/authenticate/compare/v0.6.1...v0.6.2
+
+
+
 ## [0.6.1] - May 16, 2017
 
 ### Fixed
@@ -31,7 +40,7 @@
 
 
 
-## [0.5.0] - March 26, 2017
+## [0.5.0] - March 26, 2017oh
 
 ### Support for rails 5.1.
 

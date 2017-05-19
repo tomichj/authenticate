@@ -23,7 +23,6 @@ Please use [GitHub Issues] to report bugs. You can contact me directly on twitte
 * configuration driven - almost all configuration is performed in the initializer
 
 
-
 ## Implementation Overview
 
 Authenticate:
@@ -71,6 +70,19 @@ You'll need to run the migrations that Authenticate just generated:
 rake db:migrate
 ```
 
+Finally, you need to secure any controllers that require authentication by adding   
+`before_action :require_authentication`. If your entire app requires authentication, add it to 
+`ApplicationController`:
+
+```ruby
+# app/controllers/application_controller.rb
+class ApplicationController < ActionController::Base
+  include Authenticate::Controller
+  before_action :require_authentication
+  protect_from_forgery with: :exception
+end
+```
+
 
 ## Configure
 
@@ -101,7 +113,6 @@ end
 ```
 
 Configuration parameters are described in detail here: [Configuration](lib/authenticate/configuration.rb)
-
 
 
 ## Use
@@ -229,7 +240,6 @@ class SessionsController < Authenticate::SessionController
   def new
     # ...
   end
-  ...
 end
 ```
 
@@ -293,21 +303,24 @@ All flash messages and email lines are stored in i18n translations. You can over
 See [config/locales/authenticate.en.yml](/config/locales/authenticate.en.yml) for the default messages.
 
 
-
 ## Extending Authenticate
 
-Authenticate can be further extended with two mechanisms:
+Authenticate can be extended via two mechanisms:
 
 * user modules: add behavior to the user model
-* callbacks: add behavior during various authentication events, such as login and subsequent hits
+* callbacks: add rules or behavior during various authentication events, such as login and subsequent hits
+
+Most of authenticate's behavior is implemented with a user module and a corresponding callback. User modules add 
+behavior to the user, and the callback uses the user model data to decide an authentication attempt is valid or
+invalid.
 
 
 ### User Modules
 
-Add behavior to your User model for your callbacks to use. You can, of course, incldue behavrio yourself directly
+Add behavior to your User model for your callbacks to use. You can include behavior yourself directly
 in your User class, but you can also use the Authenticate module loading system.
 
-To add a custom module to Authenticate, e.g. `MyUserModule`:
+To add a custom module for Authenticate to load into your User model, e.g. `MyUserModule`:
 
 ```ruby
 Authenticate.configuration do |config|
@@ -318,14 +331,23 @@ end
 
 ### Callbacks
 
-Callbacks can be added to Authenticate. Use `Authenticate.lifecycle.after_set_user` or
-`Authenticate.lifecycle.after_authentication`. See [Lifecycle](lib/authenticate/lifecycle.rb) for full details.
+Callbacks can be added to Authenticate. Callbacks available at these points of the authenticate lifecycle:
 
-Callbacks can `throw(:failure, message)` to signal an authentication/authorization failure. Callbacks can also perform
-actions on the user or session. Callbacks are passed a block at runtime of `|user, session, options|`.
+- `Authenticate.lifecycle.after_set_user`
+Runs with every hit requiring authentication. This includes both the initial authentication process and
+subsequent to any controller secured by Authenticate. These callbacks run immediately after the User is determined. 
+ 
+- `Authenticate.lifecycle.after_authentication`
+These callbacks run only during the initial authentication process.
 
-Here's an example that counts logins for users. It consists of a module for User, and a callback that is
-set in the `included` block. The callback is then added to the  User module via the Authenticate configuration.
+See [Lifecycle](lib/authenticate/lifecycle.rb) for full details.
+
+Callbacks must `throw(:failure, message)` to signal an authentication/authorization failure. Callbacks can also perform
+other actions on the user or session. Callbacks are invoked with `|user, session, options|`.
+
+Here's a simple example that counts logins for users. It consists of a module for User implemented as an 
+`ActiveSupport::Concern`, with a callback that is defined in an `included` block. The module and callback 
+is added to the User module via the Authenticate configuration.
 
 ```ruby
 # app/models/concerns/login_count.rb
@@ -351,15 +373,29 @@ Authenticate.configuration do |config|
 end
 ```
 
+More complex callbacks and modules can be implemented in a separate file(s); in that case, 
+the user module should `require` the callback file to inject it into Authenticate's callback lifecycle.
 
-## Testing
 
-Authenticate has been tested with rails 4.2, 5.0, and 5.1, using the Appraisal gem.
+## Additional Documentation
 
+Consult the [Authenticate wiki](https://github.com/tomichj/authenticate/wiki/) for additional documentation.
+
+
+## Versions of Rails Supported
+
+Authenticate is tested with rails 4.2, 5.0, and 5.1.
+
+
+## Changelog
+
+For a summary of changes by version, see the [CHANGELOG.md](/CHANGELOG.md).
 
 
 ## License
 
-This project rocks and uses MIT-LICENSE.
+Authenticate is copyright © 2015 Justin Tomich. It is free software, and may be
+redistributed under the terms specified in the [`LICENSE`] file.
 
+[`LICENSE`]: /LICENSE
 

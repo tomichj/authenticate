@@ -8,18 +8,30 @@ module Authenticate
 
     attr_accessor :request
 
-    def initialize(request, cookies)
+    # Initialize an Authenticate session. The presence of a session does not mean the user
+    # is authenticated; #authenticated? is the arbiter.
+    def initialize(request)
       @request = request # trackable module accesses request
-      @cookies = cookies
+      @cookies = request.cookie_jar
       @session_token = @cookies[cookie_name]
       debug 'SESSION initialize: @session_token: ' + @session_token.inspect
     end
 
     # Finish user login process, *after* the user has been authenticated.
-    # Called when user creates an account or signs back into the app.
-    # Runs all callbacks checking for any login failure. If a login failure
-    # occurs, user is NOT logged in.
     #
+    # Called when user creates an account or signs back into the app.
+    # Runs all configured callbacks, checking for login failure.
+    #
+    # If login is successful, @current_user is set and a session token is generated
+    # and returned to the client browser.
+    # If login fails, the user is NOT logged in. No session token is set,
+    # and @current_user will not be set.
+    #
+    # After callbacks are finished, a {LoginStatus} is yielded to the provided block,
+    # if one is provided.
+    #
+    # @param [User] user login completed for this user
+    # @yieldparam [Success,Failure] status result of the sign in operation.
     # @return [User]
     def login(user)
       @current_user = user
@@ -70,12 +82,6 @@ module Authenticate
 
       # # nuke cookie
       @cookies.delete cookie_name
-    end
-
-    protected
-
-    def user_loaded?
-      !@current_user.present?
     end
 
     private

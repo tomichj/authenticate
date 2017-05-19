@@ -179,7 +179,7 @@ module Authenticate
     end
 
     def authenticate_session
-      @authenticate_session ||= Authenticate::Session.new(request, cookies)
+      @authenticate_session ||= Authenticate::Session.new(request)
     end
   end
 end

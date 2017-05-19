@@ -5,10 +5,16 @@ class Authenticate::SessionsController < Authenticate::AuthenticateController
   before_action :redirect_signed_in_users, only: [:new]
   skip_before_action :require_authentication, only: [:create, :new, :destroy], raise: false
 
+  #
+  # Render the login screen.
+  #
   def new
     render template: 'sessions/new'
   end
 
+  #
+  # Log the user in, with the provided name and password.
+  #
   def create
     @user = authenticate(params)
     login(@user) do |status|
@@ -21,6 +27,9 @@ class Authenticate::SessionsController < Authenticate::AuthenticateController
     end
   end
 
+  #
+  # Log the user out
+  #
   def destroy
     logout
     redirect_to url_after_destroy

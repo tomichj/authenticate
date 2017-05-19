@@ -55,12 +55,21 @@ RSpec.configure do |config|
   end
 end
 
-def mock_request(params = {})
+#
+# todo - enhance test helpers, put in main project
+#
+def mock_request(params: {}, cookies: {})
   req = double('request')
   allow(req).to receive(:params).and_return(params)
   allow(req).to receive(:remote_ip).and_return('111.111.111.111')
+  allow(req).to receive(:cookie_jar).and_return(cookies)
   req
 end
+
+def session_cookie_for(user)
+  { Authenticate.configuration.cookie_name.freeze.to_sym => user.session_token }
+end
+
 
 #
 # Dumb glue method, deal with rails 4 vs rails 5 get/post methods.
