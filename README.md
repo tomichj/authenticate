@@ -497,14 +497,6 @@ end
 ```
 
 
-### Additional documentation
-
-See the [testing] wiki page for more information on
-testing, including examples.
-
-[testing]: https://github.com/tomichj/authenticate/wiki/Testing.md
-
-
 ## Additional Documentation
 
 Consult the [Authenticate wiki](https://github.com/tomichj/authenticate/wiki/) for additional documentation.
