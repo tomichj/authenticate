@@ -8,8 +8,9 @@ module Authenticate
 
     attr_accessor :request
 
-    # Initialize an Authenticate session. The presence of a session does not mean the user
-    # is authenticated; #authenticated? is the arbiter.
+    # Initialize an Authenticate session.
+    #
+    # The presence of a session does NOT mean the user is logged in; call #logged_in? to determine login status.
     def initialize(request)
       @request = request # trackable module accesses request
       @cookies = request.cookie_jar
@@ -57,23 +58,23 @@ module Authenticate
     #
     # @return [User]
     def current_user
-      debug 'session.current_user'
+      debug "session.current_user #{@current_user.inspect}"
       @current_user ||= load_user_from_session_token if @session_token.present?
       @current_user
     end
 
-    # Has this session successfully authenticated?
+    # Has this user successfully logged in?
     #
     # @return [Boolean]
-    def authenticated?
-      debug 'session.authenticated?'
+    def logged_in?
+      debug "session.logged_in? #{current_user.present?}"
       current_user.present?
     end
 
     # Invalidate the session token, unset the current user and remove the cookie.
     #
     # @return [void]
-    def deauthenticate
+    def logout
       # nuke session_token in db
       current_user.reset_session_token! if current_user.present?
 

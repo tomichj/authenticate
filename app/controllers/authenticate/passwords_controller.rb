@@ -1,6 +1,7 @@
 # Request password change via an emailed link with a unique token.
 # Thanks to devise and Clearance.
 class Authenticate::PasswordsController < Authenticate::AuthenticateController
+  skip_before_action :require_login, only: [:create, :edit, :new, :update], raise: false
   skip_before_action :require_authentication, only: [:create, :edit, :new, :update], raise: false
   before_action :ensure_existing_user, only: [:edit, :update]
 

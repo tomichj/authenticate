@@ -1,11 +1,31 @@
 # Authenticate Changelog
 
+
+## [0.7.0] - May 25, 2017
+
+### API Change
+- controller#require_authentication is deprecated, use controller#require_login
+- controller#authenticated? is deprecated, use controller#logged_in? 
+- added controller#logged_out?
+ 
+`authenticated?` and `required_authentication` will be removed in a future release.
+
+
+### Test support
+- Added login_as via middleware for feature/integration/system tests.
+- added rspec helpers for view and controller tests
+- added test-unit helpers for controller/view tests
+
+[0.7.0]: https://github.com/tomichj/authenticate/compare/v0.6.2...v0.7.0
+
+
+
 ## [0.6.2] - May 18, 2017
 
 ### API Change
-- Session#initialize(request, cookies) is now just Session#initialize(request)
+- Session#initialize(request, cookies) is now Session#initialize(request)
 
-[0.6.1]: https://github.com/tomichj/authenticate/compare/v0.6.1...v0.6.2
+[0.6.2]: https://github.com/tomichj/authenticate/compare/v0.6.1...v0.6.2
 
 
 

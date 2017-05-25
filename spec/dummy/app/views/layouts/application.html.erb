@@ -9,7 +9,7 @@
 <body>
 
 <div id="header">
-  <% if authenticated? -%>
+  <% if logged_in? -%>
       <%= link_to t(".sign_out"), sign_out_path %>
   <% else -%>
       <%= link_to t(".sign_in"), sign_in_path %>

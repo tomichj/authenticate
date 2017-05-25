@@ -6,7 +6,7 @@ module Authenticate
   #
   #    class ApplicationController < ActionController::Base
   #       include Authenticate::Controller
-  #       before_action :require_authentication
+  #       before_action :require_login
   #       protect_from_forgery with: :exception
   #     end
   #
@@ -19,15 +19,16 @@ module Authenticate
   # * require_authentication - restrict access to authenticated users, often from ApplicationController
   #
   # Helpers, used anywhere:
-  # * current_user - get the current user from the current Authenticate session.
-  # * authenticated? - has the user been logged in?
+  # * current_user - get the currently logged in user
+  # * logged_in? - is the user logged in?
+  # * logged_out? - is the user not logged in?
   #
   module Controller
     extend ActiveSupport::Concern
     include Debug
 
     included do
-      helper_method :current_user, :authenticated?
+      helper_method :current_user, :logged_in?, :logged_out?, :authenticated?
       attr_writer :authenticate_session
     end
 
@@ -43,7 +44,7 @@ module Authenticate
     def login(user, &block)
       authenticate_session.login user, &block
 
-      if authenticated? && Authenticate.configuration.rotate_csrf_on_sign_in?
+      if logged_in? && Authenticate.configuration.rotate_csrf_on_sign_in?
         session.delete(:_csrf_token)
         form_authenticity_token
       end
@@ -59,25 +60,27 @@ module Authenticate
     #     redirect_to '/', notice: 'You logged out successfully'
     #   end
     def logout
-      authenticate_session.deauthenticate
+      authenticate_session.logout
     end
 
-    # Use this filter as a before_action to restrict controller actions to authenticated users.
-    # Consider using in application_controller to restrict access to all controllers.
+    # Use this filter as a before_action to control access to controller actions,
+    # limiting to logged in users.
+    #
+    # Placing in application_controller will control access to all controllers.
     #
     # Example:
     #
     #   class ApplicationController < ActionController::Base
-    #     before_action :require_authentication
+    #     before_action :require_login
     #
     #     def index
     #       # ...
     #     end
     #   end
     #
-    def require_authentication
-      debug 'Controller::require_authentication'
-      unauthorized unless authenticated?
+    def require_login
+      debug "!!!!!!!!!!!!!!!!!! controller#require_login " # logged_in? #{logged_in?}"
+      unauthorized unless logged_in?
       message = catch(:failure) do
         current_user = authenticate_session.current_user
         Authenticate.lifecycle.run_callbacks(:after_set_user, current_user, authenticate_session, event: :set_user)
@@ -87,14 +90,25 @@ module Authenticate
 
     # Has the user been logged in? Exposed as a helper, can be called from views.
     #
-    #   <% if authenticated? %>
-    #     <%= link_to logout_path, "Sign out" %>
+    #   <% if logged_in? %>
+    #     <%= link_to sign_out_path, "Sign out" %>
     #   <% else %>
-    #     <%= link_to login_path, "Sign in" %>
+    #     <%= link_to sign_in_path, "Sign in" %>
     #   <% end %>
     #
-    def authenticated?
-      authenticate_session.authenticated?
+    def logged_in?
+      debug "!!!!!!!!!!!!!!!!!! controller#logged_in?"
+      authenticate_session.logged_in?
+    end
+
+    # Has the user not logged in? Exposed as a helper, can be called from views.
+    #
+    #   <% if logged_out? %>
+    #     <%= link_to sign_in_path, "Sign in" %>
+    #   <% end %>
+    #
+    def logged_out?
+      !logged_in?
     end
 
     # Get the current user from the current Authenticate session.
@@ -115,11 +129,29 @@ module Authenticate
       is_a?(Authenticate::AuthenticateController)
     end
 
+    # The old API.
+    #
+    # todo: remove in a future version.
+    def require_authentication
+      warn "#{Kernel.caller.first}: [DEPRECATION] " +
+        "'require_authentication' is deprecated and will be removed in a future release. use 'require_login' instead"
+      require_login
+    end
+
+    # The old API.
+    #
+    # todo: remove in a future version.
+    def authenticated?
+      warn "#{Kernel.caller.first}: [DEPRECATION] " +
+             "'authenticated?' is deprecated and will be removed in a future release. Use 'logged_in?' instead."
+      logged_in?
+    end
+
     protected
 
     # User is not authorized, bounce 'em to sign in
     def unauthorized(msg = t('flashes.failure_when_not_signed_in'))
-      authenticate_session.deauthenticate
+      authenticate_session.logout
       respond_to do |format|
         format.any(:js, :json, :xml) { head :unauthorized }
         format.any { redirect_unauthorized(msg) }
@@ -127,13 +159,13 @@ module Authenticate
     end
 
     def redirect_unauthorized(flash_message)
-      store_location
+      store_location!
 
       if flash_message
         flash[:notice] = flash_message # TODO: use locales
       end
 
-      if authenticated?
+      if logged_in?
         redirect_to url_after_denied_access_when_signed_in
       else
         redirect_to url_after_denied_access_when_signed_out
@@ -164,7 +196,7 @@ module Authenticate
     private
 
     # Write location to return to in user's session (normally a cookie).
-    def store_location
+    def store_location!
       if request.get?
         session[:authenticate_return_to] = request.original_fullpath
       end

@@ -42,13 +42,13 @@ module Authenticate
       end
 
       def call(env)
-        do_sign_on(env)
+        do_login(env)
         @app.call(env)
       end
 
       private
 
-      def do_sign_on(env)
+      def do_login(env)
         params = Rack::Utils.parse_query(env['QUERY_STRING'])
         user_param = params['as']
 

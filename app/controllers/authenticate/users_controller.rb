@@ -3,6 +3,7 @@
 #
 class Authenticate::UsersController < Authenticate::AuthenticateController
   before_action :redirect_signed_in_users, only: [:create, :new]
+  skip_before_action :require_login, only: [:create, :new], raise: false
   skip_before_action :require_authentication, only: [:create, :new], raise: false
 
   def new
@@ -24,7 +25,7 @@ class Authenticate::UsersController < Authenticate::AuthenticateController
   private
 
   def redirect_signed_in_users
-    redirect_to Authenticate.configuration.redirect_url if authenticated?
+    redirect_to Authenticate.configuration.redirect_url if logged_in?
   end
 
   def url_after_create

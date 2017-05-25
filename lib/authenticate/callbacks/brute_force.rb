@@ -2,7 +2,7 @@
 # Runs as a hook after authentication.
 Authenticate.lifecycle.prepend_after_authentication name: 'brute force protection' do |user, session, _options|
   include ActionView::Helpers::DateHelper
-  unless session.authenticated? || Authenticate.configuration.max_consecutive_bad_logins_allowed.nil?
+  unless session.logged_in? || Authenticate.configuration.max_consecutive_bad_logins_allowed.nil?
     user_credentials = User.credentials(session.request.params)
     user ||= User.find_by_credentials(user_credentials)
     if user && user.respond_to?(:register_failed_login!)

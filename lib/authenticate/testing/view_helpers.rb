@@ -4,7 +4,7 @@ module Authenticate
     # Helpers for view tests/specs.
     #
     # Use login_as to log in a user for your test case, which allows
-    # `current_user` and `authenticated?` to work properly in your test.
+    # `current_user`, `logged_in?` and `logged_out?` to work properly in your test.
     module ViewHelpers
 
       # Set the current_user on the view being tested.
@@ -15,8 +15,12 @@ module Authenticate
       module CurrentUser
         attr_accessor :current_user
 
-        def authenticated?
+        def logged_in?
           current_user.present?
+        end
+
+        def logged_out?
+          !logged_in?
         end
       end
 

@@ -71,14 +71,14 @@ rake db:migrate
 ```
 
 Finally, you need to secure any controllers that require authentication by adding   
-`before_action :require_authentication`. If your entire app requires authentication, add it to 
+`before_action :require_login`. If your entire app requires authentication, add it to 
 `ApplicationController`:
 
 ```ruby
 # app/controllers/application_controller.rb
 class ApplicationController < ActionController::Base
   include Authenticate::Controller
-  before_action :require_authentication
+  before_action :require_login
   protect_from_forgery with: :exception
 end
 ```
@@ -119,12 +119,12 @@ Configuration parameters are described in detail here: [Configuration](lib/authe
 
 ### Access Control
 
-Use the `require_authentication` filter to control access to controller actions. To control access to
+Use the `require_login` filter to control access to controller actions. To control access to
 all controller actions, add the filter to your `ApplicationController`, e.g.:
 
 ```ruby
 class ApplicationController < ActionController::Base
-    before_action :require_authentication
+    before_action :require_login
 end
 ```
 
@@ -144,12 +144,12 @@ end
 
 ### Helpers
 
-Use `current_user` and `authenticated?` in controllers, views, and helpers.
+Use `current_user`, `logged_in?`, and `logged_out?` in controllers, views, and helpers.
 
 Example:
 
 ```erb
-<% if authenticated? %>
+<% if logged_in? %>
   <%= current_user.email %>
   <%= link_to "Sign out", sign_out_path %>
 <% else %>
@@ -416,7 +416,7 @@ end
 
 ### Controller Tests
 
-To test controller actions protected by authenticate with `before_action :require_authentication`, you can
+To test controller actions protected by authenticate with `before_action :require_login`, you can
 use Authenticate's test helpers.
 
 For `rspec`, add the following to your `spec/spec_helper.rb` or `spec/rails_helper.rb`:
@@ -438,8 +438,8 @@ login_as(user)
 logout
 ```
 
-Once you `login_as(user)`, you will satisfy the `require_authentication` filter. The other `Authenticate::Controller`
-methods will then work: `current_user`, `authenticated?`, etc.
+Once you `login_as(user)`, you will satisfy the `require_login` filter. The other `Authenticate::Controller`
+methods will then work: `current_user`, `logged_in?`, `logged_out?`
 
 A controller spec using `factory_girl` and authenticate's controller helpers might look like this:
 ```ruby
@@ -478,10 +478,11 @@ For `rspec`, require `authenticate/testing/rspec` to include view helpers:
 ```ruby
 login_as(user)
 current_user
-authenticated?
+logged_in?
+logged_out?
 ```
 
-Once you `login_as(user)`, your view can make use of `current_user` and `authenticated?` as you'd expect. 
+Once you `login_as(user)`, your view can make use of the other helpers as you'd expect. 
 
 An example view spec using `factory_girl` and authenticate's view helpers:
 ```ruby

@@ -17,9 +17,9 @@ RSpec::Matchers.define :deny_access do
 end
 
 # A dummy 'secured' controller to test
-class SecuredAppsController < ActionController::Base
+class DeprecatedMethodsController < ActionController::Base
   include Authenticate::Controller
-  before_action :require_login, only: :show
+  before_action :require_authentication, only: :show
 
   def new
     head :ok
@@ -30,10 +30,10 @@ class SecuredAppsController < ActionController::Base
   end
 end
 
-describe SecuredAppsController, type: :controller do
+describe DeprecatedMethodsController, type: :controller do
   before do
     Rails.application.routes.draw do
-      resource :secured_app, only: [:new, :show]
+      resource :deprecated_methods, only: [:new, :show]
       get '/sign_in' => 'authenticate/sessions#new', as: 'sign_in'
     end
   end
@@ -45,26 +45,14 @@ describe SecuredAppsController, type: :controller do
   context 'with authenticated user' do
     before { sign_in }
 
-    it 'allows access to new' do
-      do_get :new
+    it 'warns but allows access to show' do
+      expect { do_get :show }.to output(/deprecated/i).to_stderr
       expect(subject).to_not deny_access
     end
 
-    it 'allows access to show' do
-      do_get :show
-      expect(subject).to_not deny_access
-    end
-  end
-
-  context 'with an unauthenticated visitor' do
-    it 'allows access to new' do
-      do_get :new
-      expect(subject).to_not deny_access
-    end
-
-    it 'denies access to show' do
-      do_get :show
-      expect(subject).to deny_access
+    it 'warns on authenticated?' do
+      expect { subject.authenticated? }.to output(/deprecated/i).to_stderr
+      expect(subject.authenticated?).to be_truthy
     end
   end
 end
