@@ -1,11 +1,14 @@
 module Authenticate
   module Testing
 
-    # Middleware which allows tests to bypass signon. Typically used by integration and feature tests, etc.
-    # Should speed up tests by eliminating the need to visit and submit the signon form repeatedly.
+    # Middleware which allows tests to bypass your sign on screen.
+    # Typically used by integration and feature tests, etc.
+    # Speeds up these tests by eliminating the need to visit and
+    # submit the signon form repeatedly.
     #
-    # Sign a test user in by passing as=USER_ID in a query parameter. If `User#to_param` is overridden
-    # you may pass a block to override the default user lookup behaviour.
+    # Sign a test user in by passing as=USER_ID in a query parameter.
+    # If `User#to_param` is overridden you may pass a block to override
+    # the default user lookup behaviour.
     #
     # Configure your application's test environment as follows:
     #

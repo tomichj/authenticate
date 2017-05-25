@@ -377,6 +377,134 @@ More complex callbacks and modules can be implemented in a separate file(s); in 
 the user module should `require` the callback file to inject it into Authenticate's callback lifecycle.
 
 
+## Testing
+
+### Feature/Integration/System Tests
+
+Authenticate includes middleware which allows tests to directly sign a test user in,
+eliminating the need to visit and submit the sign on form. This can significantly speeds up tests.
+Used by integration, system, feature, etc tests.
+
+Configure your test environment to enable the middleware:
+```ruby
+# config/environments/test.rb
+MyRailsApp::Application.configure do
+  # ...
+  config.middleware.use Authenticate::Testing::IntegrationTestsSignOn
+  # ...
+end
+```
+
+Sign a test user in by passing as=USER_ID in a query parameter:
+```ruby
+visit root_path(as: user)
+```
+
+A feature spec using factory_girl and capybara with the integration sign on middleware might look like this: 
+```ruby
+require 'spec_helper'
+
+feature 'dashboard' do
+  scenario 'logged in user has name on dashboard' do
+    user = create(:user)
+    visit dashboard_path(as: user)
+    expect(page).to have_content user.name
+  end
+end  
+```
+
+
+### Controller Tests
+
+To test controller actions protected by authenticate with `before_action :require_authentication`, you can
+use Authenticate's test helpers.
+
+For `rspec`, add the following to your `spec/spec_helper.rb` or `spec/rails_helper.rb`:
+
+```ruby
+require 'authenticate/testing/rspec'
+```
+
+For `test-unit`, add the following to your `test/test_helper.rb`.
+
+```ruby
+require 'authenticate/testing/test_unit'
+```
+
+This will give you helper methods:
+
+```ruby
+login_as(user)
+logout
+```
+
+Once you `login_as(user)`, you will satisfy the `require_authentication` filter. The other `Authenticate::Controller`
+methods will then work: `current_user`, `authenticated?`, etc.
+
+A controller spec using `factory_girl` and authenticate's controller helpers might look like this:
+```ruby
+require 'spec_helper'
+describe DashboardsController do
+  describe '#show' do
+    it 'shows view' do
+      user = create(:user)
+      login_as(user)
+      get :show
+      expect(response).to be_success
+      expect(response).to render_template 'dashboards/show'
+    end
+  end
+end
+```
+
+Rails 5 built-in test suite's controller tests now extend `ActionDispatch::IntegrationTest`. Use the middleware 
+`IntegrationTestsSignOn` to support sign on. For example:
+```ruby
+require 'test_helper'
+class DashboardsControllerTest < ActionDispatch::IntegrationTest
+  test 'logged in user can GET a dashboard' do
+    user = create(:user)
+    get dashboards_show_path(as: user)
+    assert_response :success
+  end
+end
+```
+
+
+### View Tests
+
+For `rspec`, require `authenticate/testing/rspec` to include view helpers:
+
+```ruby
+login_as(user)
+current_user
+authenticated?
+```
+
+Once you `login_as(user)`, your view can make use of `current_user` and `authenticated?` as you'd expect. 
+
+An example view spec using `factory_girl` and authenticate's view helpers:
+```ruby
+require 'spec_helper'
+describe 'dashboards/show', type: :view do
+  it 'displays user name' do
+    user = create(:user)
+    login_as(user)
+    render
+    expect(rendered).to match user.name  # view uses `current_user`
+  end
+end
+```
+
+
+### Additional documentation
+
+See the [testing] wiki page for more information on
+testing, including examples.
+
+[testing]: https://github.com/tomichj/authenticate/wiki/Testing.md
+
+
 ## Additional Documentation
 
 Consult the [Authenticate wiki](https://github.com/tomichj/authenticate/wiki/) for additional documentation.
