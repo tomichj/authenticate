@@ -91,7 +91,6 @@ module Authenticate
       end
 
       def copy_migration(migration_name, config = {})
-        puts "migration_version: #{migration_version}"
         unless migration_exists?(migration_name)
           migration_template(
             "db/migrate/#{migration_name}",

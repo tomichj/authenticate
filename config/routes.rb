@@ -9,8 +9,11 @@ if Authenticate.configuration.routes_enabled?
       resources :passwords, controller: 'authenticate/passwords', only: [:edit, :update]
     end
 
-    get '/sign_up', to: 'authenticate/users#new', as: 'sign_up'
     get '/sign_in', to: 'authenticate/sessions#new', as: 'sign_in'
     get '/sign_out', to: 'authenticate/sessions#destroy', as: 'sign_out'
+
+    if Authenticate.configuration.allow_sign_up?
+      get '/sign_up', to: 'authenticate/users#new', as: 'sign_up'
+    end
   end
 end

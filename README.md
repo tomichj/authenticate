@@ -36,7 +36,7 @@ The callback architecture is based on the system used by devise and warden, but 
 
 ### Session Token
 
-Authenticate generates and clears a token (called a 'session token') to identify the user from a saved cookie.
+Authenticate generates a token (called a 'session token') to identify the user from a saved cookie.
 When a user authenticates successfully, Authenticate generates and stores a 'session token' for your user in
 your database. The session token is also stored in a cookie in the user's browser.
 The cookie is then presented upon each subsequent access attempt to your server.
