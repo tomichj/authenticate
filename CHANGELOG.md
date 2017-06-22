@@ -1,6 +1,15 @@
 # Authenticate Changelog
 
 
+## [0.7.1] - June 22, 2017
+
+### Fixed
+- routes respects config.allow_sign_up? and shuts off /sign_up
+- removed spurious output from install generator
+
+[0.7.1]: https://github.com/tomichj/authenticate/compare/v0.7.0...v0.7.1
+
+
 ## [0.7.0] - May 25, 2017
 
 ### API Changes

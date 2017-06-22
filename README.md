@@ -17,7 +17,7 @@ Please use [GitHub Issues] to report bugs. You can contact me directly on twitte
 
 ## Philosophy
 
-* simple - Authenticate's code is straightforward and easy to read.
+* simple - Authenticate's code is straightforward and easy to read. No middleware!
 * opinionated - set the "right" defaults, but let you control almost everything if you want
 * small footprint - as few public methods and modules as possible. Methods only loaded into your user model if needed.
 * configuration driven - almost all configuration is performed in the initializer
