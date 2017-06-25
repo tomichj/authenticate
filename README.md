@@ -2,10 +2,11 @@
 
 A Rails authentication gem.
 
-Authenticate is small, simple, but extensible. It has highly opinionated defaults but is
-open to significant modification.
+Authenticate is small, simple, but extensible and comprehensive. Authenticate comes out of the box with opinionated 
+defaults but is open to complete modification.
 
-Authenticate is inspired by, and draws from, Devise, Warden, Authlogic, Clearance, Sorcery, and restful_authentication.
+Authenticate is inspired by, and draws both concepts and code from: 
+Devise, Warden, Authlogic, Clearance, Sorcery, and restful_authentication.
 
 Please use [GitHub Issues] to report bugs. You can contact me directly on twitter 
 [@JustinTomich](https://twitter.com/justintomich).
@@ -21,6 +22,17 @@ Please use [GitHub Issues] to report bugs. You can contact me directly on twitte
 * opinionated - set the "right" defaults, but let you control almost everything if you want
 * small footprint - as few public methods and modules as possible. Methods only loaded into your user model if needed.
 * configuration driven - almost all configuration is performed in the initializer
+
+
+### What's different about Authenticate?
+
+Authenticate provides rails authentication with email & password. Authenticate only works with Rails, and only
+with active record; this keeps it simple. There's no middleware, and no compromises or added complexity to
+support other ORMs.
+
+Authenticate uses a modular callback mechanism similar to Warden, but much simpler. A lot of 
+functionality is provided: there are modules to detect brute force attacks, enforce maximum session
+lifetimes, session timeouts, track logins, etc. 
 
 
 ## Implementation Overview
@@ -188,12 +200,14 @@ end
 
 ### User Model
 
-You can [use an alternate user model class](https://github.com/tomichj/authenticate/wiki/custom-user-model).
+Authenticate assumes your user model is a class named User, but you can 
+[specify any user model class](https://github.com/tomichj/authenticate/wiki/custom-user-model).
 
 
 ### Username Authentication
 
-You can [authenticate with username](https://github.com/tomichj/authenticate/wiki/Authenticate-with-username).
+Authenticate uses email and password to login users. You 
+can also [authenticate with username](https://github.com/tomichj/authenticate/wiki/Authenticate-with-username).
 
 
 ### Routes

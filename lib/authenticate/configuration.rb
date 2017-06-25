@@ -202,9 +202,8 @@ module Authenticate
     #
     # Set to `false` to disable user creation routes. The setting is ignored if routes are disabled.
     #
-    # @param [Boolean] value
     # @return [Boolean]
-    attr_accessor :allow_sign_up
+    attr_writer :allow_sign_up
 
     # Enable or disable Authenticate's built-in routes.
     #
@@ -275,6 +274,13 @@ module Authenticate
     def user_model_param_key
       return :user if @user_model == '::User' # avoid nil in generator
       user_model_class.model_name.param_key.to_sym
+    end
+
+    # Actions allowed for :user resources (in routes.rb).
+    # If sign up is allowed, the [:create] action is allowed, otherwise [].
+    # @return [Array<Symbol>]
+    def user_actions
+      allow_sign_up? ? [:create] : []
     end
 
     # Is the user sign up route enabled?

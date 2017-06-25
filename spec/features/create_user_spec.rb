@@ -32,13 +32,13 @@ feature 'create user after signed in' do
   scenario 'cannot get to new user page' do
     user = create(:user, email: 'test.user@example.com')
     sign_in_with user.email, user.password
-    visit new_users_path
+    visit sign_up_path
     expect_path_is_redirect_url
   end
 end
 
 def create_user_with_valid_params(user_attrs = attributes_for(:user))
-  visit new_users_path
+  visit sign_up_path
   fill_in 'user_email', with: user_attrs[:email]
   fill_in 'user_password', with: user_attrs[:password]
   click_button 'Sign up'

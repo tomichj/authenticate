@@ -15,6 +15,12 @@ module Authenticate
                    banner: 'model',
                    desc: "Specify the model class name if you will use anything other than 'User'"
 
+      class_option :allow_sign_up,
+                   optional: true,
+                   type: :boolean,
+                   banner: 'allow_sign_up',
+                   desc: 'Disable the sign up route'
+
       def initialize(*)
         super
         assign_names!(model_class_name)
@@ -32,7 +38,6 @@ module Authenticate
           inject_into_class(model_path, model_class_name, "  include Authenticate::User\n\n")
         else
           @model_base_class = model_base_class
-          # copy_file 'user.rb', 'app/models/user.rb'
           template 'user.rb.erb', 'app/models/user.rb'
         end
       end
@@ -64,7 +69,15 @@ module Authenticate
         if options[:model]
           inject_into_file(
             'config/initializers/authenticate.rb',
-            "  config.user_model = '#{options[:model]}' \n",
+            "  config.user_model = '#{options[:model]}'\n",
+            after: "Authenticate.configure do |config|\n"
+          )
+        end
+
+        if options.key? :allow_sign_up
+          inject_into_file(
+            'config/initializers/authenticate.rb',
+            "  config.allow_sign_up = #{options['allow_sign_up']}\n",
             after: "Authenticate.configure do |config|\n"
           )
         end
@@ -121,7 +134,7 @@ module Authenticate
 
       def new_indexes
         @new_indexes ||= {
-          index_users_on_email: "add_index :#{table_name}, :email",
+          index_users_on_email: "add_index :#{table_name}, :email, unique: true",
           index_users_on_session_token: "add_index :#{table_name}, :session_token"
         }.reject { |index| existing_users_indexes.include?(index.to_s) }
       end
@@ -140,9 +153,20 @@ module Authenticate
         file.sub(%r{^.*(db/migrate/)(?:\d+_)?}, '')
       end
 
+      # def users_table_exists?
+      #   ActiveRecord::Base.connection.table_exists?(table_name)
+      # end
+
       def users_table_exists?
-        ActiveRecord::Base.connection.table_exists?(table_name)
+        # Rails 5 uses 'data sources'
+        if ActiveRecord::Base.connection.respond_to?(:data_source_exists?)
+          ActiveRecord::Base.connection.data_source_exists?(table_name)
+        else
+          # Rails 4 uses 'tables'
+          ActiveRecord::Base.connection.table_exists?(table_name)
+        end
       end
+
 
       def existing_users_columns
         return [] unless users_table_exists?

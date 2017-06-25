@@ -3,8 +3,8 @@ if Authenticate.configuration.routes_enabled?
     resource :session, controller: 'authenticate/sessions', only: [:create, :new, :destroy]
     resources :passwords, controller: 'authenticate/passwords', only: [:new, :create]
 
-    user_actions = Authenticate.configuration.allow_sign_up? ? [:new, :create] : []
     user_model = Authenticate.configuration.user_model_route_key
+    user_actions = Authenticate.configuration.allow_sign_up? ? [:create] : []
     resource user_model, controller: 'authenticate/users', only: user_actions do
       resources :passwords, controller: 'authenticate/passwords', only: [:edit, :update]
     end
