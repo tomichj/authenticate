@@ -10,7 +10,6 @@ describe Authenticate::Session do
     end
     it 'nil user without a session token' do
       request = mock_request
-      cookies = {}
       session = Authenticate::Session.new(request)
       expect(session.current_user).to be_nil
     end
