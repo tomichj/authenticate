@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'support/features/feature_helpers'
 
 feature 'create a user with valid attributes' do
 

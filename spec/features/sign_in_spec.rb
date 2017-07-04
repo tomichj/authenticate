@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'support/features/feature_helpers'
 
 feature 'visitor signs in' do
   scenario 'with valid email and password' do

@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'support/features/feature_helpers'
 
 feature 'visitor has consecutive bad logins' do
   before do

@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'support/features/feature_helpers'
 
 feature 'visitor at sign up form, not signed in' do
   scenario 'visit with no arguments' do

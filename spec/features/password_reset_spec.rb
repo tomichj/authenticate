@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'support/features/feature_helpers'
 
 feature 'visitor requests password reset' do
   before(:each) do

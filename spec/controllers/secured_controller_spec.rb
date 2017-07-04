@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'support/controllers/controller_helpers'
 
 # Matcher that asserts user was denied access.
 RSpec::Matchers.define :deny_access do
