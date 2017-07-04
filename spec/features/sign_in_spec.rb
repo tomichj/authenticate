@@ -30,7 +30,7 @@ end
 feature 'visitor goes to sign in page' do
   scenario 'signed out user is not redirected' do
     visit sign_in_path
-    expect_sign_in_path
+    expect_sign_in_page
   end
 
   scenario 'signed in user is redirected' do
@@ -42,6 +42,10 @@ feature 'visitor goes to sign in page' do
   end
 end
 
-def expect_sign_in_path
-  expect(current_path).to eq sign_in_path
+feature 'user is not signed in' do
+  scenario 'redirected to sign in' do
+    visit welcome_index_path
+    expect_sign_in_page
+  end
 end
+

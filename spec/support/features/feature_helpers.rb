@@ -30,6 +30,10 @@ module Features
     def expect_path_is_redirect_url
       expect(current_path).to eq(Authenticate.configuration.redirect_url)
     end
+
+    def expect_sign_in_page
+      expect(current_path).to eq sign_in_path
+    end
   end
 end
 
