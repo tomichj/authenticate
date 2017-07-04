@@ -1,6 +1,17 @@
 # Authenticate Changelog
 
 
+## [0.7.2] - June 22, 2017
+
+### API change
+- removed new_users_path, sign_up_path remains
+
+### New Feature
+- added allow_sign_up flag to install generator 
+
+[0.7.2]: https://github.com/tomichj/authenticate/compare/v0.7.1...v0.7.2
+
+
 ## [0.7.1] - June 22, 2017
 
 ### Fixed
