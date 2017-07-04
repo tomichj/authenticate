@@ -19,4 +19,15 @@ describe Authenticate::Model::Email do
     user = create(:user)
     expect(User.authenticate([user.email, user.password])).to eq(user)
   end
+
+  it 'validates unique email address' do
+    original = build(:user, email: 'email@email.com')
+    dupe_email = build(:user, email: 'email@email.com')
+
+    original.save
+    dupe_email.save
+
+    expect(dupe_email.errors.count).to be(1)
+    expect(dupe_email.errors.messages[:email]).to include('has already been taken')
+  end
 end
