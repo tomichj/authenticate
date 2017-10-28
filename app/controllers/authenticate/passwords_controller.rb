@@ -6,14 +6,13 @@ class Authenticate::PasswordsController < Authenticate::AuthenticateController
   before_action :ensure_existing_user, only: [:edit, :update]
 
   # Display screen to request a password change email.
+  #
   # GET /users/passwords/new
   def new
     render template: 'passwords/new'
   end
 
   # Send password change email.
-  #
-  # POST /users/password
   def create
     if (user = find_user_for_create)
       user.forgot_password!
@@ -22,12 +21,12 @@ class Authenticate::PasswordsController < Authenticate::AuthenticateController
     redirect_to sign_in_path, notice: flash_create_description
   end
 
-  # Screen to enter your new password.
+  # Enter a new password.
   #
-  # A get with the token in the url is expected:
+  # A get with the token in the url is expected, for example:
   #   GET /users/passwords/3/edit?token=abcdef
   #
-  # This results in a redirect with the token removed from the url & copied to the session:
+  # Results in a redirect with the token removed from the url & copied to the session:
   #   GET /users/passwords/3/edit
   #
   def edit
@@ -35,7 +34,7 @@ class Authenticate::PasswordsController < Authenticate::AuthenticateController
 
     if params[:token]
       session[:password_reset_token] = params[:token]
-      redirect_to edit_users_password_url(@user)
+      redirect_to url_for
     elsif !@user.reset_password_period_valid?
       redirect_to sign_in_path, notice: flash_failure_token_expired
     else
@@ -43,9 +42,6 @@ class Authenticate::PasswordsController < Authenticate::AuthenticateController
     end
   end
 
-  # Save the new password entered in #edit.
-  #
-  # PUT /users/passwords/3/
   def update
     @user = find_user_for_update
 
