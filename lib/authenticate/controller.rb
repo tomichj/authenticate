@@ -16,7 +16,7 @@ module Authenticate
   # * logout - log a user out, invalidating their Authenticate session.
   #
   # Action/Filter:
-  # * require_authentication - restrict access to authenticated users, often from ApplicationController
+  # * require_login - restrict access to authenticated users, often from ApplicationController
   #
   # Helpers, used anywhere:
   # * current_user - get the currently logged in user
@@ -129,7 +129,7 @@ module Authenticate
       is_a?(Authenticate::AuthenticateController)
     end
 
-    # The old API.
+    # The old API. DEPRECATED, use #require_login instead.
     #
     # todo: remove in a future version.
     def require_authentication
@@ -138,7 +138,7 @@ module Authenticate
       require_login
     end
 
-    # The old API.
+    # The old API. DEPRECATED, use #logged_in? instead.
     #
     # todo: remove in a future version.
     def authenticated?
