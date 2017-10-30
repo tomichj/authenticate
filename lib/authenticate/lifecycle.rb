@@ -62,7 +62,7 @@ module Authenticate
     # Example:
     #   Authenticate.lifecycle.run_callbacks(:after_set_user, @current_user, self, { event: :authentication })
     #
-    def run_callbacks(kind, *args) # args - |user, session, opts|
+    def run_callbacks(kind, user, session, *args) # args - |user, session, opts|
       # Last callback arg MUST be a Hash
       options = args.last
       send("#{kind}_callbacks").each do |callback, conditions| # each callback has 'conditions' stored with it
@@ -70,7 +70,7 @@ module Authenticate
         invalid = conditions.find do |key, value|
           value.is_a?(Array) ? !value.include?(options[key]) : (value != options[key])
         end
-        callback.call(*args) unless invalid
+        callback.call(user, session, *args) unless invalid
       end
       nil
     end

@@ -19,6 +19,7 @@ module Authenticate
     end
 
     # Finish user login process, *after* the user has been authenticated.
+    # The user is authenticated by Authenticate::Controller#authenticate.
     #
     # Called when user creates an account or signs back into the app.
     # Runs all configured callbacks, checking for login failure.
@@ -81,7 +82,7 @@ module Authenticate
       # nuke notion of current_user
       @current_user = nil
 
-      # # nuke cookie
+      # nuke session_token cookie from the client browser
       @cookies.delete cookie_name
     end
 
