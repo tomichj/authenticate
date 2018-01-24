@@ -56,8 +56,6 @@ module RequestHelpers
   end
 end
 
-
-
 RSpec.configure do |config|
   config.include RequestHelpers
 end
