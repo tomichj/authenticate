@@ -64,9 +64,6 @@ module Authenticate
     # When set to `true`, Authenticate will use Rails 'signed cookie' mechanism to
     # prevent tampering with cookie value.
     #
-    # You should have `secret_key_base` set for your environment in `config/secrets.yml`
-    # or Authenticate will fallback to default mechanism.
-    #
     # For more, see [ActionDispatch::Cookies documentation](http://api.rubyonrails.org/classes/ActionDispatch/Cookies.html).
     # @return [Boolean]
     attr_accessor :signed_cookie
@@ -84,6 +81,9 @@ module Authenticate
     #
     # You should set this value to true in live environments where you can not use
     # [#secure_cookie] (e.g. non-https connections).
+    #
+    # If set to `true` and `secret_key_base` in `config/secrets.yml` is not set,
+    # Authenticate will fallback to 'signed cookie' mechanism.
     #
     # For more, see [ActionDispatch::Cookies documentation](http://api.rubyonrails.org/classes/ActionDispatch/Cookies.html).
     # @return [Boolean]

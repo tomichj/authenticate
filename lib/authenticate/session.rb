@@ -116,20 +116,12 @@ module Authenticate
       get_cookies_class[cookie_name] = value
     end
 
-    def secret_present?
-      !!Rails.application.secrets.try(:secret_key_base)
-    end
-
     def signed_or_encrypted?
       Authenticate.configuration.encrypted_cookie || Authenticate.configuration.signed_cookie
     end
 
     def get_cookies_class
-      if signed_or_encrypted? && secret_present?
-        Authenticate.configuration.encrypted_cookie ? @cookies.encrypted : @cookies.signed
-      else
-        @cookies
-      end
+      signed_or_encrypted? ? @cookies.signed_or_encrypted : @cookies
     end
   end
 end

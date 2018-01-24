@@ -44,11 +44,7 @@ module RequestHelpers
   # Sometimes cookie is a cookie, and sometimes it is not.
   #
   def wrap_cookie(cookie)
-    def cookie.signed
-      self
-    end
-
-    def cookie.encrypted
+    def cookie.signed_or_encrypted
       self
     end
 
