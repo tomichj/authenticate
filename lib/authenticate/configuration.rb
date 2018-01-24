@@ -57,6 +57,38 @@ module Authenticate
     # @return [String]
     attr_accessor :cookie_path
 
+    # Controls whether cookie should be signed with your app's secret.
+    #
+    # Defaults to `false`.
+    #
+    # When set to `true`, Authenticate will use Rails 'signed cookie' mechanism to
+    # prevent tampering with cookie value.
+    #
+    # You should have `secret_key_base` set for your environment in `config/secrets.yml`
+    # or Authenticate will fallback to default mechanism.
+    #
+    # For more, see [ActionDispatch::Cookies documentation](http://api.rubyonrails.org/classes/ActionDispatch/Cookies.html).
+    # @return [Boolean]
+    attr_accessor :signed_cookie
+
+    # Controls whether cookie should be encrypted.
+    #
+    # Defaults to `false`.
+    #
+    # When set to `true`, Authenticate will encrypt cookie value using Rails built-in
+    # mechanism to prevent tampering with cookie value. In addition, [#signed_cookie] option
+    # will be omitted.
+    #
+    # It differs from [#signed_cookie] in that cookie value will be encrypted before
+    # being signed.
+    #
+    # You should set this value to true in live environments where you can not use
+    # [#secure_cookie] (e.g. non-https connections).
+    #
+    # For more, see [ActionDispatch::Cookies documentation](http://api.rubyonrails.org/classes/ActionDispatch/Cookies.html).
+    # @return [Boolean]
+    attr_accessor :encrypted_cookie
+
     # Controls the secure setting on the session cookie.
     #
     # Defaults to `false`.
@@ -244,6 +276,8 @@ module Authenticate
       @cookie_expiration = -> { 1.year.from_now.utc }
       @cookie_domain = nil
       @cookie_path = '/'
+      @signed_cookie = false
+      @encrypted_cookie = false
       @secure_cookie = false
       @cookie_http_only = true
       @mailer_sender = 'reply@example.com'
