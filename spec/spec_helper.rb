@@ -12,7 +12,7 @@ require 'rspec/rails'
 require 'capybara/rails'
 require 'capybara/rspec'
 require 'database_cleaner'
-require 'factory_girl'
+require 'factory_bot'
 require 'timecop'
 
 Dir[File.join(File.dirname(__FILE__), 'support/**/*.rb')].each { |f| require f }
@@ -20,7 +20,7 @@ Dir[File.join(File.dirname(__FILE__), 'support/**/*.rb')].each { |f| require f }
 Rails.backtrace_cleaner.remove_silencers!
 DatabaseCleaner.strategy = :truncation
 
-# Load factory girl factories.
+# Load factory bot factories.
 Dir[File.join(File.dirname(__FILE__), 'factories/**/*.rb')].each { |f| require f }
 
 # Build test database in spec/dummy/db. There's probably a better way to do this.
@@ -35,7 +35,7 @@ if ActiveRecord::VERSION::STRING >= '4.2' && ActiveRecord::VERSION::STRING < '5.
 end
 
 RSpec.configure do |config|
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
   config.infer_spec_type_from_file_location!
   config.order = :random
   config.use_transactional_fixtures = true
@@ -54,4 +54,3 @@ RSpec.configure do |config|
     Capybara.use_default_driver # Revert Capybara.current_driver to Capybara.default_driver
   end
 end
-

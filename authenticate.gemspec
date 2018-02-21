@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'email_validator', '~> 1.6'
   s.add_dependency 'rails', '>= 4.0', '< 5.2'
 
-  s.add_development_dependency 'factory_girl', '~> 4.8'
+  s.add_development_dependency 'factory_bot', '~> 4.8.2'
   s.add_development_dependency 'rspec-rails', '~> 3.6'
   s.add_development_dependency 'pry', '~> 0.10'
   s.add_development_dependency 'sqlite3', '~> 1.3'
