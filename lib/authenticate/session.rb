@@ -121,7 +121,13 @@ module Authenticate
     end
 
     def get_cookies_class
-      signed_or_encrypted? ? @cookies.signed_or_encrypted : @cookies
+      if Authenticate.configuration.encrypted_cookie
+        @cookies.encrypted
+      elsif Authenticate.configuration.signed_cookie
+        @cookies.signed
+      else
+        @cookies
+      end
     end
   end
 end
