@@ -1,6 +1,19 @@
 # Authenticate Changelog
 
 
+## [0.7.3] - June 7, 2018
+
+### Support for rails 5.2
+- added rails 5.2 support to gemspec
+- added rails 5.2 to Appraisals, .travis.yml, gemfiles
+- added `sqlite3.represent_boolean_as_integer = true` to dummy application config 
+- bumped authenticate version
+- update request specs, looks for 302 after login
+- added build and release tasks to Rakefile
+
+[0.7.3]: https://github.com/tomichj/authenticate/compare/v0.7.2...v0.7.3
+
+
 ## [0.7.2] - June 22, 2017
 
 ### API change

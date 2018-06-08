@@ -23,6 +23,7 @@ describe 'CSRF rotation' do
         do_post session_path, params: { **session_params }
 
         # expect that we now have a new csrf token
+        expect(response).to have_http_status(302)
         expect(csrf_token).not_to eq original_token
         expect(csrf_token).to be_present
       end

@@ -7,6 +7,10 @@ describe 'session key assignment' do
       do_post session_path, params: { session: { email: @user.email, password: @user.password } }
     end
 
+    it 'redirects after login' do
+      expect(response).to have_http_status(302)
+    end
+
     it 'sets user session token' do
       @user.reload
       expect(@user.session_token).to_not be_nil
