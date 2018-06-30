@@ -32,12 +32,27 @@ module RequestHelpers
     req = double('request')
     allow(req).to receive(:params).and_return(params)
     allow(req).to receive(:remote_ip).and_return('111.111.111.111')
-    allow(req).to receive(:cookie_jar).and_return(cookies)
+    allow(req).to receive(:cookie_jar).and_return(wrap_cookie(cookies))
     req
   end
 
   def session_cookie_for(user)
     { Authenticate.configuration.cookie_name.freeze.to_sym => user.session_token }
+  end
+
+  #
+  # Sometimes cookie is a cookie, and sometimes it is not.
+  #
+  def wrap_cookie(cookie)
+    def cookie.signed
+      self
+    end
+
+    def cookie.encrypted
+      self
+    end
+
+    cookie
   end
 end
 

@@ -14,7 +14,7 @@ module Authenticate
     def initialize(request)
       @request = request # trackable module accesses request
       @cookies = request.cookie_jar
-      @session_token = @cookies[cookie_name]
+      @session_token = session_token_cookie
       debug 'SESSION initialize: @session_token: ' + @session_token.inspect
     end
 
@@ -97,8 +97,8 @@ module Authenticate
         expires: Authenticate.configuration.cookie_expiration.call
       }
       cookie_hash[:domain] = Authenticate.configuration.cookie_domain if Authenticate.configuration.cookie_domain
-      # Consider adding an option for a signed cookie
-      @cookies[cookie_name] = cookie_hash
+
+      self.session_token_cookie = cookie_hash
     end
 
     def cookie_name
@@ -107,6 +107,28 @@ module Authenticate
 
     def load_user_from_session_token
       Authenticate.configuration.user_model_class.where(session_token: @session_token).first
+    end
+
+    def session_token_cookie
+      get_cookies_class[cookie_name]
+    end
+
+    def session_token_cookie=(value)
+      get_cookies_class[cookie_name] = value
+    end
+
+    def signed_or_encrypted?
+      Authenticate.configuration.encrypted_cookie || Authenticate.configuration.signed_cookie
+    end
+
+    def get_cookies_class
+      if Authenticate.configuration.encrypted_cookie
+        @cookies.encrypted
+      elsif Authenticate.configuration.signed_cookie
+        @cookies.signed
+      else
+        @cookies
+      end
     end
   end
 end
